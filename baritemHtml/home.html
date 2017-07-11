@@ -110,16 +110,16 @@
 		}
 		
 		/*zss*/
-		.mui-content{margin-bottom: 50px;margin-top:50px;background: #e9e9e9;}
+		.mui-content{margin-bottom: 50px;margin-top:50px;background: #f0f0f0;}
 		.mui-table-view.mui-grid-view{padding:10px 10px 10px 0;}
 		.mui-col-xs-2{width:20%;}
-		.own-middle{width: 100%;height: 35px;line-height: 30px;background: #fff; padding: 0 20px 20px; margin-bottom: 15px;border-top: 1px solid #ddd}
+		.own-middle{width: 95%;height: 35px;line-height: 35px;    border-radius: 200px;margin: 10px auto;background: #fff; padding: 0 0px 20px; }
 		.own-middle >div{float:left;display: inline-block;}
 		.own-middle .more{position: absolute;right: 20px;}
-		.own-middle span{font-size: 11px;color:#fff;background: #f00;display: inline-block;padding:0 10px;text-align: center;line-height: 22px;border-radius: 200px;}
-		.own-middle p{font-size: 14px;color:#333;text-indent: 20px;}
-		.own-middle a{font-size: 13px;color:#999;}
-		.own-middle .own-m-news{width:60%;text-overflow: ellipsis;overflow: hidden;height:22px;}
+		.own-middle span{font-size: 15px;color:#fff;background: #f00;display: inline-block;padding:0 10px;text-align: center;line-height:35px;border-bottom-left-radius: 200px;border-top-left-radius: 200px;position: relative;}
+		.own-middle p{font-size: 14px;color:#333;text-indent: 10px;}
+		.own-middle a{font-size: 13px;color:#333;display: inline-block;line-height: 15px;border-left: 1px solid #999;padding:0 5px;}
+		.own-middle .own-m-news{width:60%;text-overflow: ellipsis;overflow: hidden;height:35px;}
 		.rmg-sign{ font-size: 10px;color: gray; position: absolute; right: 10px;
 		   		 display: inline-block; padding: 0 10px;border: 1px solid #ccc; border-radius: 200px;
 		    		height: 24px;line-height: 23px;margin-top: -5px;}
@@ -155,6 +155,7 @@
 		.mui-focusin>.mui-bar-nav {
 			position: fixed
 		}
+		.mui-table-view:before{background-color:rgba(255,255,255,0);}
     </style>
 </head>
 <body >
@@ -274,7 +275,7 @@
         <div class="own-middle">
         	<div><span>最新新闻</span></div>
         	<div class="own-m-news"><p>满300送价值129飞科剃须刀满300送价值129飞科剃须刀</p></div>
-        	<div class="more"><a href="#">更多></a></div>
+        	<div class="more"><a href="#">更多</a></div>
         </div>
         <ul id="brand" class="mui-table-view mui-grid-view" style="padding: 0;">
 			<li class="mui-table-view-cell mui-media mui-col-xs-6">
