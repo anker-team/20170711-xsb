@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+    		.mui-table-view .mui-media-object {
+			line-height: 75px;
+			max-width: 75px;
+			height: 75px;
+		}
+		.itemName {
+			color: black;
+			font-size: 0.9em;
+		}
+		
+		.price {
+			margin-top: 10px;
+			font-size: 1em;
+		}
+		
+		.curprice {
+			color: #ef5028;
+		}
+		.preprice {
+			color: black;
+			text-decoration:line-through
+		}
+		.mui-pull-left {
+    			color: gray;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;"></h1>
+	</header>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div id="noneInfo" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未查询到相关数据</span>
+			<br />
+			<!--<button type="button" class="mui-btn own-btn-green" style="margin-top: 10px; padding: 5px 20px;">请登录</button>-->
+		</div>
+		<div class="mui-scroll">
+			<ul id="xingyuandanList" class="mui-table-view">
+				<!--<li class="mui-table-view-cell mui-media">
+					<div class="mui-slider-handle">
+						<a>
+							<img src="http://www.xjcdma.com/upload/upload/4a47c0aeb9c84b5e90d7d5e815a63e62.jpg" class="mui-media-object mui-pull-left"/>
+							<div class="mui-media-body">
+								<p class="itemName mui-ellipsis-2">dddddddddddddddddd</p>
+								<p class="price"><span class="curprice">¥111</span></p>
+							</div>
+						</a>
+					</div>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<div class="mui-slider-handle">
+						<a>
+							<img src="../img/chenggong_03.jpg" class="mui-media-object mui-pull-left"/>
+							<div class="mui-media-body">
+								<p class="itemName mui-ellipsis-2">dddddddddddddddddd</p>
+								<p class="price"><span class="curprice">¥111</span></p>
+							</div>
+						</a>
+					</div>
+				</li>-->
+			</ul>
+		</div>
+	</div>
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/arttmpl.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false,
+			pullRefresh: {
+				container:'#pullrefresh',
+				down:{
+					contentdown:'下拉可刷新',
+					contentover:'释放立即刷新',
+					contentrefresh:'正在加载..',
+					callback:pulldownRefresh
+				},
+				up:{
+					contentrefresh:'正在加载..',
+					contentnomore:'已加载全部商品',
+					callback:pullupRefresh
+				}
+			}
+		});
+		var  xinyuandanwebview;//当前页面
+		var isnodate = false;
+		var xinyuandanList;
+		var page = 1;//页码
+		var pagesize=0 ; //总页数
+		var user;
+		mui.plusReady(function(){
+			user= JSON.parse(localStorage.getItem('$users'));
+			xinyuandanwebview = plus.webview.currentWebview();
+			xinyuandanList = document.getElementById('xingyuandanList');
+			getlikelist(page,xinyuandanwebview.type);
+			//添加每个item点击的监听事件
+			mui('#xingyuandanList').on('tap','a',function(){
+				var item = this;
+				var itemID = this.getAttribute('href');
+				var indexWebview = plus.webview.getWebviewById('index');
+				var anishow = getaniShow();
+				//弹入分类商品列表
+				mui.fire(indexWebview,'newWebView',{
+					id:'Home/product-detail-needtem.html',
+					href:'Home/product-detail-needtem.html',
+					aniShow:anishow,
+					title:'商品详情',
+					isBars:false,
+					barsIcon:'',
+					product_id:itemID,
+				});
+			});
+		});
+		
+		function getlikelist(page,type) {
+			ajax_get_likelist({
+				page:page,
+				page_size:'10',
+				type:type
+			});
+		}
+		
+		//成功获取心愿列表
+		function likelistSuccess(data){
+			//if (data.code == '000000') {
+				pagesize = data.pagesize;
+				document.querySelector('.mui-title').innerText=xinyuandanwebview.title+"("+pagesize+")";
+				if(pagesize>0){
+					mui.each(JSON.parse(data.phoneList),function(index,item){
+						var listItem = document.createElement('li');
+						listItem.className = 'mui-table-view-cell mui-media';
+						if(('' != user.usertype && '4' != user.usertype) || user.id)
+							listItem.innerHTML = '<div class="mui-slider-handle"><a href="'+item.id+'"><img src="'+item.photosrc+'" class="mui-media-object mui-pull-left"/><div class="mui-media-body"><p class="itemName mui-ellipsis-2">'+item.pname+'</p><p class="price"><span class="curprice">¥'+item.price+'</span></p></div></a></div>';
+						else
+							listItem.innerHTML = '<div class="mui-slider-handle"><a href="'+item.id+'"><img src="'+item.photosrc+'" class="mui-media-object mui-pull-left"/><div class="mui-media-body"><p class="itemName mui-ellipsis-2">'+item.pname+'</p></div></a></div>';
+						xinyuandanList.appendChild(listItem);
+					});
+				}else{
+					document.getElementById("noneInfo").style.display ='block';
+					document.querySelector(".mui-scroll").style.display = 'none';
+				}
+				
+			//}
+		}
+		
+		function pulldownRefresh() {
+			setTimeout(function(){
+				 mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			},1000);
+		}
+		function pullupRefresh(){
+			var copythis = this;
+			//上拉翻页
+			if(pagesize>page*10){
+				page++;
+				getlikelist(page,xinyuandanwebview.type);
+			}else{
+				isnodate = true;
+			}
+			setTimeout(function(){
+				copythis.endPullupToRefresh(isnodate);
+			});
+		}
+	</script>
+</body>
+</html>

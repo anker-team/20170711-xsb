@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <style type="text/css">
+    		/*下面两项是重置muicss的输入框label和input之间的宽比率*/
+    		.mui-input-row label {
+    			width: 20%;
+    		}
+    		.mui-input-row label~input {
+    			width: 80%;
+    		}
+    </style>
+</head>
+<body>
+	
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-left-nav-color"></a>
+		<h1 class="mui-title">注册</h1>
+	</header>
+	
+	<div class="mui-content">
+		<div class="mui-card" style="margin-top: 30px;">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label><span class="mui-icon iconfont icon-zhanghao"></span></label>
+					<input id="account" class="mui-input-clear" type="text" placeholder="输入用户名" />
+				</div>
+				<div class="mui-input-row">
+					<label><span class="mui-icon iconfont icon-mimaxiugai"></span></label>
+					<input id="psd" class="mui-input-clear" type="password" placeholder="输入密码" />
+				</div>
+				<div class="mui-input-row">
+					<label><span class="mui-icon iconfont icon-queren"></span></label>
+					<input id="repsd" class="mui-input-clear" type="password" placeholder="确认密码" />
+				</div>
+			</form>
+		</div>
+		<div class="mui-button-row" style="margin: 10px 15px;">
+			<button type="button" class="mui-btn mui-btn-block own-btn-green" style="padding: 5px 0px;">注册</button>
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+		
+		var account,//用户名
+		 	psd,//密码
+		 	repsd,//确认密码
+		 	registerBtn; //注册按钮对象
+		 	
+		mui.plusReady(function(){
+			account = document.getElementById('account');
+			psd = document.getElementById('psd');
+			repsd = document.getElementById('repsd');
+			registerBtn = document.querySelector('button[type="button"]');
+			//注册按钮点击事件
+			registerBtn.addEventListener('tap',function(){
+				if (account.value.length <= 0) {
+					mui.toast('请输入要注册的账号');
+					return;
+				}
+				if (psd.value.length <= 0){
+					mui.toast('请输入密码');
+					return;
+				}
+				if (repsd.value.length <= 0 || psd.value != repsd.value	){
+					mui.toast('两次输入密码必须一致');
+					return;
+				}
+				
+				//联网注册
+				var regInfo = {
+							account: account.value,
+							password: repsd.value
+						};
+						
+				reg(regInfo, function(data) {
+					if (data.code !='000000') {
+						plus.nativeUI.toast(data.msg);
+						return;
+					}
+					
+					plus.nativeUI.toast('注册成功');
+					//跳转到绑定手机号界面
+					mui.openWindow({
+					url: '../Mine/first-binding-phone.html',
+					id: '../Mine/first-binding-phone.html',
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras:{
+						appuserid:data.appuserid
+					},
+					styles: {
+						popGesture: 'hide'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+					
+				});
+			},false);
+			
+		});
+	</script>
+</body>
+</html>

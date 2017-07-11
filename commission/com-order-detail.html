@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    
+    <style type="text/css">
+    	.title{
+    		float: left;
+    	}
+    	
+    	.value{
+    		float: right;
+    	}
+    	
+    	.mui-pull-left{
+    		color: gray;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">佣金订单详情</h1>
+	</header>
+	<div class="mui-content">
+		<div class="mui-content">
+			<div class="mui-card">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<h5 class="title">订单号</h5>
+						<h5 id="ordercode" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">结算状态</h5>
+						<h5 id="status" class="value">已结算</h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">结算金额(元)</h5>
+						<h5 id="amount" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">结算时间</h5>
+						<h5 id="credate" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">佣金方案</h5>
+						<h5 id="commisionname" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">串码</h5>
+						<h5 id="imei" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">联系方式</h5>
+						<h5 id="phoneno" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">业务大类</h5>
+						<h5 id="busstype" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">业务小类</h5>
+						<h5 id="bussmalltype" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">佣金类型</h5>
+						<h5 id="type" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">地市编码</h5>
+						<h5 id="areacode" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">地市名称</h5>
+						<h5 id="areaname" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">代理商编码</h5>
+						<h5 id="buyercode" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">代理商名称</h5>
+						<h5 id="buyername" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">网点编码</h5>
+						<h5 id="netcode" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">网点名称</h5>
+						<h5 id="netname" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">套餐编码</h5>
+						<h5 id="combocode" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">套餐名称</h5>
+						<h5 id="comboname" class="value"></h5>
+					</li>
+					<li class="mui-table-view-cell">
+						<h5 class="title">套餐值（元）</h5>
+						<h5 id="comboamount" class="value"></h5>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		}); 
+		var comOrderDetailWebView;
+		mui.plusReady(function(){
+			comOrderDetailWebView = plus.webview.currentWebview();
+			//ajax获取当前页面数据
+			ajax_get_commission_order_detail({
+				id:comOrderDetailWebView.detailid
+			},function(data){
+				document.getElementById("amount").innerText=data.amount;
+				document.getElementById("areaname").innerText=data.areaname;
+				document.getElementById("bussmalltype").innerText=data.bussmalltype;
+				document.getElementById("busstype").innerText=data.busstype;
+				document.getElementById("buyercode").innerText=data.buyercode;
+				document.getElementById("buyername").innerText=data.buyername;
+				document.getElementById("comboamount").innerText=data.comboamount;
+				document.getElementById("combocode").innerText=data.combocode;
+				document.getElementById("comboname").innerText=data.comboname;
+				document.getElementById("commisionname").innerText=data.commisionname;
+				document.getElementById("credate").innerText=data.credate;
+				document.getElementById("imei").innerText=data.imei;
+				document.getElementById("netcode").innerText=data.netcode;
+				document.getElementById("netname").innerText=data.netname;
+				document.getElementById("ordercode").innerText=data.ordercode;
+				document.getElementById("phoneno").innerText=data.phoneno;
+				document.getElementById("status").innerText=data.status;
+				document.getElementById("type").innerText=data.type;
+				document.getElementById("areacode").innerText =data.areacode;
+			});
+		});
+	</script>
+</body>
+</html>

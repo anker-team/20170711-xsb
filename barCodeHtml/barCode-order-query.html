@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+    <style type="text/css">
+		/*下面两项是重置muicss的输入框label和input之间的宽比率*/
+		.mui-input-row label {
+			width: 20%;
+		}
+		.mui-input-row label~input {
+			width: 80%;
+		}
+		
+		.mui-popover {
+			height: 100px;
+		}
+		.mui-content {
+			padding: 10px;
+		}
+		#middlePopover{
+			position: fixed;
+			top: 160px;
+			right: 60px;
+		}
+		.mui-pull-left{
+		color: gray;
+		}
+    </style>
+</head>
+<body>
+	
+	<header class="mui-bar mui-bar-nav own-main-background-color" >
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">串码查询</h1>
+	</header>	
+	<div class="mui-content">
+		<div class="mui-card" style="margin-top: 20px;">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<input type="text" id="ordercode" class="mui-input-clear" placeholder="请输入订单号" />
+				</div>
+				<!--<div class="mui-input-row">
+					<a href="#middlePopover" style="width: 100%;">
+						<label style="width: 100%;color: #c8c7cc;">请选择佣金类型</label>
+					</a>
+				</div>-->
+				<div class="mui-input-row" id="addressPicker">
+					<label data-options='{"type":"date"}' class="btn" id="start" style="width: 100%;color: #c8c7cc;">开始时间</label>
+				</div>
+				<div class="mui-input-row">
+					<label data-options='{"type":"date"}' class="btn" id="end" style="width: 100%;color: #c8c7cc;">结束时间</label>
+				</div>
+			</form>
+			</div><div class="mui-button-row" style="margin: 10px 15px;">
+			<button id="queryBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">查询</button>
+		</div>
+		<!--<div id="middlePopover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell"><a href="#">Item1</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item2</a>
+						</li>
+					</ul>
+				</div>
+			</div>-->
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+//		mui('.mui-scroll-wrapper').scroll();
+//			mui('body').on('shown', '.mui-popover', function(e) {
+//				//console.log('shown', e.detail.id);//detail为当前popover元素
+//			});
+//			mui('body').on('hidden', '.mui-popover', function(e) {
+//				//console.log('hidden', e.detail.id);//detail为当前popover元素
+//			});
+		var comOrderQueryWebview;
+		mui.plusReady(function(){
+			comOrderQueryWebview = plus.webview.currentWebview();
+			mui('.btn').each(function(i, btn) {
+				btn.addEventListener('tap', function() {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+					var options = JSON.parse(optionsJson);
+					var dateTag = this;
+					/*
+					 * 首次显示时实例化组件
+					 * 示例为了简洁，将 options 放在了按钮的 dom 上
+					 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+					 */
+					var picker = new mui.DtPicker(options);
+					picker.show(function(rs) {
+						/*
+						 * rs.value 拼合后的 value
+						 * rs.text 拼合后的 text
+						 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+						 * rs.m 月，用法同年
+						 * rs.d 日，用法同年
+						 * rs.h 时，用法同年
+						 * rs.i 分（minutes 的第二个字母），用法同年
+						 */
+						dateTag.innerText = rs.text;
+						/* 
+						 * 返回 false 可以阻止选择框的关闭
+						 * return false;
+						 */
+						/*
+						 * 释放组件资源，释放后将将不能再操作组件
+						 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
+						 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
+						 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实例。
+						 */
+						picker.dispose();
+					});
+				}, false);
+			});
+			
+			//监听点击查询按钮
+			document.getElementById("queryBtn").addEventListener('tap',function(){
+				var ordercode = document.getElementById("ordercode").value;
+				var begindate =document.getElementById("start").innerText;
+				var enddate =document.getElementById("end").innerText;
+				if(ordercode == '' && begindate =='开始时间' && enddate == '结束时间'){
+					mui.toast('查询条件不能为空');
+					return;
+				}
+				if(enddate !='结束时间'&&begindate =='开始时间'){
+					mui.toast('开始时间不能为空');
+					return;
+				}
+				if(begindate !='开始时间'&&enddate =='结束时间'){
+					mui.toast('结束时间不能为空');
+					return;
+				}
+				
+				if(enddate=='结束时间'){
+					 enddate='';
+				}
+				if(begindate =='开始时间'){
+					begindate='';
+				}
+				if(enddate.replace("-","")<begindate.replace("-","")){
+					mui.toast('开始时间不能大于结束时间');
+					return;
+				}
+				var lastWebView = plus.webview.getWebviewById('../barCodeHtml/barCode-order.html');
+				mui.fire(lastWebView,'queryBarCodeOrder',{
+					ordercode : ordercode,
+					begindate :begindate,
+					enddate :enddate
+				});
+				comOrderQueryWebview.close();
+			},false);
+		});
+		
+	</script>
+</body>
+</html>

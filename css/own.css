@@ -1,0 +1,96 @@
+
+.own-left-nav-color {
+	color: gray;
+}
+
+.own-main-color {
+	color: #ef5028;
+}
+
+.own-gray-color {
+	background-color: #EBEBF1;
+}
+
+.own-black-color {
+	color: black;
+}
+.own-text-through {
+	text-decoration: line-through;
+}
+
+.own-main-background-color {
+	/*background-color: #41cea9;*/
+	background-color: #0e3250;
+	
+}
+
+.own-header-hidden {
+	display: none!important;
+}
+
+.own-content-padding {
+	padding-top: 0 !important;
+}
+
+.own-btn-green {
+	color: #fff;
+	border: 1px solid #ef5028;
+	background-color: #ef5028;
+}
+
+.own-btn-green.mui-active:enabled,
+.own-btn-green:enabled:active {
+	color: #fff;
+	border: 1px solid #41dfa9;
+	background-color: #41dfa9;
+}
+
+.own-font-size {
+	font-size: 1em;
+}
+
+/*搜索页*/
+.search-box{ position: relative; margin:5px 10px;}
+.search-box .search-text{ background: #eee; color: #999;text-align: left; font-size: 13x; vertical-align: top; border-radius: 3px;}
+.mui-bar .search-box .search-btn{ position: absolute; /*right: 0;*/ top: 5px; color: #c0c0c0; font-size: 24px; font-weight: bold; padding: 5px 10px;}
+.fixed-inner{background-color: #fff;border-bottom: solid 1px #DDD;height: 44px;width: 100%;padding: 0; position:fixed; top:44px; left:0; z-index:777; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+.fixed-inner a {color: #666;height: 43px;line-height: 43px;text-align: center; width:20%; display: block;float: left; font-size:14px;}
+.fixed-inner a+a{border-left: solid 1px #EEE;}
+.fixed-inner a.select {color: #E33B3D;}
+.icon_sort {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAA1ElEQVR42u2UTQrCMBCFI/UAFa+gVjxFEQ9TPE8RcoB6C/EE/uzFtfizEHd1o28kA4O0NZNuDXzdfY+SmTxjao61dgrO4ARSozkQJuABXo47SHzlPjgKmTmA+JfcBesKmVmBqE7ugEWDzOR18txDZrLvgBl4KgJKmhLLI3BTyMwVDClgHyAzWwpYKn+fIacw//MZY9HqEvHZtBjjjgIGbim08oVcWR5l0CqLu8iCH5MIyYOeswiIXGnoC0WExK6+qiqt57sbiStSWapj7YKlrtIba/0NqA5XS9NeO6AAAAAASUVORK5CYII=);width: 8px;height: 12px;display: inline-block;background-size: 8px 12px;-webkit-background-size: 8px 12px;overflow: hidden;margin-left: 3px; vertical-align:-2px;}
+.icon_sort_single {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAkElEQ…xkb8zHFph4NRKTkEYNoIIBT/AY8IQYAzyA+DkWzSAxD3T1AGfIcMiAc+6HAAAAAElFTkSuQmCC);width: 8px;height: 9px;display: inline-block;background-size: 8px 9px;-webkit-background-size: 8px 9px;overflow: hidden;margin-left: 3px;}
+.state_switch .icon_sort_single {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAlElEQVR42mNgQANpaWn2QHwSiP+jYZCYPQMhAFT0HItmGH5OjAH/8eFRA2hhAFBwPhB/I6QRCwbpmQ8y4AwZmuGJC2SAChC/IkMzSI8KzBtOQPyTBM0gtU7oYZFGggFpuGJgMhGaJ+OLQmYg3oVHM0iOmVA64Afi21g0g8T4GYgB0Jj5gKT5AzzEiQXQguUJFOMsSAD1NXDFkXt2/wAAAABJRU5ErkJggg==);}
+.icon_switch {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAABlBMVEUAAABmZmZ+SwYRAAAAAXRSTlMAQObYZgAAABxJREFUeNpj+P/H/j8DmDjAY8BMGoHQiw1QxWQAYWQttdWMsqkAAAAASUVORK5CYII=);width: 16px;height: 16px;display: inline-block;background-size: 16px 16px;-webkit-background-size: 16px 16px;overflow: hidden;vertical-align: -2px;margin: 0 5px;}
+.select .icon_sort {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAA2ElEQVR42u3UzQmDMBjG8YAL1B2EukMp1Exj97EHB7BT1AlKcQCPPQj24rXtwT4P+IKIiUnODfxANP8X/EClDOt5OGbQTU7KZyFIYYBxwuO9axxDO4sFz+224gjqlVjcuMc2oLDEojDFuUMs8mWs4e0xgHu1xAn0HrFgk3DAPSAWDQdc4RsQs6nUfylVlmUFHxg9sak44BEQi4YDEngFxD1buQ0Nb4+Ye/XyWZw9BuSmB3pxiAvbG4mgtsS8Fm291hjalZjnYtdvI4VhFvM49f3AMugmxt/6DwgMIppbpINyAAAAAElFTkSuQmCC);}
+.state_switch .icon_sort {transform: rotate(180deg);-webkit-transform: rotate(180deg);}
+.select.state_switch .icon_sort_single {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAlUlEQVR42mNgQAOPrW3tgfgkEP9HwyAxewZCAKjoORbNMPycGAP+48OjBtDCAKDgfCD+RkgjFgzSMx9kwBkyNMMTF8gAFSB+RYZmkB4VmDecgPgnCZpBap3QwyKNBAPScMXAZCI0T8YXhcxAvAuPZpAcM6F0wA/Et7FoBonxMxADoDHzAUnzB3iIEwugBcsTKMZZkAAAZgCM9be+9J4AAAAASUVORK5CYII=);}
+.state_switch .icon_switch {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAABlBMVEUAAABmZmZ+SwYRAAAAAXRSTlMAQObYZgAAACFJREFUeNpj+P+HgYEBTBzgARP2/2EEQgyHLEIvNkAVkwEkzym53pX1XwAAAABJRU5ErkJggg==);}
+.switch  i{ vertical-align:middle;}
+.mui-table-view.crossrange{padding: 0;}
+.mui-table-view.crossrange li.mui-table-view-cell{ margin: 0; padding: 0; height: 120px; width: 100%;border-bottom: solid 1px #f3f3f3; }
+.crossrange .vshop-product-box{border-radius: 0;}
+.mui-table-view.crossrange .mui-table-view-cell .mui-media-body{ padding-left: 120px; margin-top: 15px;}
+.crossrange p{ padding-left: 120px; border: 0;}
+.crossrange li{ width:100%; margin:0; border:0;padding: 15px 0;}
+.crossrange li .p-img{width:100px; height:100px !important; position: absolute;left: 10px; top:10px}
+.crossrange li img{ max-width:100%; max-height:100%;}
+
+.screen-box{ position: fixed; background-color: #eeeff3; height: 100%; width: 86%; overflow-y: auto;z-index: 9999;right: 0; top: 0; transform: translateX(100%);-webkit-transform: translateX(100%); transition: all .3s; -webkit-transition: all .3s;}
+.screen-box.active{transform: translateX(0);-webkit-transform: translateX(0); box-shadow: 0 0 3px rgba(0,0,0,0.5);}
+.screen-box .mui-radio input[type=radio]{ right: 6px;}
+.screen-box .mui-collapse a em{ color: #E3393C;}
+.screen-head{ padding: 0 10px; background-color: #fff; line-height: 44px; height: 44px; position: relative;}
+.screen-head h1{ text-align: center; font-size: 17px; line-height: 44px; margin: 0;}
+.screen-head a{ position: absolute; right: 15px; top: 0;}
+.screen-head a:first-child{ left: 15px; right: auto;}
+.collapse-line{ height: 10px; background-color: #eeeff3;}
+.screen-bot{ text-align: center; padding: 15px;}
+.screen-bot button{ width: 100%; padding: 8px 0;}
+
+.empty-show{ position: fixed; top: 50%; left: 0; width: 100%; padding: 0 20px; text-align: center; transform: translateY(-50%); -webkit-transform:translateY(-50%) ; color: #a2a2a2; font-size: 14px;}
+.empty-show button{ padding: 10px 30px; margin-top: 15px;}
+
+::-webkit-input-placeholder {
+    color:#c0c0c0 !important;
+}
+

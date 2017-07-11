@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <style type="text/css">
+    	.mui-pull-left, .mui-pull-right{
+    		color: gray;
+    	}
+		.mui-table-view {
+			margin-top: 20px;
+		}
+		.mui-table-view span.mui-pull-right {
+			color: #999;
+		}
+		.head {
+			height: 40px;
+		}
+		#head {
+			line-height: 40px;
+		}
+		.head-img {
+			width: 40px;
+			height: 40px;
+		}
+		#head-img {
+			position: absolute;
+			bottom: 10px;
+			right: 40px;
+			width: 40px;
+			height: 40px;
+		}
+		.view-more-text{ 
+			position: absolute; 
+			color: #999;
+			right:30px;
+		}
+		.tap{}
+		#topPopover {
+			position: fixed;
+			top: 16px;
+			right: 6px;
+		}
+		#topPopover .mui-popover-arrow {
+			left: auto;
+			right: 6px;
+		}
+		p {
+			text-indent: 22px;
+		}
+		.mui-popover {
+			height: 160px;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <a id="menu" class="mui-action-menu mui-icon mui-icon-bars mui-pull-right" href="#topPopover"></a>
+	    <h1 class="mui-title" style="color: white;">账号与安全</h1>
+	</header>
+	<div  class="mui-content" >
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell">
+				<a id="head" class="mui-navigate-right">头像
+					<span class="mui-pull-right head">
+						<img class="head-img mui-action-preview" id="head-img" src="../img/logo.png"/>
+					</span>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a >用户名<span class="mui-pull-right" id="loginname"></span></a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a >手机号<span class="mui-pull-right" id="phone"></span></a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right tap" href="../Mine/binding-phone.html">
+					<span class="view-more-text" id="userphone"></span>绑定手机号
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right tap" href="../Mine/binding-yigou.html">
+					<span class="view-more-text" id="yigouname"></span>绑定直供账号
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a id="bind" class="mui-navigate-right" href="../Mine/binding-phone.html">
+					<span class="view-more-text" id="dlnumber"></span>绑定代理商编码
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!--右上角弹出菜单-->
+	<div id="topPopover" class="mui-popover">
+		<div class="mui-popover-arrow"></div>
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell"><a class="tap" href="../Mine/unbinding-phone.html">解绑手机号</a>
+					</li>
+					<li class="mui-table-view-cell"><a class="tap" href="../Mine/unbinding-yigou.html">解绑直供账号</a>
+					</li>
+					<li class="mui-table-view-cell"><a id="delete-salenum" href="#">解绑代理商编码</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script src="../js/ajax.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+      	mui.init({
+			swipeBack: true //启用右滑关闭功能
+		});
+		mui('.mui-scroll-wrapper').scroll();
+		mui('body').on('shown', '.mui-popover', function(e) {
+			//console.log('shown', e.detail.id);//detail为当前popover元素
+		});
+		mui('body').on('hidden', '.mui-popover', function(e) {
+			//console.log('hidden', e.detail.id);//detail为当前popover元素
+		});
+      	var userwebview; //当前webview
+      	var photosrc; //前一个页面传递过来的图片路径
+      	var mineWebView; //'我的'页面webview
+      	mui.plusReady(function(){
+      		userwebview = plus.webview.currentWebview();
+      		mineWebView = plus.webview.getWebviewById('baritemHtml/Mine.html');
+      		photosrc = userwebview.photosrc;
+      		
+      		//获取缓存中的appuserid查询用户信息
+      		if(localStorage.getItem('$users')){
+      			ajax_login({
+      				appuserid:JSON.parse(localStorage.getItem('$users')).appuserid
+      			},function(data){
+      				document.getElementById("loginname").innerText =data.login_name||'';
+      				document.getElementById("phone").innerText = data.phone||'';
+      				document.getElementById("userphone").innerText = data.userphone||'';
+      				document.getElementById("yigouname").innerText = data.username||'';
+      				document.getElementById("dlnumber").innerText = data.busscode||'';
+      			});
+      		}
+      		//监听点击事件
+      		mui('.mui-table-view').on('tap','.tap',function(){
+      			var id = this.getAttribute('href');
+				var href = this.href;
+				mui.openWindow({
+					url:href,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+      		});
+      		
+      		//监听自定义事件（绑定手机号码）
+      		window.addEventListener('showBindPhone',function(e){
+      			document.getElementById("userphone").innerText = e.detail.userphone;
+			},false);
+			
+			//监听自定义事件（解绑手机号码）
+      		window.addEventListener('showUnBindPhone',function(e){
+      			userwebview.reload();
+			},false);
+			
+			//监听自定义事件（绑定直供账号）
+      		window.addEventListener('showBindYigou',function(e){
+      			document.getElementById("yigouname").innerText = e.detail.yigouname;
+			},false);
+			
+			document.getElementById("delete-salenum").addEventListener('tap',function(){
+				var isalive = document.getElementById("dlnumber").innerText;
+				if(!isalive){
+					mui.toast('未绑定代理商编码');
+					return;
+				}
+				ajax_delete_salenum({
+					appuserid : JSON.parse(localStorage.getItem('$users')).appuserid
+					},function(data){
+						if(data.code=='000000')
+							document.getElementById("dlnumber").innerText='';
+						else
+						 mui.toast(data.msg);
+						userwebview.reload();
+					});
+			},false)
+			
+			document.getElementById("bind").addEventListener('tap',function(){
+			   var loginname =localStorage.getItem('$account');
+					var btnArray = ['取消', '确定'];
+					mui.prompt('', '请输入销售员编码', '销售宝', btnArray, function(e) {
+						var salenum = e.value||'';
+						if (e.index == 1) {
+							if(!salenum){
+								mui.toast('请输入销售员编码');
+								return;
+							}
+							ajax_bind_sale({
+									appuserid : JSON.parse(localStorage.getItem('$users')).appuserid,
+									salenum: salenum
+							},function(data) {
+								if ('000000' == data.code) {
+									document.getElementById("dlnumber").innerText = data.dlnumber;
+								}else{
+									mui.toast(data.msg);
+									
+								}
+							});
+						}
+					},'div');     
+			})
+      	});
+      	
+      	
+
+		var server =httpUrl+"UploadServlet";
+		var files=[];
+		// 上传文件
+		function upload(){
+			if(files.length<=0){
+				plus.nativeUI.alert("没有添加上传图片！");
+				return;
+			}
+			var wt=plus.nativeUI.showWaiting();
+			var task=plus.uploader.createUpload(server,
+				{method:"POST"},
+				function(t,status){ //上传完成
+					if(status==200){
+						wt.close();
+						plus.nativeUI.toast('上传成功');
+					}else{
+						plus.nativeUI.toast('上传失败');
+						wt.close();
+					}
+				}
+			);
+			
+			for(var i=0;i<files.length;i++){
+				var f=files[i];
+				task.addFile(f.path,{key:f.name});
+			}
+			task.start();
+			files =[];
+		}      	
+      	
+      	setTimeout(function () {
+			defaultImg();
+			setTimeout(function() {
+				initImgPreview();
+			}, 300);
+		},500);
+      	
+  		//更换头像
+		mui(".mui-table-view-cell").on("tap", "#head", function(e) {
+			if(mui.os.plus){
+				var a = [{
+					title: "拍照"
+				}, {
+					title: "从手机相册选择"
+				}];
+				plus.nativeUI.actionSheet({
+					title: "修改头像",
+					cancel: "取消",
+					buttons: a
+				}, function(b) {
+					switch (b.index) {
+						case 0:
+							break;
+						case 1:
+							getImage();
+							break;
+						case 2:
+							galleryImg();
+							break;
+						default:
+							break
+					}
+				})	
+			}
+			
+		});
+
+		function getImage() {
+			var c = plus.camera.getCamera();
+			c.captureImage(function(e) {
+				plus.io.resolveLocalFileSystemURL(e, function(entry) {
+					var s = entry.toLocalURL() + "?version=" + new Date().getTime();
+					document.getElementById("head-img").src = s;
+					files.push({name:JSON.parse(localStorage.getItem('$users')).appuserid,path:s});
+					upload();
+					//变更大图预览的src
+					//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+					document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();;;
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(s) {
+				console.log("error" + s);
+			}, {
+				filename: "_doc/head.jpg"
+			})
+		};
+		
+		function galleryImg() {
+			plus.gallery.pick(function(a) {
+				plus.io.resolveLocalFileSystemURL(a, function(entry) {
+					plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
+						root.getFile("head.jpg", {}, function(file) {
+							//文件已存在
+							file.remove(function() {
+								console.log("file remove success");
+								entry.copyTo(root, 'head.jpg', function(e) {
+										var e = e.fullPath + "?version=" + new Date().getTime();
+										document.getElementById("head-img").src = e;
+										files.push({name:JSON.parse(localStorage.getItem('$users')).appuserid,path:e});
+										upload();
+										//变更大图预览的src
+										//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+										document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" + new Date().getTime();;
+									},
+									function(e) {
+										console.log('copy image fail:' + e.message);
+									});
+							}, function() {
+								console.log("delete image fail:" + e.message);
+							});
+						}, function() {
+							//文件不存在
+							entry.copyTo(root, 'head.jpg', function(e) {
+									var path = e.fullPath + "?version=" + new Date().getTime();
+									document.getElementById("head-img").src = path;	
+									files.push({name:JSON.parse(localStorage.getItem('$users')).appuserid,path:path});
+									upload();
+									//变更大图预览的src
+									//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+									document.querySelector("#__mui-imageview__group .mui-slider-item img").src = path;
+								},
+								function(e) {
+									console.log('copy image fail:' + e.message);
+								});
+						});
+					}, function(e) {
+						console.log("get _www folder fail");
+					})
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(a) {}, {
+				filter: "image"
+			})
+		};
+  	
+	  	function defaultImg() {
+			document.getElementById("head-img").src = photosrc;
+		}
+	  	
+		document.getElementById("head-img").addEventListener('tap', function(e) {
+			e.stopPropagation();
+		});
+			
+		function initImgPreview() {
+			var imgs = document.querySelectorAll("img.mui-action-preview");
+			imgs = mui.slice.call(imgs);
+			if (imgs && imgs.length > 0) {
+				var slider = document.createElement("div");
+				slider.setAttribute("id", "__mui-imageview__");
+				slider.classList.add("mui-slider");
+				slider.classList.add("mui-fullscreen");
+				slider.style.display = "none";
+				slider.addEventListener("tap", function() {
+					slider.style.display = "none";
+				});
+				slider.addEventListener("touchmove", function(event) {
+					event.preventDefault();
+				})
+				var slider_group = document.createElement("div");
+				slider_group.setAttribute("id", "__mui-imageview__group");
+				slider_group.classList.add("mui-slider-group");
+				imgs.forEach(function(value, index, array) {
+					//给图片添加点击事件，触发预览显示；
+					value.addEventListener('tap', function() {
+						slider.style.display = "block";
+						_slider.refresh();
+						_slider.gotoItem(index, 0);
+					})
+					var item = document.createElement("div");
+					item.classList.add("mui-slider-item");
+					var a = document.createElement("a");
+					var img = document.createElement("img");
+					img.setAttribute("src", value.src);
+					a.appendChild(img)
+					item.appendChild(a);
+					slider_group.appendChild(item);
+				});
+				slider.appendChild(slider_group);
+				document.body.appendChild(slider);
+				var _slider = mui(slider).slider();
+			}
+		}
+		
+	//点击返回
+	 mui.back=function(){
+	 	if(document.getElementById("head-img").src != photosrc)
+    		mui.fire(mineWebView,'refreshphoto',{photosrc:document.getElementById("head-img").src});
+    	userwebview.close();
+	 };
+	</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    
+    <style type="text/css">
+    		.mui-input-row label {
+    			width: 20%;
+    		}
+    		.mui-input-row label~input {
+    			width: 80%;
+    		}
+    		.mui-pull-left{
+    			color: gray;
+    		}
+    </style>
+</head>
+<body>
+	
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title" style="color: white;">修改密码</h1>
+	</header>
+	
+	<div class="mui-content">
+		<div class="mui-card" style="margin-top: 30px;">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label><span class="mui-icon iconfont icon-mimaxiugai"></span></label>
+					<input type="password" class="mui-input-clear" placeholder="新密码" />
+				</div>
+				<div class="mui-input-row">
+					<label><span class="mui-icon iconfont icon-queren"></span></label>
+					<input type="password" class="mui-input-clear" placeholder="确认新密码" />
+				</div>
+			</form>
+		</div>
+		<div class="mui-button-row" style="margin: 10px 15px;">
+			<button type="button" class="mui-btn mui-btn-link own-btn-green mui-btn-block" style="padding: 5px 0px;">修改密码</button>
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+		
+		var inputList;
+		var changepwdWebview;
+		var userphone;
+		var pwebview;
+		mui.plusReady(function(){
+			//选出所有input
+			inputList = document.querySelectorAll('input[type="password"]');
+			changepwdWebview = plus.webview.currentWebview();
+			appuserid = changepwdWebview.appuserid;
+			pwebview = plus.webview.getWebviewById('remenberpsd');
+			document.querySelector('button[type="button"]').addEventListener('tap',function(){
+				for (var i = 0;i < inputList.length; i++) {
+					if (inputList[i].value.length <= 0) {
+						if (i == 0) {
+							alertMSG = '请输入新密码';
+						} else if(i == 1){
+							alertMSG = '两次输入密码必须一致';
+						}
+						mui.toast(alertMSG);
+						return;
+					}
+				}
+				if (inputList[0].value != inputList[1].value) {
+					mui.toast('两次输入密码必须一致');
+					return;
+				}
+				
+				//开始执行修改密码联网
+				ajax_login_change_pwd({
+					confirm_pwd:inputList[1].value, //确认新密码
+					new_pwd:inputList[0].value, //新密码
+					appuserid: appuserid||''//id
+				});
+				
+			},false);
+		});
+		
+		//密码修改返回函数
+		function changePwdSuccess(data){
+			if (data.code == '000000') {
+				mui.toast('修改成功');
+				setTimeout(function(){
+					plus.runtime.restart();
+				},500);
+			}
+		}
+		
+		//点击返回
+		var old_back = mui.back;
+		 mui.back=function(){
+		 	pwebview.close();
+           old_back();
+        };
+	</script>
+	
+</body>
+</html>

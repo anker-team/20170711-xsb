@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+		.mui-page .mui-table-view:first-child {
+			margin-top: 15px;
+		}
+		.mui-page .mui-table-view:last-child {
+			margin-bottom: 30px;
+		}
+		/*.mui-table-view {
+			margin-top: 10px;
+		}*/
+		.table-view-combine:after {
+			height: 0;
+		}
+		.mui-table-view span.mui-pull-right {
+			color: #999;
+		}
+		.mui-grid-view.mui-grid-9{ background-color: #fff; margin: 0;}
+		.mui-grid-view.mui-grid-9:after{ position: absolute; display: block;}
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell{padding: 0; border: 0;}
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell .mui-badge,.mui-table-view-chevron .mui-badge{ display: none;}
+		.mui-grid-view.mui-grid-9 .mui-media .mui-icon{font-size:24px; color: #666;-webkit-text-stroke-width: 0.3px;}
+		.mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-body{ font-size: 12px;}
+		.mui-table-view .iconfont{ font-size: 20px;-webkit-text-stroke-width: 0.3px;}
+		.table-view-iconlist .iconfont{margin-right: 5px;}
+		.view-more-text{ position: absolute; font-size: 12px; color: #999;right:30px;}
+		.headImg {
+			padding: 8% 0px 13% 0px;
+			/*background: url(../img/bg.jpeg);*/
+			background: url(../img/me_back.jpg);
+			background-position: center center; 
+			background-size: 100% auto;
+		}
+		
+		.touxiang {
+			text-align: center;
+		}
+		
+		.touxiang div {
+			width: 4em;
+			height: 4em;
+			padding: 0px;
+			border-radius: 50%;
+			border: 2px solid white;
+			color: gray;
+			margin: 0px auto;
+			margin-bottom: 5px;
+		}
+		
+    </style>
+</head>
+<body>
+	<div class="mui-content">
+		<div class="headImg">
+			<!--<span id="touxiang" class="mui-btn mui-btn-link mui-icon iconfont icon-zhanghao"></span>-->
+			<div class="touxiang">
+				<div > 
+					<a id="trueimg" href="../Mine/usercenter.html"><img id="head-img" src="../img/logo.png" style="width: 100%; height: 100%; border-radius: 50%;" /></a>
+				</div>
+				<span id="touxiangword"></span>
+				
+			</div>
+			<a  id="help" href="../help.html"><span style="float: right;color: white;margin-right: 20px;">使用帮助</span></a>
+		</div>
+		<ul class="mui-table-view mui-table-view-chevron table-view-combine">
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../Mine/my-dingdan.html" id="1">
+					<span class="view-more-text">查看全部订单</span>我的订单
+				</a>
+			</li>
+		</ul>	
+		<ul class="mui-table-view mui-grid-view mui-grid-9">
+			<li class="mui-table-view-cell mui-media mui-col-xs-3" onclick="showOrderList(1)">
+				<a href="../Mine/my-dingdan.html" id="2">
+					<span class="mui-icon iconfont icon-wodedingdan"><span class="mui-badge" id="WaitingForPay"></span></span>
+					<div class="mui-media-body">待付款</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-3" onclick="showOrderList(2)">
+				<a href="../Mine/my-dingdan.html" id="3">
+					<span class="mui-icon iconfont icon-dizhi"></span>
+					<div class="mui-media-body">待发货</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-3" onclick="showOrderList(3)">
+				<a href="../Mine/my-dingdan.html" id="4">
+					<span class="mui-icon iconfont icon-jiumima"><span class="mui-badge" id="WaitingForRecieve"></span></span>
+					<div class="mui-media-body">待收货</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-3" onclick="showOrderList(5)">
+				<a href="../Mine/my-dingdan.html" id="5">
+					<span class="mui-icon iconfont icon-xiaolian"><span class="mui-badge" id="WaitingForComments"></span></span>
+					<div class="mui-media-body">已签收</div>
+				</a>
+			</li>
+		</ul>
+		<ul class="mui-table-view" style="margin-top: 10px;" >
+			<li class="mui-table-view-cell" id="yongjin">
+				<a class="mui-navigate-right" href="../commission/com-index.html">
+					<span class="mui-icon iconfont icon-wodedingdan"></span>
+					我的佣金
+				</a>
+			</li>
+			<li class="mui-table-view-cell" id="cm">
+				<a id="bar" class="mui-navigate-right" href="../barCodeHtml/barcode.html">
+					<span class="mui-icon mui-icon-email"></span>
+					串码查询
+				</a>
+			</li>
+			<li class="mui-table-view-cell" id="lh-li">
+				<a id="lianghao" class="mui-navigate-right" href="../goodPhoneNum/goodPhoneNum-list.html">
+					<span class="mui-icon mui-icon-chatbubble"></span>
+					<span class="view-more-text">先到先得，送完为止</span>靓号兑换
+				</a>
+			</li>
+			<li class="mui-table-view-cell" id="network" style="display: none;">
+				<a id="ywks" class="mui-navigate-right" href="../network/network-list.html">
+					<span class="mui-icon mui-icon-location"></span>
+					地包商
+				</a>
+			</li>
+			<li class="mui-table-view-cell" id="money" style="display: none;">
+				<a id="nm" class="mui-navigate-right" href="../network/network-user-pay.html">
+					<span class="mui-icon mui-icon-star"></span>
+					异网客商奖励
+				</a>
+			</li>
+			<li class="mui-table-view-cell" id="zghd" >
+				<a id="nm" class="mui-navigate-right" href="../zghd/zghd-index.html">
+					<span class="mui-icon mui-icon-star"></span>
+					店员奖励
+				</a>
+			</li>
+			<!--<li class="mui-table-view-cell" id="zy100" >
+				<a id="nm" class="mui-navigate-right" href="../zghd/zghd-index.html">
+					<span class="mui-icon mui-icon-star"></span>
+					卓越100奖励
+				</a>
+			</li>-->
+			
+		</ul>
+		<ul class="mui-table-view" style="margin-top: 20px;">
+			<li class="mui-table-view-cell" id="address">
+				<a id="changeaddress" class="mui-navigate-right" href="../Mine/change-address.html">
+					<span class="mui-icon iconfont icon-dizhi"></span>
+					地址管理
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../Mine/changepsd.html">
+					<span class="mui-icon mui-icon-locked"></span>
+					修改密码
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a href="../lock.html" class="mui-navigate-right">
+					<span class="mui-icon mui-icon-settings"></span>
+					设置锁屏图案
+				</a>
+			</li>
+		</ul>
+		<ul id="logoutBtn" class="mui-table-view" style="margin-top: 20px;margin-bottom: 20px;">
+			<li class="mui-table-view-cell" style="text-align: center;">
+				<span style="color: indianred;">退出登录</span>
+			</li>
+		</ul>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		
+		var currentwebview;
+		var aniShow;
+		var parentWebView;
+		var logoutBtn;
+		var trueimg;
+		var touxiangword;
+		mui.plusReady(function(){
+			currentwebview = plus.webview.currentWebview();
+			parentWebView = plus.webview.currentWebview().parent();
+			aniShow = getaniShow();
+			logoutBtn = document.getElementById('logoutBtn');
+			trueimg = document.getElementById('trueimg');
+			touxiangword = document.getElementById('touxiangword');
+			//查询用户相关信息
+			currentwebview.addEventListener('show',function(){
+				var user = JSON.parse(localStorage.getItem('$users'));
+				//根据用户的权限，是否显示 '地址管理'，'靓号管理'
+				if(!user.id){//未绑定直供账号 
+					document.getElementById("address").style.display='none';
+					document.getElementById("lh-li").style.display='none';
+					document.getElementById("zghd").style.display='none';
+//					document.getElementById("zy100").style.display='none';
+					//只有领导用户有权限查询串码
+					if(!user.usertype || user.usertype == '3')
+						document.getElementById("cm").style.display='none';
+				}else{
+					document.getElementById("bar").href ='../barCodeHtml/barCode-order.html';
+					
+				}
+				//根据用户的权限，是否显示 '我的佣金'
+				if(!user.usertype){
+					document.getElementById("yongjin").style.display='none';
+				}
+				if(user.usertype == 4){
+					document.getElementById("yongjin").style.display='none';
+					document.getElementById("cm").style.display='none';
+					document.getElementById("zghd").style.display='none';
+//					document.getElementById("zy100").style.display='none';
+					document.getElementById("money").style.display='block';
+				}
+				
+				if(user.dbs == 1){
+					document.getElementById("network").style.display='block';
+				}
+				touxiangword.innerText = user ?user.name :'';
+				touxiangword.style.color = 'white';
+				if(document.getElementById("head-img").getAttribute('src') == '../img/logo.png'){
+					ajax_get_photo({appuserid:user.appuserid},
+					function(data){
+						if(data.code == '000000'){
+							document.getElementById("head-img").src = data.photo;
+						}						
+					});
+				}
+			},false);
+			
+			//监听自定义事件
+      		window.addEventListener('refreshphoto',function(e){
+      			document.getElementById("head-img").src = e.detail.photosrc;
+			},false);
+			
+			mui('.mui-table-view').on('tap','a',function(){
+				var id = this.getAttribute('href');
+				var href = this.href;
+				var isBars = false;
+				var barsIcon = '';
+				var type = this.id;
+				var title = this.innerText;
+
+				//点击锁屏图案的时候，提示需要输入密码进行验证
+				if('../lock.html' == id){
+					var loginname =localStorage.getItem('$account');
+					var str = '用户名:'+loginname;
+					var btnArray = ['取消', '确定'];
+					mui.prompt(str, '请输入密码', '', btnArray, function(e) {
+						if (e.index == 1) {
+							ajax_login({
+									username: loginname,
+									password: e.value
+								},function(data) {
+								//确认成功，进入设置锁屏图案界面
+								if ('000000' == data.code) {
+									mui.fire(parentWebView,'newWebView',{
+										id:id,
+										href:href,
+										aniShow:aniShow,
+										title:title,
+										isBars:isBars,
+										barsIcon:barsIcon,
+										type:type
+									});
+								}else{
+									mui.toast('密码错误');
+									
+								}
+							});
+						}
+					},'div');
+					//修改弹出框默认input类型为password
+  					document.querySelector('.mui-popup-input input').type='password' 
+					return;
+				}
+				
+				if(type=='1')
+					title ='全部订单';
+				//检测已经存在sessionkey否者运行下面的登陆代码
+				if (!localStorage.getItem('user')) {
+				}else {
+					href = "Mine/login.html";
+					id = "Mine/login.html";
+					aniShow = 'slide-in-bottom';
+					title = '登录';
+				}
+				
+				if (this.id == 'changeaddress') {
+					isBars = true;
+					barsIcon = 'mui-icon iconfont icon-tianjia';
+				}
+				
+				mui.fire(parentWebView,'newWebView',{
+					id:id,
+					href:href,
+					aniShow:aniShow,
+					title:title,
+					isBars:isBars,
+					barsIcon:barsIcon,
+					type:type
+				});
+			});
+			
+			//点击头像登录
+			document.getElementById("help").addEventListener('tap',function(){
+				var url = this.href;
+				var id = this.getAttribute("href");
+				mui.openWindow({
+					url:url,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			//点击头像登录
+			mui('.headImg').on('tap','a',function(){
+				var id = this.getAttribute('href');
+				var href = this.href;
+				var photosrc =document.getElementById("head-img").src;
+				mui.openWindow({
+					url:href,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						photosrc : photosrc
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			//点击等出
+			logoutBtn.addEventListener('tap',function(){
+				var btnArray = ['否', '是'];
+				mui.confirm('确认退出？', '销售宝', btnArray, function(e) {
+					if(e.index == 1) {
+						localStorage.removeItem('$users');
+						localStorage.removeItem('$account');
+						plus.runtime.restart(); //重启动当前应用
+					}
+				},'div');
+			},false);
+		});
+	</script>
+</body>
+</html>

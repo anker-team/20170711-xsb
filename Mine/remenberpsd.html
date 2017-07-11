@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>销售宝</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/own.css" rel="stylesheet" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-left-nav-color"></a>
+			<h1 class="mui-title own-left-nav-color">忘记密码</h1>
+			<a class="mui-icon iconfont icon-iconfont53 mui-pull-right own-left-nav-color"></a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" style="margin-top: 20px;">
+				<div class="mui-input-row">
+					<input class="mui-input" style="width: 65%;" type="text" id="username" placeholder="请输入用户名">
+					<button class="mui-btn mui-btn-primary own-btn-green " style="padding: 6px;float: none;width: 30%;vertical-align: middle;" onclick="settime(this)">获取验证码</button>
+				</div>
+				<div class="mui-input-row">
+					<input class="mui-input-clear mui-input" type="text" id="verifyCode" placeholder="请输入短信验证码">
+				</div>
+			</form>
+			<div class="mui-button-row" style="margin: 10px 15px;">
+			<button id="loginBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">确认</button>
+		</div>
+		</div>
+	</body>
+	<!--MUI-->
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/ajax.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		mui.init({
+			swipeBack:true
+		});
+		mui.plusReady(function(){
+			document.getElementById("loginBtn").addEventListener('tap',function(){
+				if(document.getElementById("username").value==''){
+					mui.toast('请输入用户名');
+					return;
+				}
+				if(document.getElementById("verifyCode").value==''){
+					mui.toast('请输入短信验证码');
+					return;
+				}
+				ajax_forget_phone({
+					username : document.getElementById("username").value,
+					captcha : document.getElementById("verifyCode").value
+				},function(data) {
+						if ('000000' == data.code) {
+							mui.openWindow({
+								url:'../Mine/changepsd-login.html',
+								id:'../Mine/changepsd-login.html',
+								styles:{
+									popGesture:'close'
+								},
+								extras:{
+									appuserid : data.appuserid
+								},
+								show:{
+									aniShow:'pop-in'
+								},
+								waiting:{
+									autoShow:false
+								}
+							});
+						}else{
+							mui.toast(data.msg);
+						}
+				});
+			},false);
+		});
+		
+		var countdown=60;
+		var flag = true;
+		function settime(_this) {
+			if(document.getElementById("username").value==''){
+				mui.toast('请输入用户名');
+				return;
+			}
+			if(flag){
+				ajax_get_login_code({
+					username : document.getElementById("username").value
+				},function(data){
+					if(data.code!='000000'){
+						mui.toast(data.msg);
+						return;
+					}
+				});
+			}
+			if (countdown == 0) {
+				_this.removeAttribute("disabled");
+				countdown = 60;
+				flag = true;
+				return;
+			} else {
+				_this.setAttribute("disabled", true); 
+				countdown--; 
+				_this.innerText="重新发送(" + countdown + ")"; 
+				if(countdown == 0)
+					_this.innerText="重新发送"; 
+				flag = false;
+			}
+			
+			setTimeout(function() { 
+				settime(_this) 
+			},1000)
+		}
+	</script>
+</html>

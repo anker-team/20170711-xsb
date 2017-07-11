@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+			.mui-table-view .mui-media-object {
+			line-height: 75px;
+			max-width: 75px;
+			height: 75px;
+		}
+		.itemName {
+			color: black;
+			font-size: 0.9em;
+		}
+		
+		.price {
+			margin-top: 10px;
+			font-size: 1em;
+		}
+		
+		.curprice {
+			color: #ef5028
+		}
+		.preprice {
+			color: black;
+			text-decoration:line-through
+		}
+		.mui-pull-left {
+    			color: gray;
+		}
+		h5 {
+			color: black
+		}
+		
+		.name {
+			float: left;
+		}
+		.number {
+			float: right;
+		}
+		
+		.address {
+			padding-top: 2px;
+			clear: both;
+		}
+		
+		.li_3{
+			padding: 5px 15px;
+		}
+		
+		.button {
+			float: right;
+		}
+		
+		.money{
+			float: left;
+		}
+		.status{
+			float: right;
+			color: red;
+			font-weight: 500;
+		}
+		
+		.appName{
+			float: left;
+			font-size: 16px;
+		}
+		
+		.list-padding{
+			margin-bottom: 15px;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;" id="title">提现</h1>
+	</header>
+	<div class="mui-content">
+		<ul id="xs" data-id="0" class="mui-table-view list-padding" style="display: none;">
+				<li class="mui-table-view-cell">
+					<h5 class="appName">累计奖励</h5>
+					<h5 class="status">0</h5>
+				</li>
+				<li class="mui-table-view-cell">
+					<h5 class="appName">已提现</h5>
+					<h5 class="status">0</h5>
+				</li>
+				<li class="mui-table-view-cell">
+					<h5 class="appName">未提现</h5>
+					<h5 class="status">0</h5>
+				</li>
+				<li class="mui-table-view-cell li_3">
+				
+					<h5 class="button" id="0">
+						<button type="button" class="mui-btn mui-btn-outlined mui-btn-danger">提现</button>
+					</h5>
+				</li>
+			</ul>
+	</div>	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/echarts.common.min.js" charset="utf-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		var currentwebview,
+			dzsList,
+			lastWebView;
+		mui.plusReady(function(){
+			currentwebview = plus.webview.currentWebview();
+			lastWebView = plus.webview.getWebviewById('../zghd/zghd-index.html');
+			dzsList =  document.querySelector(".mui-content");
+			var user = JSON.parse(localStorage.getItem('$users'));
+			ajax_get_zghd_pay_list(
+				{
+					appuserid:user.appuserid,
+					userid:user.buyerId
+				},function(data){
+					if(data.success == "true"){
+						if(data.rewardlist==""){
+							document.getElementById("xs").style.display="block";
+						}else{
+							mui.each(data.rewardlist,function(index,item){
+								var html = '';
+								var listItem = document.createElement('ul');
+								listItem.className = 'mui-table-view list-padding';
+								listItem.id = item.id;
+								var ytx = item.allmount-item.curamount;
+								html = '<li class="mui-table-view-cell">\
+											<h5 class="appName">垫资商</h5>\
+											<h5 class="status">'+item.cushionName+'</h5>\
+										</li>\
+										<li class="mui-table-view-cell">\
+											<h5 class="appName">累计奖励</h5>\
+											<h5 class="status">'+item.allmount+'</h5>\
+										</li>\
+										<li class="mui-table-view-cell">\
+											<h5 class="appName">已提现</h5>\
+											<h5 class="status">'+ytx+'</h5>\
+										</li>\
+										<li class="mui-table-view-cell">\
+											<h5 class="appName">未提现</h5>\
+											<h5 class="status">'+item.curamount+'</h5>\
+										</li>\
+										<li class="mui-table-view-cell li_3">\
+											<h5 class="button" id="'+item.curamount+'" data-id="'+item.id+'" >\
+												<button type="button" class="mui-btn mui-btn-outlined mui-btn-danger">提现</button>\
+											</h5>\
+										</li>';
+								listItem.innerHTML = html ;
+								dzsList.appendChild(listItem);
+							});
+						}
+					}
+			});
+			mui('.mui-content').on('tap','.button',function(){
+				var id = this.getAttribute('data-id');
+				var amount = this.getAttribute('id');
+				mui.openWindow({
+					url:'../zghd/zghd-payment.html',
+					id:'../zghd/zghd-payment.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						rewardId:id,
+						amount:amount
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			//自定义事件，接收查询结果并刷新当前页面
+			window.addEventListener('closeOrder',function(e){
+				currentwebview.reload();
+			});	
+		});
+		//点击返回购物车
+		mui.back=function(){
+			currentwebview.close();
+        	mui.fire(lastWebView,'refreshWebView',false);
+        };
+	</script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <style type="text/css">
+		.mui-table-view .mui-media-object {
+			line-height: 75px;
+			max-width: 75px;
+			height: 75px;
+		}
+	 
+		.mui-pull-left,.mui-pull-right {
+    			color: gray;
+		}
+		h5 {
+			color: black
+		}
+		
+		.month{
+			float: right;
+			font-weight: 500;
+		}
+		
+		.appName{
+			float: left;
+			font-size: 17px;
+		}		
+		
+		.status{
+			float: right;
+			color: red;
+			font-weight: 500;
+		}
+		
+		.list-padding{
+			margin-bottom: 15px;
+		}
+		
+		img{
+			vertical-align: middle;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">佣金总览</h1>
+	</header>
+	<div class="mui-content">
+		<ul class="mui-table-view list-padding">
+			<li class="mui-table-view-cell">
+				<h5 class="appName">佣金总额</h5>
+				<h5 class="status"></h5>
+			</li>
+			<li class="mui-table-view-cell" id="chart" style="height: 220px;">
+				
+			</li>
+		</ul>
+		<ul class="mui-table-view list-padding comlist">
+			<li class="mui-table-view-cell">
+			 佣金分类明细
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_03.png"/>
+					发展佣金
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_06.png"/>
+					业务受理
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_08.png"/>
+					终端佣金
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_10.png"/>
+					话费分成
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_12.png"/>
+					充值缴费
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_14.png"/>
+					维系佣金
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_16.png"/>
+					增值发展
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_14.png"/>
+					终端激励
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_14.png"/>
+					奖惩佣金
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_14.png"/>
+					追溯佣金
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_14.png"/>
+					调账佣金
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_14.png"/>
+					渠道支撑费用
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../commission/com-order.html">
+					<img  src="../img/yjicon_14.png"/>
+					外包业务
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/echarts.common.min.js" charset="utf-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false			
+		});
+		var currentWebView;//当前页面	 
+		var serachtype;//查询类型
+		var	month; //查询月份
+		var combocode; //套餐编码
+		var areacode="N";
+		var	busscode="N";
+		var	netcode="N";
+		mui.plusReady(function(){
+			currentWebView = plus.webview.currentWebview();
+			month = currentWebView.month ||'';
+			busscode = currentWebView.busscode||'';
+			areacode = currentWebView.areacode||'';
+			netcode = currentWebView.netcode||'';
+			type = currentWebView.type||'';
+			//获取图标数据
+			var info ={
+				month :month,
+				appuserid:JSON.parse(localStorage.getItem('$users')).appuserid,
+				areacode:areacode,
+				busscode:busscode,
+				netcode:netcode
+			}
+			ajax_get_commission_classification(info,function(data){
+				console.log(JSON.stringify(info))
+				var num1 = [];
+				var num2 = [];
+				var heiht = 32*parseInt(data.comList.length);
+				if(heiht>250){
+					document.getElementById("chart").style.height = heiht+'px';
+				}
+				var barChart = echarts.init(document.getElementById('chart'));
+				//回写佣金总额
+				document.querySelector('.status').innerText = '￥'+parseFloat(data.account).toLocaleString();
+				//回写佣金分类明细列表
+				
+				mui.each(data.comList,function(index,item){
+				  	num1.push(item.name);
+				 	num2.push(item);
+				});
+				chartOption.legend.data = num1;
+				chartOption.series[0].data =num2 ;
+				barChart.setOption(chartOption);
+			});
+			//监听点击事件，查看明细页面
+			mui('.comlist').on('tap','a',function(){		
+				var url = this.href;				
+				var id = this.getAttribute('href');
+				var busstype = this.innerText;
+				mui.openWindow({
+					url:url,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						busstype:busstype, //佣金大分类
+						month:month,
+						serachtype:'0',  //按月查询
+						areacode:areacode,
+						busscode:busscode,
+						netcode:netcode,
+						type:type
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+		});
+		//图表控件
+		var	chartOption = {
+		    tooltip: {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		    },
+		    legend: {
+		        orient: 'orient',
+		        x: 'right',
+		        top:'middle',
+		       // data:['发展佣金    335','业务受理    123,345','终端佣金    0','话费分成    0','充值缴费    0','维系佣金    0','增值发展    0']
+		    	data:[]
+		    },
+		    series: [
+		        {
+		            name:'佣金明细',
+		            type:'pie',
+		            radius: ['24%', '50%'],
+		            avoidLabelOverlap: false,
+		            label: {
+		                normal: {
+		                    show: false,
+		                    position: 'center'
+		                },
+		                emphasis: {
+		                    show: false,
+		                    textStyle: {
+		                        fontSize: '16',
+		                        fontWeight: 'bold'
+		                    }
+		                }
+		            },
+		            labelLine: {
+		                normal: {
+		                    show: false
+		                }
+		            },
+		            center: ['30%', '50%'],
+//		            data:[
+//		                {value:335, name:'发展佣金    335'},
+//		                {value:310, name:'业务受理    123,345'},
+//		                {value:11, name:'终端佣金    0'},
+//		                {value:22, name:'话费分成    0'},
+//		                {value:133, name:'充值缴费    0'},
+//		                {value:133, name:'维系佣金    0'},
+//		                {value:133, name:'增值发展    0'}
+//		            ]
+					data:[]
+		        }
+		    ]
+		};
+		var barChart = echarts.init(document.getElementById('chart'));
+		
+		
+			
+	</script>
+</body>
+</html>

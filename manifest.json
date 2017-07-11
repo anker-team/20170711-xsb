@@ -1,0 +1,2064 @@
+{
+	"@platforms": ["android", "iPhone", "iPad"],
+	"id": "H501D613B",/*应用的标识，创建应用时自动生成，勿手动修改*/
+	"name": "销售宝",/*应用名称，程序桌面图标名称*/
+	"version": {
+		"name": "1.0.8",/*应用版本名称*/
+		"code": "83"
+	},
+	"description": "",/*应用描述信息*/
+	"icons": {
+		"72": "icon.png"
+	},
+	"launch_path": "login.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+	"developer": {
+		"name": "",/*开发者名称*/
+		"email": "",/*开发者邮箱地址*/
+		"url": "http://www.dcloud.io"
+	},
+	"permissions": {
+		"Accelerometer": {
+            "description": "访问加速度感应器"
+        },
+        "Audio": {
+            "description": "访问麦克风"
+        },
+        "Cache": {
+            "description": "管理应用缓存"
+        },
+        "Camera": {
+            "description": "访问摄像头"
+        },
+        "Console": {
+            "description": "跟踪调试输出日志"
+        },
+        "Contacts": {
+            "description": "访问系统联系人信息"
+        },
+        "Device": {
+            "description": "访问设备信息"
+        },
+        "Downloader": {
+            "description": "文件下载管理"
+        },
+        "Events": {
+            "description": "应用扩展事件"
+        },
+        "File": {
+            "description": "访问本地文件系统"
+        },
+        "Gallery": {
+            "description": "访问系统相册"
+        },
+        "Geolocation": {
+            "description": "访问位置信息"
+        },
+         "Invocation": {
+            "description": "使用Native.js能力"
+        },
+        "Messaging": {
+            "description": "访问通讯能力"
+        },
+        "Orientation": {
+            "description": "访问方向感应器"
+        },
+        "Proximity": {
+            "description": "访问距离感应器"
+        },
+        "Storage": {
+            "description": "管理应用本地数据"
+        },
+        
+        "Uploader": {
+            "description": "管理文件上传任务"
+        },
+        "Runtime": {
+            "description": "访问运行期环境"
+        },
+        "XMLHttpRequest": {
+            "description": "跨域网络访问"
+        },
+        "Zip": {
+            "description": "文件压缩与解压缩"
+        },
+        "Barcode": {
+            "description": "管理二维码扫描插件"
+        },
+        "Maps": {
+            "description": "管理地图插件"
+        },
+        "Speech": {
+            "description": "管理语音识别插件"
+        },
+        "Webview":{
+        	"description": "窗口管理"
+        },
+        "NativeUI":{
+        	"description": "原生UI控件"
+        },
+        "Navigator":{
+        	"description": "浏览器信息"
+        },
+        "NativeObj":{
+        	"description": "原生对象"
+        }
+	},
+	"plus": {
+		"splashscreen": {
+			"autoclose": false,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
+			"waiting": true
+		},
+		"runmode": "liberate",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
+		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
+		"distribute": {
+			"apple": {
+				"appid": "",/*iOS应用标识，苹果开发网站申请的appid，如io.dcloud.HelloH5*/
+				"mobileprovision": "",/*iOS应用打包配置文件*/
+				"password": "",/*iOS应用打包个人证书导入密码*/
+				"p12": "",/*iOS应用打包个人证书，打包配置文件关联的个人证书*/
+				"devices": "universal",/*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
+				"frameworks": []
+			},
+			"google": {
+				"packagename": "",/*Android应用包名，如io.dcloud.HelloH5*/
+				"keystore": "",/*Android应用打包使用的密钥库文件*/
+				"password": "",/*Android应用打包使用密钥库中证书的密码*/
+				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
+				"permissions": ["<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>","<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-feature android:name=\"android.hardware.camera.autofocus\"/>","<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.CAMERA\"/>","<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>","<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.SEND_SMS\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-feature android:name=\"android.hardware.camera\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>","<uses-permission android:name=\"android.permission.WRITE_SMS\"/>","<uses-permission android:name=\"android.permission.READ_SMS\"/>"]
+			},
+			"orientation": ["portrait-primary", "portrait-secondary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+			"icons": {
+				"ios": {
+					"prerendered": true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
+					"auto": "", /*应用图标，分辨率：512x512，用于自动生成各种尺寸程序图标*/
+					"iphone": {
+						"normal": "unpackage/res/icons/57x57.png",/*iPhone普通屏幕程序图标，分辨率：57x57*/
+						"retina": "unpackage/res/icons/114x114.png",/*iPhone高分屏程序图标，分辨率：114x114*/
+						"retina7": "unpackage/res/icons/120x120.png",/*iPhone iOS7高分屏程序图标，分辨率：120x120*/
+						"spotlight-normal": "unpackage/res/icons/29x29.png", /*iPhone Spotlight搜索程序图标，分辨率：29x29*/
+						"spotlight-retina": "unpackage/res/icons/58x58.png", /*iPhone高分屏Spotlight搜索程序图标，分辨率：58x58*/
+						"spotlight-retina7": "unpackage/res/icons/80x80.png",/*iPhone iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+						"settings-normal": "unpackage/res/icons/29x29.png", /*iPhone设置页面程序图标，分辨率：29x29*/
+						"settings-retina": "unpackage/res/icons/58x58.png","retina8":"unpackage/res/icons/180x180.png","settings-retina8":"unpackage/res/icons/87x87.png"
+					},
+					"ipad": {
+						"normal": "unpackage/res/icons/72x72.png", /*iPad普通屏幕程序图标，分辨率：72x72*/
+						"retina": "unpackage/res/icons/144x144.png", /*iPad高分屏程序图标，分辨率：144x144*/
+						"normal7": "unpackage/res/icons/76x76.png", /*iPad iOS7程序图标，分辨率：76x76*/
+						"retina7": "unpackage/res/icons/152x152.png", /*iPad iOS7高分屏程序图标，分辨率：152x152*/
+						"spotlight-normal": "unpackage/res/icons/50x50.png", /*iPad Spotlight搜索程序图标，分辨率：50x50*/
+						"spotlight-retina": "unpackage/res/icons/100x100.png", /*iPad高分屏Spotlight搜索程序图标，分辨率：100x100*/
+						"spotlight-normal7": "unpackage/res/icons/40x40.png",/*iPad iOS7 Spotlight搜索程序图标，分辨率：40x40*/
+						"spotlight-retina7": "unpackage/res/icons/80x80.png",/*iPad iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+						"settings-normal": "unpackage/res/icons/29x29.png",/*iPad设置页面程序图标，分辨率：29x29*/
+						"settings-retina": "unpackage/res/icons/58x58.png"
+					}
+				},
+				"android": {
+					"mdpi": "unpackage/res/icons/48x48.png", /*普通屏程序图标，分辨率：48x48*/
+					"ldpi": "unpackage/res/icons/48x48.png", /*大屏程序图标，分辨率：48x48*/
+					"hdpi": "unpackage/res/icons/72x72.png", /*高分屏程序图标，分辨率：72x72*/
+					"xhdpi": "unpackage/res/icons/96x96.png",/*720P高分屏程序图标，分辨率：96x96*/
+					"xxhdpi": "unpackage/res/icons/144x144.png"
+				}
+			},
+			"splashscreen": {
+				"ios": {
+					"iphone": {
+						"default": "", /*iPhone3启动图片选，分辨率：320x480*/
+						"retina35": "",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
+						"retina40": ""
+					},
+					"ipad": {
+						"portrait": "", /*iPad竖屏启动图片，分辨率：768x1004*/
+						"portrait-retina": "",/*iPad高分屏竖屏图片，分辨率：1536x2008*/
+						"landscape": "", /*iPad横屏启动图片，分辨率：1024x748*/
+						"landscape-retina": "", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
+						"portrait7": "", /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
+						"portrait-retina7": "",/*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
+						"landscape7": "", /*iPad iOS7横屏启动图片，分辨率：1024x768*/
+						"landscape-retina7": ""
+					}
+				},
+				"android": {
+					"mdpi": "E:/guide-html/引导页240.png", /*普通屏启动图片，分辨率：240x282*/
+					"ldpi": "E:/guide-html/引导页320.png", /*大屏启动图片，分辨率：320x442*/
+					"hdpi": "E:/guide-html/引导页480.png", /*高分屏启动图片，分辨率：480x762*/
+					"xhdpi": "E:/guide-html/引导页720.png", /*720P高分屏启动图片，分辨率：720x1242*/
+					"xxhdpi": "E:/guide-html/引导页1080.png"
+				}
+			}
+		}
+	},
+	"dependencies": {
+		"pages": {
+			"baritemHtml/home.html": {
+				"resources": [
+					"js/load.js",
+					"js/md5.js",
+					"js/own.js",
+					"css/own.css",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"img/3.jpg",
+					"img/top1.png",
+					"fonts/mui.ttf",
+					"img/jump.gif",
+					"img/huawei.jpg",
+					"img/index_6.png",
+					"img/index_3.png",
+					"img/index_1.png",
+					"img/index_2.png",
+					"img/index_4.png",
+					"img/index_5.png",
+					null,
+					"img/2.png"
+				],
+				"refer": [
+					"zghd/zghd-list.html"
+				],
+				"priority": 0
+			},
+			"index.html": {
+				"resources": [
+					"baritemHtml/home.html",
+					"css/own.css",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/iconfont.ttf",
+					"fonts/mui.ttf",
+					null,
+					"baritemHtml/cart.html",
+					"baritemHtml/barcode.html",
+					"js/update.js",
+					"barCodeHtml/barcode-jy.html",
+					"network/network-barcode-scan.html",
+					"network/network-barcode.html",
+					"fonts/mui-icons-extra.ttf",
+					"css/icons-extra.css"
+				],
+				"refer": [
+					"template-main.html",
+					"baritemHtml/mine.html",
+					"baritemHtml/xinyuandan.html",
+					"Mine/login.html",
+					"baritemHtml/category.html",
+					"product-detail-tem.html",
+					"Mine/register-needtem.html",
+					"Mine/remenberpsd-needtem.html",
+					"Home/product-detail-needtem.html",
+					"baritemHtml/anaylze.html",
+					"order/order-confirm.html",
+					"Mine/change-address-needtem.html",
+					"Mine/my-dingdan-needtem.html",
+					"Mine/changepsd-needtem.html",
+					"Mine/changeEmail-needtem.html",
+					"order/order-confirm-needtem.html",
+					"order/order-logistics-needtem.html",
+					"order/order-logistics.html",
+					"order/order-payway.html",
+					"order/order-repertory.html",
+					"order/order-cart-needtem.html",
+					"order/order-cart.html",
+					"order/order-address-list.html",
+					"Mine/change-address.html",
+					"Mine/my-dingdan.html",
+					"commission/com-index.html",
+					"search.html",
+					"lock.html",
+					"Mine/usercenter.html",
+					"Mine/barcode.html",
+					"barCodeHtml/barcode.html",
+					"barCodeHtml/barCode-order.html",
+					"Mine/changepsd.html",
+					"Mine/phone-number.html",
+					"goodPhoneNum/goodPhoneNum-list.html",
+					"network/info.html",
+					"barCodeHtml/barcode_scan.html",
+					"barCodeHtml/barcode-jy-scan.html",
+					"network/network-list.html",
+					"network/network-user-bill.html",
+					"network/network-user-pay.html",
+					"zghd/zghd-index.html"
+				],
+				"priority": 0
+			},
+			"template-main.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"img/jump.gif",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"css/own.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"baritemHtml/mine.html": {
+				"resources": [
+					"img/bg.jpeg",
+					"js/own.js",
+					"img/touxiang.jpg",
+					"fonts/mui.ttf",
+					"css/own.css",
+					"js/load.js",
+					"js/md5.js",
+					"fonts/iconfont.ttf",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"Mine/change-address-needtem.html",
+					"img/fbb.jpg",
+					"img/me_back.jpg",
+					"commission/com-index.html",
+					"Mine/usercenter.html",
+					"img/logo.png",
+					"img/jump.gif"
+				],
+				"refer": [
+					"login.html",
+					"commission/com-index-detail.html",
+					"help.html"
+				],
+				"priority": 0
+			},
+			"baritemHtml/cart.html": {
+				"resources": [
+					"js/wl_ajax.js",
+					"js/own.js",
+					"css/own.css",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif",
+					"img/huawei.jpg",
+					"fonts/mui.ttf",
+					"index.html",
+					"order/order-confirm.html",
+					"order/order-confirm-needtem.html",
+					"fonts/iconfont.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"product-detail-tem.html": {
+				"resources": [
+					"js/own.js",
+					"img/jump.gif",
+					"fonts/mui.ttf",
+					"js/mui.min.js",
+					"css/own.css",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"Home/product-detail-needtem.html",
+					null
+				],
+				"refer": [
+					"order/order-confirm.html"
+				],
+				"priority": 0
+			},
+			"baritemHtml/category.html": {
+				"resources": [
+					"js/load.js",
+					"js/md5.js",
+					"js/own.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/login.html": {
+				"resources": [
+					"js/own.js",
+					"fonts/mui.ttf",
+					"js/load.js",
+					"js/md5.js",
+					"fonts/iconfont.ttf",
+					"css/own.css",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"baritemHtml/xinyuandan.html": {
+				"resources": [
+					"js/own.js",
+					"css/own.css",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"fonts/mui.ttf",
+					null,
+					"img/jump.gif",
+					"search.html",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"img/chenggong_03.jpg"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Home/product-detail-needtem.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/touxiang.jpg",
+					"img/bg.jpeg",
+					"fonts/mui.ttf",
+					"fonts/iconfont.ttf",
+					"img/3.jpg",
+					"img/huawei.jpg",
+					"img/jump.gif",
+					"order/order-cart.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"baritemHtml/barcode.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"baritemHtml/anaylze.html": {
+				"resources": [
+					"js/echarts-all.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"js/ajax.js",
+					"img/jump.gif",
+					"css/own.css",
+					"js/own.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					null
+				],
+				"refer": [
+					"anaylzeHtml/anaylze-ds.html",
+					"anaylzeHtml/anaylze-query.html",
+					"anaylzeHtml/anaylze-sale-percent.html",
+					"anaylzeHtml/anaylze-register.html"
+				],
+				"priority": 0
+			},
+			"order/order-confirm.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/own.css",
+					"js/own.js",
+					"Mine/change-address-needtem.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/change-address-needtem.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"order/order-confirm.html",
+					"fonts/mui.ttf",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [
+					"Mine/address.html"
+				],
+				"priority": 0
+			},
+			"Mine/address.html": {
+				"resources": [
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css",
+					"js/city.data-3.js",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					null,
+					"js/load.js",
+					"js/ajax.js",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/changepsd-needtem.html": {
+				"resources": [
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"fonts/mui.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"order/order-confirm-needtem.html": {
+				"resources": [
+					"Mine/change-address-needtem.html",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"order/order-logistics-needtem.html",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif",
+					"order/order-logistics.html"
+				],
+				"refer": [
+					"order/order-submit.html",
+					"order/order-repertory.html",
+					"order/order-payway.html",
+					"order/order-address-list.html"
+				],
+				"priority": 0
+			},
+			"order/order-logistics-needtem.html": {
+				"resources": [
+					"css/iconfont.css",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/my-dingdan-needtem.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"order/order-logistics.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"order/order-payway.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/mui.ttf",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"order/order-repertory.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					null
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"login.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/iconfont.ttf",
+					"img/login.png",
+					"shareBarCode.html",
+					"help.html"
+				],
+				"refer": [
+					"index.html",
+					"Mine/remenberpsd-needtem.html",
+					"Mine/register-needtem.html",
+					"unlock.html",
+					"Mine/remenberpsd.html"
+				],
+				"priority": 0
+			},
+			"Mine/register-needtem.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/mui.ttf",
+					"fonts/iconfont.ttf",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [
+					"Mine/first-binding-phone.html"
+				],
+				"priority": 0
+			},
+			"Mine/remenberpsd-needtem.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"order/order-submit.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif"
+				],
+				"refer": [
+					"index.html",
+					"baritemHtml/cart.html",
+					"order/order-pay.html"
+				],
+				"priority": 0
+			},
+			"order/order-cart-needtem.html": {
+				"resources": [
+					"order/order-confirm-needtem.html",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"order/order-cart.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf"
+				],
+				"refer": [
+					"order/order-confirm-needtem.html"
+				],
+				"priority": 0
+			},
+			"order/order-address-list.html": {
+				"resources": [
+					"css/iconfont.css",
+					"fonts/iconfont.ttf",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [
+					"order/order-address-change.html"
+				],
+				"priority": 0
+			},
+			"Mine/change-address.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/iconfont.ttf",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js",
+					"commission/com-classification.html"
+				],
+				"refer": [
+					"Mine/address.html"
+				],
+				"priority": 0
+			},
+			"Mine/my-dingdan.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js",
+					"commission/com-index.html"
+				],
+				"refer": [
+					"order/order-submit.html"
+				],
+				"priority": 0
+			},
+			"commission/com-index.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"fonts/iconfont.ttf",
+					"js/md5.js",
+					"Mine/my-dingdan.html",
+					"img/jump.gif",
+					"img/bg.jpeg",
+					"js/animateBackground-plugin.js",
+					"js/jquery-1.7.2.min.js",
+					"img/number.png",
+					"js/odometer.js",
+					"css/odometer-theme-car.css",
+					"commission/com-classification.html"
+				],
+				"refer": [
+					"commission/com-order.html",
+					"commission/com-index-query.html",
+					"commission/com-index-detail.html",
+					"commission/com-area-classification.html",
+					"commission/com-fen-classification.html",
+					"commission/com-dl-classification.html"
+				],
+				"priority": 0
+			},
+			"commission/com-order.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [
+					"commission/com-order-detail.html",
+					"commission/com-order-query.html"
+				],
+				"priority": 0
+			},
+			"commission/com-order-detail.html": {
+				"resources": [
+					"css/iconfont.css",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"commission/com-index-query.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"css/mui.picker.min.css",
+					"js/mui.picker.min.js",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"js/own.js"
+				],
+				"refer": [
+					"commission/com-index-detail.html"
+				],
+				"priority": 0
+			},
+			"commission/com-order-query.html": {
+				"resources": [
+					"js/mui.picker.min.js",
+					"css/iconfont.css",
+					"css/mui.picker.min.css",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"commission/com-order-query.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"commission/com-index-detail.html": {
+				"resources": [
+					"img/jump.gif",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [
+					"commission/com-order-query.html",
+					"commission/com-order-detail.html",
+					"commission/com-index-query.html",
+					"commission/com-order.html",
+					"commission/com-classification.html",
+					"commission/com-fen-classification.html",
+					"commission/com-dl-classification.html"
+				],
+				"priority": 0
+			},
+			"commission/com-classification.html": {
+				"resources": [
+					"js/echarts-all.js",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js",
+					"js/echarts.simple.min.js",
+					"js/echarts.common.min.js",
+					"css/iconfont.css",
+					"fonts/iconfont.ttf",
+					"img/yjicon_03.png",
+					"commission/com-index.html",
+					"img/yjicon_12.png",
+					"img/yjicon_14.png",
+					"img/yjicon_06.png",
+					"img/yjicon_08.png",
+					"img/yjicon_16.png",
+					"img/yjicon_10.png",
+					"Mine/change-address.html",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"img/yjicon_7.png",
+					"img/yjicon_13.png",
+					"img/yjicon_11.png",
+					"img/yjicon_9.png",
+					"img/yjicon_15.png",
+					"img/yjicon_5.png"
+				],
+				"refer": [
+					"commission/com-index-detail.html",
+					"commission/com-order.html",
+					"commission/com-area-classification.html",
+					"commission/com-menu-order.html"
+				],
+				"priority": 0
+			},
+			"order/order-address-change.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.picker.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"fonts/iconfont.ttf",
+					"css/mui.picker.min.css",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"order/order-pay.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"css/own.css",
+					"js/own.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"img/jump.gif"
+				],
+				"refer": [
+					"order/order-dingdan.html"
+				],
+				"priority": 0
+			},
+			"search.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/own.css",
+					"css/iconfont.css",
+					"baritemHtml/xinyuandan.html",
+					"js/delayimg.min.js",
+					"js/ajax.js",
+					"img/3.jpg",
+					"img/yjicon_16.png",
+					"img/bg.jpeg"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"commission/com-area-classification.html": {
+				"resources": [
+					"js/own.js",
+					"img/yjicon_12.png",
+					"fonts/mui.ttf",
+					"img/yjicon_14.png",
+					"js/load.js",
+					"js/echarts.common.min.js",
+					"img/yjicon_06.png",
+					"css/own.css",
+					"img/yjicon_03.png",
+					"js/mui.min.js",
+					"img/yjicon_08.png",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"img/yjicon_16.png",
+					"img/jump.gif",
+					"js/md5.js",
+					"img/yjicon_10.png"
+				],
+				"refer": [
+					"commission/com-order.html"
+				],
+				"priority": 0
+			},
+			"lock.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/mui.locker.js",
+					"css/own.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"unlock.html": {
+				"resources": [
+					"js/mui.locker.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"img/logo.png",
+					"img/peo.png"
+				],
+				"refer": [
+					"login.html"
+				],
+				"priority": 0
+			},
+			"Mine/usercenter.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/own.js",
+					"css/iconfont.css",
+					"js/ajax.js",
+					"fonts/iconfont.ttf",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js",
+					"img/logo.png",
+					"js/common.js",
+					"Mine/binding-phone.html"
+				],
+				"refer": [
+					"Mine/binding-yigou.html",
+					"Mine/unbinding-phone.html",
+					"Mine/unbinding-yigou.html"
+				],
+				"priority": 0
+			},
+			"commission/com-fen-classification.html": {
+				"resources": [
+					"img/yjicon_03.png",
+					"img/yjicon_12.png",
+					"img/yjicon_08.png",
+					"img/yjicon_14.png",
+					"css/iconfont.css",
+					"img/yjicon_16.png",
+					"js/echarts.common.min.js",
+					"img/yjicon_06.png",
+					"img/yjicon_10.png",
+					"js/own.js",
+					"fonts/mui.ttf",
+					"js/load.js",
+					"css/own.css",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"img/jump.gif",
+					"js/md5.js",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"img/yjicon_7.png",
+					"img/yjicon_11.png",
+					"img/yjicon_13.png",
+					"img/yjicon_9.png",
+					"img/yjicon_15.png",
+					"img/yjicon_5.png",
+					"img/num_4.png",
+					"img/num_3.png",
+					"img/num_7.png",
+					"img/num_5.png",
+					"img/num_1.png",
+					"img/num_0.png",
+					"img/num_8.png",
+					"img/num_6.png",
+					"img/num_9.png",
+					"img/num_2.png"
+				],
+				"refer": [
+					"commission/com-dl-classification.html",
+					"commission/com-order.html",
+					"commission/com-area-classification.html",
+					"commission/com-menu-order.html"
+				],
+				"priority": 0
+			},
+			"commission/com-dl-classification.html": {
+				"resources": [
+					"js/own.js",
+					"img/yjicon_12.png",
+					"fonts/mui.ttf",
+					"img/yjicon_14.png",
+					"js/load.js",
+					"js/echarts.common.min.js",
+					"img/yjicon_06.png",
+					"css/own.css",
+					"img/yjicon_03.png",
+					"js/mui.min.js",
+					"img/yjicon_08.png",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"img/yjicon_16.png",
+					"img/jump.gif",
+					"js/md5.js",
+					"img/yjicon_10.png",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"img/yjicon_7.png",
+					"img/yjicon_5.png",
+					"img/yjicon_9.png",
+					"img/yjicon_15.png",
+					"img/yjicon_13.png",
+					"img/yjicon_11.png"
+				],
+				"refer": [
+					"commission/com-classification.html",
+					"commission/com-order.html",
+					"commission/com-area-classification.html",
+					"commission/com-menu-order.html"
+				],
+				"priority": 0
+			},
+			"Mine/barcode.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"anaylzeHtml/anaylze-ds.html": {
+				"resources": [
+					"js/echarts-all.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js",
+					"fonts/mui.ttf",
+					"css/own.css",
+					"css/iconfont.css"
+				],
+				"refer": [
+					"anaylzeHtml/anaylze-ds-query.html"
+				],
+				"priority": 0
+			},
+			"Mine/binding-phone.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"Mine/binding-phone.html",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif",
+					"Mine/usercenter.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"barCodeHtml/barCode-order.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif"
+				],
+				"refer": [
+					"barCodeHtml/barCode-cm.html",
+					"barCodeHtml/barCode-order-query.html"
+				],
+				"priority": 0
+			},
+			"barCodeHtml/barcode.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [
+					"barCodeHtml/barcode_scan.html"
+				],
+				"priority": 0
+			},
+			"barCodeHtml/barCode-cm.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [
+					"barCodeHtml/barcode.html"
+				],
+				"priority": 0
+			},
+			"barCodeHtml/barCode-order-query.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.picker.min.js",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"css/mui.picker.min.css",
+					"js/md5.js",
+					"barCodeHtml/barCode-order-query.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/changepsd.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/iconfont.ttf",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/remenberpsd.html": {
+				"resources": [
+					"css/own.css",
+					"Mine/remenberpsd.html",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif"
+				],
+				"refer": [
+					"Mine/changepsd-login.html"
+				],
+				"priority": 0
+			},
+			"Mine/changepsd-login.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/iconfont.ttf",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/phone-number.html": {
+				"resources": [
+					"js/own.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"order/order-dingdan.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js",
+					"css/iconfont.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"goodPhoneNum/goodPhoneNum-list.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [
+					"goodPhoneNum/goodPhoneNum-query.html",
+					"commission/com-order-detail.html"
+				],
+				"priority": 0
+			},
+			"goodPhoneNum/goodPhoneNum-query.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"anaylzeHtml/anaylze-query.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css"
+				],
+				"refer": [
+					"anaylzeHtml/anaylze-ds.html"
+				],
+				"priority": 0
+			},
+			"anaylzeHtml/anaylze-ds-query.html": {
+				"resources": [
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css",
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"barCodeHtml/barcode_scan.html": {
+				"resources": [
+					"js/common.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"commission/com-menu-order.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/jump.gif",
+					"js/md5.js"
+				],
+				"refer": [
+					"commission/com-order-detail.html",
+					"commission/com-order-query.html",
+					"commission/com-menu-order-query.html"
+				],
+				"priority": 0
+			},
+			"commission/com-menu-order-query.html": {
+				"resources": [
+					"js/mui.picker.min.js",
+					"css/iconfont.css",
+					"css/mui.picker.min.css",
+					"commission/com-menu-order-query.html",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/binding-yigou.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif",
+					"Mine/binding-yigou.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/unbinding-phone.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/unbinding-yigou.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif",
+					"Mine/unbinding-yigou.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Mine/first-binding-phone.html": {
+				"resources": [
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"anaylzeHtml/anaylze-sale-percent.html": {
+				"resources": [
+					"js/echarts-all.js",
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/jump.gif"
+				],
+				"refer": [
+					"anaylzeHtml/anaylze-ds-query.html",
+					"anaylzeHtml/anaylze-percent-query.html"
+				],
+				"priority": 0
+			},
+			"anaylzeHtml/anaylze-percent-query.html": {
+				"resources": [
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css",
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"anaylzeHtml/anaylze-register.html": {
+				"resources": [
+					"js/echarts-all.js",
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"network/info.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"fonts/mui.ttf",
+					"css/own.css",
+					"css/iconfont.css",
+					"js/own.js",
+					"img/jump.gif",
+					"img/me_back.jpg"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"barCodeHtml/barcode-jy-scan.html": {
+				"resources": [
+					"js/common.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"barCodeHtml/barcode-jy.html": {
+				"resources": [
+					"js/load.js",
+					"js/md5.js",
+					"index.html",
+					"css/own.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js"
+				],
+				"refer": [
+					"barCodeHtml/barcode_scan.html"
+				],
+				"priority": 0
+			},
+			"network/network-list.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"fonts/mui.ttf",
+					"network/network-money-index.html",
+					null
+				],
+				"refer": [
+					"network/info.html",
+					"anaylzeHtml/anaylze-sale-percent.html",
+					"anaylzeHtml/anaylze-register.html",
+					"network/network-user-detail.html",
+					"network/network-money.html",
+					"zghd/zghd-pay-list.html",
+					"network/network-user-payment.html",
+					"network/network-money-user-detail.html"
+				],
+				"priority": 0
+			},
+			"network/network-user-detail.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/peo.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"network/network-money.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/peo.png",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"network/network-barcode-scan.html": {
+				"resources": [
+					"js/common.js",
+					"js/mui.min.js"
+				],
+				"refer": [
+					"network/network-barcode.html"
+				],
+				"priority": 0
+			},
+			"network/network-barcode.html": {
+				"resources": [
+					"index.html",
+					"css/own.css",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"js/mui.min.js"
+				],
+				"refer": [
+					"barCodeHtml/barcode_scan.html",
+					"network/network-barcode-scan2.html"
+				],
+				"priority": 0
+			},
+			"network/network-barcode-scan2.html": {
+				"resources": [
+					"js/common.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"network/network-user-bill.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"img/peo.png",
+					"js/md5.js",
+					"img/index_3.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"network/network-money-index.html": {
+				"resources": [
+					"css/odometer-theme-car.css",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"js/echarts.common.min.js"
+				],
+				"refer": [
+					"network/network-money-detail.html"
+				],
+				"priority": 0
+			},
+			"network/network-money-detail.html": {
+				"resources": [
+					"img/peo.png",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/mui.ttf",
+					"js/load.js",
+					"js/md5.js",
+					"img/yjicon_9.png"
+				],
+				"refer": [
+					"network/network-money-user-detail.html"
+				],
+				"priority": 0
+			},
+			"network/network-money-user-detail.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"img/peo.png"
+				],
+				"refer": [
+					"network/network-bill.html"
+				],
+				"priority": 0
+			},
+			"network/network-bill.html": {
+				"resources": [
+					"img/index_3.png",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"network/network-user-pay.html": {
+				"resources": [
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"fonts/iconfont.ttf",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [
+					"network/network-user-detail.html",
+					"network/network-user-bill.html",
+					"commission/com-index.html",
+					"goodPhoneNum/goodPhoneNum-list.html",
+					"network/network-user-pay-bill.html",
+					"network/network-user-payment.html",
+					"network/network-user-mx.html"
+				],
+				"priority": 0
+			},
+			"network/network-user-pay-bill.html": {
+				"resources": [
+					"img/index_3.png",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"network/network-user-payment.html": {
+				"resources": [
+					"img/index_3.png",
+					"css/own.css",
+					"js/own.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"zghd/zghd-index.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"js/own.js",
+					"js/mui.min.js",
+					"js/ajax.js",
+					"img/logo.png",
+					"img/timg.jpg",
+					"zghd/zghd-list.html"
+				],
+				"refer": [
+					"zghd/zghd-jl.html",
+					"network/network-user-payment.html",
+					"network/network-user-pay-bill.html",
+					"network/network-user-bill.html",
+					"zghd/zghd-pay-list.html",
+					"zghd/zghd-jl-list.html",
+					"zghd/zghd-ling-list.html"
+				],
+				"priority": 0
+			},
+			"zghd/zghd-jl.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"img/yjicon_08.png",
+					"img/hzy-gywm.png",
+					"js/echarts.common.min.js",
+					"js/own.js",
+					"js/mui.min.js",
+					"js/ajax.js"
+				],
+				"refer": [
+					"network/network-user-payment.html",
+					"zghd/zghd-jl-list.html"
+				],
+				"priority": 0
+			},
+			"zghd/zghd-jl-list.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"js/own.js",
+					"js/mui.min.js",
+					"js/ajax.js"
+				],
+				"refer": [
+					"commission/com-order-detail.html",
+					"zghd/zghd-jl-detail.html"
+				],
+				"priority": 0
+			},
+			"zghd/zghd-jl-detail.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"js/own.js",
+					"js/mui.min.js",
+					"js/ajax.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"zghd/zghd-pay-list.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"js/echarts.common.min.js",
+					"js/own.js",
+					"js/ajax.js",
+					"js/mui.min.js"
+				],
+				"refer": [
+					"zghd/zghd-payment.html"
+				],
+				"priority": 0
+			},
+			"zghd/zghd-payment.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"zghd/zghd-payment.html",
+					"js/mui.min.js",
+					"js/ajax.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"zghd/zghd-ling-list.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"js/own.js",
+					"js/ajax.js",
+					"js/mui.min.js"
+				],
+				"refer": [
+					"zghd/zghd-jl-detail.html"
+				],
+				"priority": 0
+			},
+			"zghd/zghd-list.html": {
+				"resources": [
+					"js/own.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"img/loginBanner.png",
+					"js/load.js",
+					"js/md5.js",
+					null,
+					"zghd/zghd-index.html"
+				],
+				"refer": [
+					"zghd/zghd-detail.html"
+				],
+				"priority": 0
+			},
+			"zghd/zghd-detail.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js",
+					"js/own.js",
+					"js/mui.min.js",
+					"js/ajax.js",
+					"zghd/zghd-detail-rule.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"zghd/zghd-detail-phone.html": {
+				"resources": [
+					"js/own.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"zghd/zghd-detail-rule.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"zghd/zghd-detail-rule.html": {
+				"resources": [
+					"js/own.js",
+					"js/mui.min.js",
+					"zghd/zghd-detail-phone.html",
+					"css/mui.min.css",
+					"js/ajax.js",
+					"js/load.js",
+					"js/md5.js",
+					"zghd/zghd-detail.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"shareBarCode.html": {
+				"resources": [
+					"img/app.png",
+					"login.html",
+					"css/mui.min.css",
+					"js/mui.min.js",
+					"js/ajax.js",
+					"fonts/mui.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"help.html": {
+				"resources": [
+					"login.html",
+					"css/mui.min.css",
+					"js/mui.min.js",
+					"js/ajax.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"network/network-user-mx.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/load.js",
+					"js/md5.js"
+				],
+				"refer": [],
+				"priority": 0
+			}
+		},
+		"idle": {
+			"resources": [
+				"category/category-detail-needtem.html",
+				"css/mui.picker.css",
+				"css/mui.css",
+				"css/mui.picker.all.css",
+				"js/mui.js",
+				"css/mui.poppicker.css",
+				"img/bg.png"
+			]
+		}
+	}
+}

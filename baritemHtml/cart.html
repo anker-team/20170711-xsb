@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>购物车</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+   		.table_head {
+  
+   			padding-left: 15px;
+   			height: 30px;
+   			display: table-cell;
+    			vertical-align: middle;
+   		}
+    		
+    		
+    		.head_title {
+    			
+    			/*background-color: darkblue;*/
+    			position: relative;
+    			left: 10px;
+    			right: 10px;
+    		}
+    		
+    		.cellImg {
+    			
+    			max-width: 70%;
+    			height: auto;
+    			vertical-align: middle;
+    			position: relative;
+    			left: 5px;
+    		}
+    		
+    		.mui-table-view .mui-table-view-cell {
+    			background: #f3fcfb;
+    		}
+    		.mui-table-view .mui-table-view-cell:after{
+    			left: 0px;
+    		}
+    	
+    		.leftClassCell {
+    			
+    			margin: 0 auto;
+    			padding-top: 5%;
+    			width: 30%;
+    			float: left;
+    			display: table-cell;
+    			vertical-align: middle;
+    		}
+    		.rightClassCell {
+    			
+    			width: 70%;
+    			float: left;
+    		}
+    		
+    		.headSelect:visited {
+    			
+    			background-color:  red;
+    		}
+    		
+    		.downDiv {
+  
+  			background-color: red;
+    			height: 50px;
+    			width: 100%;
+    			/*网页底部*/
+    			position: fixed;
+    			bottom: 0;
+    		}
+    		
+    		.changeNum {
+    			
+    			padding: 0px;
+    			width: 30px;
+    			height: 30px;
+    			font-size: 30px;
+    		}
+    		
+    		.mui-icon.iconfont.icon-xuanze1,
+    		.mui-icon.iconfont.icon-xuanze {
+    			font-size: 1.1em;
+    			color: #ef5028;
+    		}
+    		
+    		.head_title {
+    			vertical-align: baseline;
+    		}
+    		
+    		.mui-numbox {
+    			width: 40%;
+    			height: 100%;
+    			padding: 0px;
+    		}
+    		
+    		.mui-numbox [class*=mui-numbox-btn] {
+    			width: 30%;
+    			height: 100%;
+    			font-size: 1em;
+    			padding-bottom: 0.3em;
+    		}
+    		
+    		.itemName {
+    			color: black;
+    			line-height: 1.2em;
+    		}
+    		.itemfeatures {
+    			font-size: 0.6em;
+    			line-height: 0.5em;
+    			padding-top: 3px;
+    		}
+    		.price {
+    			color: #ef5028;
+    			padding-top: 0px;
+    			margin-top: 0px;
+    		}
+
+    </style>
+   
+</head>
+<body>
+	<div class="mui-content">
+		<div id="nonePhone" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未有商品加入到购物车</span>
+			<br />
+			<!--<button type="button" class="mui-btn own-btn-green" style="margin-top: 10px; padding: 5px 20px;">请登录</button>-->
+		</div>
+		<div>
+			<div class="login"></div>
+			<div class="downDiv">
+				<!--<span style="max-width: 40%;font-size: 14px;margin-top: 10px;">总计：6488.00</span>-->
+				<a id="goorder" href="../order/order-confirm-needtem.html" style="font-size: 24px;color:white;margin-left: 40%;position: fixed;bottom: 15px;">去结算</a>
+			</div>
+		</div>
+	</div>
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		var cartSupplierItem = [];
+		var cartWebview;//当前购物车webview
+		var downDiv = document.querySelector('.downDiv');
+		var user = JSON.parse(localStorage.getItem('$users'));
+		mui.plusReady(function(){
+			cartWebview = plus.webview.currentWebview();
+			window.addEventListener('refreshCartWebView',function(){
+				cartWebview.show();
+			},false);
+			
+			//跳转至提交订单页面
+			mui('.downDiv').on('tap','a',function(){
+				//异网客商下单
+				if('4' == user.usertype){
+					var btn =   ["取消","确定"];
+		            mui.confirm("确认发送订单信息至您的上游商户采购？","销售宝",btn,function(e){
+		                if(e.index==1){
+		                	var orderInfo = {
+								appuserid:user.appuserid,
+								goods:localStorage.getItem('$cart')
+							};
+		                	ajax_cart_save(orderInfo,function(data){
+		                			if('000000' == data.code){
+		                				mui.toast(data.msg);
+										setTimeout(function(){
+											//清空购物车信息
+											localStorage.removeItem('$cart');
+											cartWebview.reload();
+										},500);
+		                			}
+									
+								}
+		                	);
+		                }
+		            },'div');
+					return;
+				}
+				var id = this.getAttribute('href');
+				var href = this.href;
+				mui.openWindow({
+					url:href,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});			
+			
+			//为页面显示的时候添加监听
+			cartWebview.addEventListener('show',function(){
+				//根据购物车中是否有商品，显示不同的界面
+				if(localStorage.getItem('$cart')) {//有商品
+					setHtml();
+					document.getElementById("nonePhone").style.display="none";
+					downDiv.style.display="block";
+					document.querySelector('.login').style.display="block";
+					
+				}else{//没有商品
+					document.getElementById("nonePhone").style.display="block";
+					downDiv.style.display="none";
+					document.querySelector('.login').style.display="none";
+				}
+			},false);
+			
+			//为删除商品时添加监听
+			mui('.login').on('tap','.mui-icon-trash',function(){
+				var pid=this.id;
+				var btnArray = ['否', '是'];
+				mui.confirm('确认从购物车中删除？', '销售宝', btnArray, function(e) {
+					if(e.index == 1) {
+						deleteSelectPhone(pid);	
+						cartWebview.show();
+					}
+				},'div');
+			});
+			
+			//手动写增加减少
+			mui('.login').on('tap','.mui-numbox-btn-minus',function(){
+				// obj.nextElementSibling||obj.nextSibling 兼容写法
+				var inputNumbox = this.nextElementSibling;
+				var num = parseInt(inputNumbox.value);
+				if (num>1) {
+					num -= 1;
+					inputNumbox.value = ''+num;
+					//处理本地存储的购物车信息
+					changeCartNum("delete",this.nextElementSibling.nextElementSibling.nextElementSibling.id);
+				}
+			});
+			
+			mui('.login').on('tap','.mui-numbox-btn-plus',function(){
+				var inputNumbox = this.previousElementSibling;
+				var  num = parseInt(inputNumbox.value);
+				num += 1;
+				inputNumbox.value = ''+num;
+				//处理本地存储的购物车信息
+					changeCartNum("plus",this.nextElementSibling.id);
+			});
+		});
+		
+		function setHtml() {
+			var loginDiv =  document.querySelector('.login');
+			var html ='';
+			var cart =JSON.parse(localStorage.getItem('$cart') || '[]');
+			 for(var i in cart){ 
+			 	var listDiv = '';
+					listDiv = '<ul class="mui-table-view"><li class="mui-table-view-cell mui-media">\
+								<a href="javascript:;"><img class="mui-media-object mui-pull-left" src="'+cart[i].photosrc+'" style="max-width: 63px;height: 63px;">\
+								<div class="mui-media-body" style="margin-right: 0;"><p>'+cart[i].pname+'-'+cart[i].phoneColor+'</p><p style="color:#FF7F24;">￥:'+cart[i].price+'</p>\
+								<p><button style="padding: 0;width: 19px;" class="mui-btn mui-numbox-btn-minus" type="button">-</button>\
+								<input style="padding: 0;width: 15%;height: 21px;text-align: center;" class="mui-input-numbox" type="number" value="'+cart[i].num+'"/>\
+								<button style="padding: 0;width: 19px;" class="mui-btn mui-numbox-btn-plus" type="button">+</button>\
+								<span id="'+cart[i].prdsellid+'-'+cart[i].color+'" class="mui-icon mui-icon-trash" style="float: right;"></span></p></div></a></li></ul>';	
+				html += listDiv;
+			 }
+			loginDiv.innerHTML = html;
+		}
+		
+		function changeCartNum(type,pid){
+			var cart =JSON.parse(localStorage.getItem('$cart') || '[]');
+			for(var i in cart){
+				if(pid==(cart[i].prdsellid+'-'+cart[i].color)){
+					if(type=='delete'){
+						cart[i].num = ""+(parseInt(cart[i].num)-1);
+					}else{
+						cart[i].num = ""+(parseInt(cart[i].num)+1);
+					}					
+					localStorage.setItem('$cart',JSON.stringify(cart));
+				}
+			}
+		}
+		
+		function deleteSelectPhone(pid){
+			var cart =JSON.parse(localStorage.getItem('$cart') || '[]');
+			if(cart.length==1){//使用splice方法删除最后一位元素时，会留下'[]'两个括号。所以只有一个时特殊处理
+				localStorage.removeItem('$cart');
+			}else{
+				for(var i in cart){
+					if(pid==(cart[i].prdsellid+'-'+cart[i].color)){
+						cart.splice(i,1);
+						localStorage.setItem('$cart',JSON.stringify(cart));
+						console.log(localStorage.getItem('$cart') );
+					}
+				}
+			}
+			
+		}
+	</script>
+	
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html style="background-color: white;">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>销售宝</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+				overflow: hidden;
+			}
+			.mui-locker {
+				margin: 35px auto;
+			}
+			#forget {
+				display: block;
+				text-align: center;
+				color: darkgray;
+				font-size: 14px;
+			}
+			.headImg {
+			padding: 8% 0px 0px 0px;
+			/*background: url(../img/bg.jpeg);*/
+			background: url(../img/me_back.jpg);
+			background-position: center center; 
+			background-size: 100% auto;
+			}
+			
+			.touxiang {
+				text-align: center;
+			}
+			
+			.touxiang div {
+				width: 4em;
+				height: 4em;
+				padding: 0px;
+				border-radius: 50%;
+				border: 2px solid white;
+				color: gray;
+				margin: 0px auto;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body style="background-color: white;">
+		<div class="headImg">
+			<div class="touxiang">
+				<div > 
+					<img id="head-img" src="img/peo.png" style="width: 100%; height: 100%; border-radius: 50%;" />
+				</div>
+			</div>
+		</div>
+		<div class="mui-content" style="background-color: white;">
+			<div class="mui-content-padded">
+				<div class="mui-locker" data-locker-options='{"ringColor":"rgba(221,221,221,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}' data-locker-width='320' data-locker-height='320'>
+				</div>
+			</div>
+			<a id='forget'>忘记手势密码</a>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mui.locker.js"></script>
+		<script src="js/ajax.js"></script>
+		<script>
+			mui.init();
+			mui.plusReady(function() {
+				//预加载首页
+				var mainPage = mui.preload({//预加载页面
+					"id": 'index',
+					"url": 'index.html'
+				});					
+				var toMain = function() {
+					mui.fire(mainPage, 'show', null); //mui.fire 触发目标窗口自定义事件
+					setTimeout(function() { //异步操作，保证最后执行function里面的内容
+						mui.openWindow({
+							id: 'index',
+							show: {
+								aniShow: 'pop-in' //页面显示动画,从右侧平移入栈动画效果
+							},
+							waiting: {
+								autoShow: false //自动显示等待框，默认为true
+							}
+						});
+					}, 0);
+				};
+				var settings = getSettings();
+				var forgetButton = document.getElementById("forget");
+				var locker = document.querySelector('.mui-locker');
+				//忘记手势密码后，清空
+				var clearStateAndToLogin = function() {
+					settings.gestures = '';
+					settings.autoLogin = false;
+					setSettings(settings);
+					mui.openWindow({
+						url: 'login.html',
+						id: 'login',
+						show: {
+							aniShow: 'pop-in'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				};
+				forgetButton.addEventListener('tap', function(event) {
+					clearStateAndToLogin();
+				});
+				var tryNumber = 5;
+				locker.addEventListener('done', function(event) {
+					var rs = event.detail;
+					if (settings.gestures == rs.points.join('')) {
+						localStorage.setItem('$users',localStorage.getItem(settings.login));
+						localStorage.setItem('$account',settings.login);
+						toMain();
+						rs.sender.clear();
+					} else {
+						tryNumber--;
+						rs.sender.clear();
+						if (tryNumber > 0) {
+							plus.nativeUI.toast('解锁手势错误，还能尝试 ' + tryNumber + ' 次。');
+						} else {
+							clearStateAndToLogin();
+						}
+					}
+				}, false);
+				var backButtonPress = 0;
+				mui.back = function(event) {
+					backButtonPress++;
+					if (backButtonPress > 1) {
+						plus.runtime.quit();
+					} else {
+						plus.nativeUI.toast('再按一次退出应用');
+					}
+					setTimeout(function() {
+						backButtonPress = 0;
+					}, 1000);
+					return false;
+				};
+			});
+		 
+		</script>
+	</body>
+
+</html>

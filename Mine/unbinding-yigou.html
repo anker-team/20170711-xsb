@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>销售宝</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/own.css" rel="stylesheet" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-left-nav-color"></a>
+			<h1 class="mui-title own-left-nav-color">解绑直供账号</h1>
+			<a class="mui-icon iconfont icon-iconfont53 mui-pull-right own-left-nav-color"></a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" style="margin-top: 20px;">
+				<div class="mui-input-row">
+					<input class="mui-input" style="width: 65%;" type="text" id="verifyCode" placeholder="请输入短信验证码">
+					<button class="mui-btn mui-btn-primary own-btn-green " style="padding: 6px;float: none;width: 30%;vertical-align: middle;" onclick="settime(this)">获取验证码</button>
+				</div>
+			</form>
+			<div class="mui-button-row" style="margin: 10px 15px;">
+			<button id="loginBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">确认</button>
+		</div>
+		</div>
+	</body>
+	<!--MUI-->
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/ajax.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		mui.init({
+			swipeBack:true
+		});
+		var pWebview,
+			curwebview;
+		mui.plusReady(function(){
+			curwebview = plus.webview.currentWebview();
+			pWebview = plus.webview.getWebviewById('../Mine/usercenter.html');
+			document.getElementById("loginBtn").addEventListener('tap',function(){
+				if(document.getElementById("verifyCode").value==''){
+					mui.toast('请输入短信验证码');
+					return;
+				}
+				ajax_unbind_yigou({
+					appuserid : JSON.parse(localStorage.getItem('$users')).appuserid,
+					captcha : document.getElementById("verifyCode").value
+				},function(data) {
+						//将用户信息和account分开存放是有好处的
+						if ('000000' == data.code) {
+							mui.toast('解绑直供账号成功');
+							mui.fire(pWebview,'showUnBindYigou',{yigouname:data.yigouname});
+							curwebview.close();
+						}else{
+							mui.toast(data.msg);
+							
+						}
+					});
+			},false);
+		});
+		
+		var countdown=60;
+		var flag = true;
+		function settime(_this) {
+			if(flag){
+				ajax_get_vcode({
+					appuserid : JSON.parse(localStorage.getItem('$users')).appuserid,
+					type:2 //‘1’-代表绑定手机号，‘2’-代表绑定直供账号
+				},function(data){
+					if(data)
+						mui.toast(data);
+				});
+			}
+			if (countdown == 0) {
+				_this.removeAttribute("disabled");
+				countdown = 60;
+				flag = true;
+				return;
+			} else {
+				_this.setAttribute("disabled", true); 
+				_this.innerText="重新发送(" + countdown + ")"; 
+				countdown--; 
+				flag = false;
+			}
+			
+			setTimeout(function() { 
+				settime(_this) 
+			},1000)
+		}
+		
+		
+	</script>
+</html>

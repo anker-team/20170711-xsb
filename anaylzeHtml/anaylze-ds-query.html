@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>销售宝</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/own.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.picker.min.css" />
+		<style type="text/css">
+			.mui-content .no-left:after{
+				left:0;
+			}
+			.btn-padding{
+				padding: 6px 6px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-left-nav-color"></a>
+			<h1 class="mui-title own-left-nav-color">分析</h1>
+			<a class="mui-icon iconfont icon-iconfont53 mui-pull-right own-left-nav-color"></a>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded" style="margin: 5px;text-align: center;margin-top: 15px;">
+				<button data-id="1" type="button" class="mui-btn mui-btn-danger mui-btn-outlined btn-padding">
+					本日
+				</button>
+				<button data-id="2" type="button" class="mui-btn mui-btn-danger mui-btn-outlined btn-padding">
+					近一周
+				</button>
+				<button data-id="3" type="button" class="mui-btn mui-btn-danger mui-btn-outlined btn-padding">
+					近一月
+				</button>
+				<button data-id="4" type="button" class="mui-btn mui-btn-danger mui-btn-outlined btn-padding">
+					近三月
+				</button>
+				<button data-id="5" type="button" class="mui-btn mui-btn-danger mui-btn-outlined btn-padding">
+					近六月
+				</button>
+			</div>
+			<form class="mui-input-group" style="margin-top: 10px;">
+				<div class="mui-input-row no-left">
+					<label data-options='{"type":"date"}' class="btn" id="start" style="width: 100%;">起始时间</label>
+				
+				</div>
+				<div class="mui-input-row" >
+					<label data-options='{"type":"date"}' class="btn" id="end" style="width: 100%;">截止时间</label>
+				</div>
+			</form>
+			<div class="mui-button-row" style="margin: 10px 15px;">
+			<button id="queryBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">确认</button>
+		</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<script src="../js/ajax.js"></script>
+	<script>
+		mui.init({
+			swipeBack:true
+		});
+		var queryWebview, //当前webview
+			type, //日-1：周-2...
+			typename;
+		mui.plusReady(function(){
+			queryWebview = plus.webview.currentWebview();
+			mui('.btn').each(function(i, btn) {
+				btn.addEventListener('tap', function() {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+					var options = JSON.parse(optionsJson);
+					var dateTag = this; 
+					var picker = new mui.DtPicker(options);
+					picker.show(function(rs) { 
+						var x = document.querySelector('.mui-content-padded');
+						for (var i = 0; i <x.children.length; i++) {
+						    x.children[i].className = 'mui-btn mui-btn-danger mui-btn-outlined btn-padding';
+						}
+						type='';
+						typename='';
+						dateTag.innerText = rs.text; 
+						picker.dispose();
+						
+					});
+				}, false);
+			});
+			
+			mui('.mui-content-padded').on('tap','button',function(){
+				var cname = this.className;
+				var pNode = this.parentNode;
+				var x = pNode.child;
+				for (var i = 0; i <pNode.children.length; i++) {
+				    pNode.children[i].className = 'mui-btn mui-btn-danger mui-btn-outlined btn-padding';
+				}
+				this.className = 'mui-btn mui-btn-danger';
+				type=this.getAttribute('data-id');
+				typename = this.innerText;
+				//重置自选时间段
+				document.getElementById("start").innerText='起始时间';
+				document.getElementById("end").innerText='截止时间';
+			});
+		});
+		
+		document.getElementById("queryBtn").addEventListener('tap',function(){
+			var begindate = document.getElementById("start").innerText;
+			var enddate = document.getElementById("end").innerText;
+			if(!type){
+				if(begindate !='起始时间'&&enddate =='截止时间'){
+					mui.toast('截止时间不能为空');
+					return;
+				}
+				
+				if(enddate=='截止时间'){
+					 enddate='';
+				}
+				if(begindate =='起始时间'){
+					begindate='';
+				}
+				if(enddate.replace("-","")<begindate.replace("-","")){
+					mui.toast('起始时间不能大于截止时间');
+					return;
+				}
+			}
+			var lastWebView = plus.webview.getWebviewById('../anaylzeHtml/anaylze-ds.html');
+			mui.fire(lastWebView,'queryanaNum',{
+				begindate:begindate,
+				enddate:enddate,
+				type:type,
+				typename:typename
+			});
+			queryWebview.close();
+		},false);
+	</script>
+</html>

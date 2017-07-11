@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    
+    <style type="text/css">
+    		.emptyAddress {
+    			text-align: center;
+    			margin-top: 50px;
+    			font-size: 0.9em;
+    		}
+    		
+    		h5 {
+    			color: black
+    		}
+    		
+    		.name {
+    			float: left;
+    		}
+    		.number {
+    			float: right;
+    		}
+    		
+    		.address {
+    			padding-top: 2px;
+    			clear: both;
+    		}    		
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-left-nav-color"></a>
+		<h1 class="mui-title" style="color: white;">物流付费</h1>
+	</header>
+	<div class="mui-content">
+		<ul id="wlPayWayList" class="mui-table-view">
+			<li class="mui-table-view-cell">现付</li>
+		</ul>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="../js/ajax.js" ></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+		 
+		var orderlogisticsWebview; //当前webview
+		mui.plusReady(function(){
+			orderlogisticsWebview = plus.webview.currentWebview();
+			//获取后台物流数据
+			 
+			
+			//选择物流付费方式，并传值到订单页面
+			mui('#wlPayWayList').on('tap','li',function(){
+				//订单页面赋在temple-sub.html共用子页面中。
+				orderMiaWbview = plus.webview.getWebviewById('template-sub.html');
+				var wlPayName=this.innerHTML;
+				mui.fire(orderMiaWbview,'getwlPayWayInfo',{
+					wlPayName: wlPayName,
+					wayVal:'0' // '1'-代表到付，其他代表现付
+				});
+				plus.webview.currentWebview().close(); //关闭当前页面，释放资源
+			});
+		});
+		
+//		//获取通过ajax传递过来的物流信息
+//			function logisticsListSuccess(data){
+//				var html = '';
+//				for(var i in data){
+//					html += '<li class="mui-table-view-cell" data-wlchargeid ="'+data[i].wlchargeid+'" data-wucompanyid = "'+data[i].wucompanyid+'" data-companyname="'+data[i].companyname+'">\
+//					<h5 class="name">'+data[i].companyname+'</h5>\
+//					<p class="address mui-ellipsis-2">'+data[i].remarks+'</p></li>';
+//					 
+//				}
+//				document.getElementById("logisticsList").innerHTML=html;
+//			}
+		
+	</script>
+	
+</body>
+</html>

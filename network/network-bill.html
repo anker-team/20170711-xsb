@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+		
+		/*.mui-content {
+			background-color: #fff;
+		}*/
+		.mui-pull-left, .mui-pull-right{
+    		color: gray;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;font-size: 18px;">明细</h1>
+	</header>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div id="nonePhone" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未查询到奖励信息</span>
+		</div>
+		<div class="mui-scroll">
+			<ul class="mui-table-view mui-table-view-chevron">
+				<li class="mui-table-view-cell mui-media">
+					<a>
+						<div class="mui-media-body mui-pull-left" style="max-width: 42px;margin-right: 10px;">
+							<span style="font-weight: bold;font-size: 14px;">周一</span>
+							<p class='mui-ellipsis' style="font-size: 12px;">03-05</p>
+						</div>
+						<img class="mui-media-object mui-pull-left head-img" id="head-img" src="../img/index_3.png">
+						<div class="mui-media-body">
+							+15
+							<p>核销A00000558781C6奖励发放</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false,
+			pullRefresh: {
+				container:'#pullrefresh',
+//				down:{
+//					contentdown:'下拉可刷新',
+//					contentover:'释放立即刷新',
+//					contentrefresh:'正在加载..',
+//					callback:pulldownRefresh
+//				},
+				up:{
+					contentrefresh:'正在加载..',
+					contentnomore:'已加载全部信息',
+					callback:pullupRefresh
+				}
+			}
+		});
+		var currentwebview,
+		    page = 1,//页码
+			pagesize, //总页数
+			user,
+			month,
+			rid,
+			amount = 0,
+			userList;
+		mui.plusReady(function(){
+			currentwebview = plus.webview.currentWebview();
+			month = currentwebview.month||'';
+			rid = currentwebview.rid||'';
+			user= JSON.parse(localStorage.getItem('$users'));
+			userList = document.querySelector('.mui-scroll');
+			//获取客商信息
+			ajax_get_network_bill({
+				appuserid:rid,
+				month:month
+			});
+			mui('.mui-table-view').on('tap','a',function(){
+				var url = this.href;				
+				var id = this.getAttribute('href');
+				 mui.openWindow({
+					url:url,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						 
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+				});
+			});
+			
+			//成功获取订单列表数据
+			function getNetworkUserList(data){
+			 	var flag = true;
+				pagesize = data.pagesize;
+				mui.each(data.userList,function(index,item){
+					var html = '';
+					var userphone = item.userphone||'';
+					var listItem = document.createElement('ul');
+					listItem.className = 'mui-table-view mui-table-view-chevron list-padding';
+					listItem.id = item.id;
+					html = '<li class="mui-table-view-cell mui-media"><a>\
+							<div class="mui-media-body mui-pull-left" style="max-width: 42px;margin-right: 10px;">\
+							<span style="font-weight: bold;font-size: 14px;">'+item.d1+'</span>\
+							<p class="mui-ellipsis" style="font-size: 12px;">'+item.d2+'</p></div>\
+							<img class="mui-media-object mui-pull-left head-img" id="head-img" src="../img/index_3.png">\
+							<div class="mui-media-body">+'+item.amount+'<p>核销'+item.imei+'奖励发放</p>\
+							</div></a></li>';
+					listItem.innerHTML = html ;
+					userList.appendChild(listItem);
+					flag = false;
+				})
+				if(flag){
+					document.getElementById("nonePhone").style.display = 'block';
+				}
+			}
+			
+			function pullupRefresh(){
+				var copythis = this;
+				//上拉翻页
+				if(pagesize>page*10){
+					page++;
+					ajax_get_network_user_detail({
+						appuserid:user.appuserid
+					});
+				}else{
+					isnodata =true;
+				}
+				setTimeout(function(){
+					copythis.endPullupToRefresh(isnodata);
+				});
+			}
+	</script>
+</body>
+</html>

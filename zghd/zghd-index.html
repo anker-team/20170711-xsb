@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+		.headImg {
+			padding: 8% 0px 13% 0px;
+			background-color:#0062CC ;
+			color: white;
+		}
+		.touxiang {
+			text-align: left;
+			height: 60px;
+			margin-left: 10px;
+		}
+		.touxiang div {
+			/*font-size: 18px;
+			font-weight: bold;
+			color: #F7F7F8;
+			width: 100px;
+			height: 45px;*/
+			width: 5em;
+			height: 5em;
+			padding: 0px;
+			border-radius: 50%;
+			border: 2px solid white;
+			margin: 0px auto;
+			margin-bottom: 15px;
+			margin-left: 65%;
+			margin-top: -10px;
+			text-align: center;
+			vertical-align: middle;
+			line-height: 80px;
+			color: white;
+			
+		}	
+		.num {
+			text-align: left;
+			font-size: 50px;
+			margin-left: 10px;
+		}
+		.mui-pull-left, .mui-pull-right{
+    		color: gray;
+    	}
+    	h3{
+    		color: red;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">店员奖励</h1>
+		<a id="query" class="mui-pull-right mui-btn-link" style="color: white;font-size: 14px;">明细</a>
+	</header>
+	<div class="mui-content">
+		<div class="headImg">
+			<div class="touxiang">
+				<span>未领奖(元)</span>
+				<!--<div class="mui-btn mui-btn-primary" id="pay">
+					领&nbsp;奖
+				</div>-->
+				<div id="pay"> 
+					<!--<a id="trueimg" href="../zghd/zghd-pay-list.html" style="color: white;font-weight: bold;">-->
+						<!--<img id="head-img" src="../img/timg.jpg" style="width: 100%; height: 100%; border-radius: 50%;" />-->
+						领&nbsp;奖
+					<!--</a>-->
+				</div>
+			</div>
+			<div class="num">
+				<span id="curamonut">0.00</span>
+			</div>
+		</div>
+		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: white;">
+			<li class="mui-table-view-cell mui-media mui-col-xs-6" style="border: 0;padding:0 50px;">
+				<a id="2" href="../zghd/zghd-jl.html" style="padding: 0;border-bottom: 2px solid #0062CC;">
+					<h3 id="total">0</h3>
+					<h5>累计奖励(元)</h5>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-6" style="border: 0;padding:0 50px;">
+				<a id="3" href="../zghd/zghd-ling-list.html" style="padding: 0;border-bottom: 2px solid #0062CC;">
+					<h3 id="owneramount">0</h3>
+					<h5>累计领奖(元)</h5>
+				</a>
+			</li>
+		</ul>
+		<ul class="mui-table-view" style="margin-top:15px ;">
+			<li class="mui-table-view-cell">
+				<a id="4" class="mui-navigate-right" href="../zghd/zghd-jl-list.html">
+					<span class="mui-badge mui-badge-danger" id="curMonthAmount">0</span>
+					当月奖励明细
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a id="5" class="mui-navigate-right" href="../zghd/zghd-ling-list.html">
+					<span class="mui-badge mui-badge-danger" id="allMonthAmount">0</span>
+					当月领奖明细
+				</a>
+			</li>
+		</ul>
+		<ul class="mui-table-view" style="margin-top:15px ;">
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../zghd/zghd-list.html">
+					<span ></span>
+					店奖活动查询
+				</a>
+			</li>
+		</ul>
+	</div>	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		var currentwebview;
+		mui.plusReady(function(){
+			currentwebview = plus.webview.currentWebview();
+			var user = JSON.parse(localStorage.getItem('$users'));
+			ajax_get_zghd_index(
+				{
+					appuserid:user.appuserid,
+					userid:user.buyerId
+				},function(data){
+					if(data.success == 'true'){
+						if(data.tyReward != null &&data.tyReward != ""){
+							var curamount = data.tyReward.curamount;
+							var allmount = data.tyReward.allmount;
+							document.getElementById("total").innerText=allmount;
+							document.getElementById("curamonut").innerText=curamount;
+							document.getElementById("owneramount").innerText=allmount-curamount;
+						}
+						document.getElementById("curMonthAmount").innerText="￥"+data.curAmount;
+						document.getElementById("allMonthAmount").innerText="￥"+data.allMonthAmount;
+					}else{
+						mui.toast(data.msg);
+					}
+					
+			});
+			
+			document.getElementById("pay").addEventListener("tap",function(){
+				mui.openWindow({
+					url:"../zghd/zghd-pay-list.html",
+					id:"../zghd/zghd-pay-list.html",
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			document.getElementById("query").addEventListener("tap",function(){
+				mui.openWindow({
+					url:"../zghd/zghd-ling-list.html",
+					id:"../zghd/zghd-ling-list.html",
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						type:"0"
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			mui('.mui-content').on('tap','a',function(){
+				var id = this.getAttribute('href');
+				var href = this.href;
+				var type=this.id;
+				mui.openWindow({
+					url:href,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						type:type
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			//自定义事件，接收查询结果并刷新当前页面
+			window.addEventListener('refreshWebView',function(e){
+				currentwebview.reload();
+			});
+		});
+	</script>
+</body>
+</html>

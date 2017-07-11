@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+		.mui-pull-left, .mui-pull-right{
+    		color: gray;
+    	}
+    	h5 {
+			color: black;
+			font-weight: bold;
+		}
+    	.appName{
+			float: left;
+			font-size: 17px;
+		}		
+		.areaName{
+			float: left;
+		}
+		.status{
+			float: right;
+			font-size: 17px;
+		}
+		.view-more-text{ 
+			position: absolute; 
+			font-size: 16px; 
+			font-weight: bold;
+			color: red;
+			right:30px;
+		}
+		.dzs{
+			font-size: 14px;
+		}
+		.dzs img{
+			width: 24px;
+			vertical-align: middle;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;" id="title"></h1>
+	</header>
+	<div class="mui-content">
+		<ul class="mui-table-view" style="margin-top: 0;">
+			<li class="mui-table-view-cell">
+				<h5 class="appName">总金额</h5>
+				<h5 class="status">0</h5>
+			</li>
+			<li class="mui-table-view-cell" id="chart" style="min-height: 250px;padding: 0;">
+			</li>
+		</ul>
+		<ul class="mui-table-view" style="margin-top:15px ;" id="dzsList">
+			<li class="mui-table-view-cell">
+				<h5 class="appName">垫资商</h5>
+			</li>
+			<!--<li class="mui-table-view-cell" id="yongjin">
+				<a href="../network/network-user-payment.html" class="dzs">
+					<img src="../img/hzy-gywm.png"/>
+					<span class="view-more-text">20</span>垫子上1
+				</a>
+			</li>-->
+		</ul>
+	</div>	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/echarts.common.min.js" charset="utf-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		
+		var currentwebview,
+			type,
+			title,
+			dzsList;
+			var num1 = [];
+			var num2 = [];
+		mui.plusReady(function(){
+			currentwebview = plus.webview.currentWebview();
+			type=currentwebview.type;
+			title = document.getElementById("title");
+			dzsList = document.getElementById("dzsList");
+			if(type=="1")
+				title.innerText="奖励余额";
+			else if(type=="2")
+				title.innerText="累计奖励";
+			else if(type=="3")
+				title.innerText="累计领奖";
+			var user = JSON.parse(localStorage.getItem('$users'));
+			ajax_get_zghd_jl(
+				{
+					appuserid:user.appuserid,
+					userid:user.buyerId,
+					type:type
+				},function(data){
+					if(data.success == "true"){
+						var barChart = echarts.init(document.getElementById('chart'));
+						//回写奖励总额
+						document.querySelector(".status").innerText = '¥'+parseFloat(data.money).toLocaleString();
+						mui.each(data.chartList,function(index,item){
+						  	num1.push(item.name);
+						 	num2.push(item);
+						});
+						chartOption.legend.data = num1;
+						chartOption.series[0].data =num2 ;
+						barChart.setOption(chartOption);
+						//列表
+						mui.each(data.rewardlist,function(index,item){
+							var html = '';
+							var amount;
+							if(type=='1'){
+								amount = item.curamount;
+							}else if(type=='2'){
+								amount = item.allmount;
+							}else if(type=='3'){
+								amount = item.allmount-item.curamount;
+							}
+							var listItem = document.createElement('li');
+							listItem.className = 'mui-table-view-cell';
+							listItem.id = item.id;
+							html = '<a data-id="'+item.cushionId+'" href="../zghd/zghd-jl-list.html" class="dzs">\
+										<img  src="../img/hzy-gywm.png"/>\
+										<span class="view-more-text">'+amount+'</span>'+item.cushionName+'\
+									</a>';
+							listItem.innerHTML = html;
+							dzsList.appendChild(listItem);
+						});
+					}else{
+						mui.toast(data.msg);
+					}
+			});
+			
+			mui('.mui-table-view').on('tap','a',function(){
+				var id = this.getAttribute('href');
+				var href = this.href;
+				var cushionId = this.getAttribute('data-id');
+				mui.openWindow({
+					url:href,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						type:type,
+						cushionId:cushionId
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+		});
+		
+		//图表控件
+		var	chartOption = {
+		    legend: {
+		        orient: 'orient',
+		        x: 'right',
+		        top:'middle',
+		        data:[]
+		    },
+		    series: [
+		        {
+		            name:'奖励明细',
+		            type:'pie',
+		            radius: ['24%', '50%'],
+		            avoidLabelOverlap: false,
+		            label: {
+		                normal: {
+		                    show: false,
+		                    position: 'center'
+		                },
+		                emphasis: {
+		                    show: false,
+		                    textStyle: {
+		                        fontSize: '16',
+		                        fontWeight: 'bold'
+		                    }
+		                }
+		            },
+		            labelLine: {
+		                normal: {
+		                    show: false
+		                }
+		            },
+		            center: ['30%', '50%'],
+					data:[]
+		        }
+		    ]
+		};
+	</script>
+</body>
+</html>

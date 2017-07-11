@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>自注册平台数据统计表</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+	    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    	<link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+		<style>
+			h5 {
+				font-weight: bold;
+			}
+			.list-padding{
+				margin-bottom: 15px;
+			}
+			.mui-pull-left,.mui-pull-right {
+    			color: gray;
+			}
+			.appName{
+			float: left;
+			font-size: 17px;
+			}		
+			
+			.status{
+				float: right;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+	    	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    	<h1 class="mui-title" style="color: white;">分析</h1>
+	    	<a id="query" class="mui-icon mui-icon-search mui-pull-right" ></a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view list-padding">
+				<li class="mui-table-view-cell">
+					<h4>自注册数占比统计图</h4>
+					<h5 id="range1"></h5>
+				</li>
+				<li class="mui-table-view-cell" id="barChart1" style="height: 220px;padding: 0;">
+					
+				</li>
+			</ul>
+			<ul class="mui-table-view list-padding">
+				<li class="mui-table-view-cell">
+					<h4>直供销量占比统计图</h4>
+					<h5 id="range2"></h5>
+				</li>
+				<li class="mui-table-view-cell" id="barChart2" style="height: 220px;padding: 0;">
+					
+				</li>
+			</ul>
+			<ul class="mui-table-view list-padding">
+				<li class="mui-table-view-cell">
+					<h4>匹配量占比统计图</h4>
+					<h5 id="range3"></h5>
+				</li>
+				<li class="mui-table-view-cell" id="barChart3" style="height: 220px;padding: 0;">
+					
+				</li>
+			</ul>
+			<!--<ul class="mui-table-view list-padding comlist" id="saleList">
+				<li class="mui-table-view-cell">
+				 	<h4 class="appName">自注册平台数据统计表</h4>
+				 	<h5 class="status"></h5>
+				</li>
+				<li class="mui-table-view-cell">
+				 	<table>
+				 		<tr>
+				 			<td >1</td>
+				 		</tr>
+				 		<tr>
+				 			<td>2</td>
+				 		</tr>
+				 		<tr>
+				 			<td >3</td>
+				 		</tr>
+				 		<tr>
+				 			<td>4</td>
+				 		</tr>
+				 	</table>
+				</li>
+			</ul>-->
+		</div>
+		<script src="../js/ajax.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/echarts-all.js"></script>
+		<script type="text/javascript" charset="UTF-8">
+			mui.init({
+				swipeBack:true
+			});
+			var anaylzeWebview,//当前webview
+				saleList,
+				begindate,
+				enddate;
+			mui.plusReady(function(){
+				anaylzeWebview = plus.webview.currentWebview();
+				saleList = document.getElementById("saleList");
+				//ajax获取数据
+				ajax_get_report_register({
+					begindate:begindate||'',
+					enddate:enddate||''
+				},function(data){
+					if(data.code=='000000'){
+						var num1 = [];
+						var num2 = []; 
+						var num3 = [];
+						//自注册数
+						mui.each(JSON.parse(data.zzcList),function(index,item){
+							//饼图
+							num1.push(item);
+						});
+						chartOption1.series[0].data =num1 ;
+						barChart1.setOption(chartOption1);
+						//直供销量
+						mui.each(JSON.parse(data.sellList),function(index,item){
+							//饼图
+							num2.push(item);
+						});
+						chartOption2.series[0].data =num2 ;
+						barChart2.setOption(chartOption2);
+						//匹配量
+						mui.each(JSON.parse(data.sellzzcList),function(index,item){
+							//饼图
+							num3.push(item);
+						});
+						chartOption3.series[0].data =num3 ;
+						barChart3.setOption(chartOption3);
+						//统计表
+						var html ='';
+						var listItem = document.createElement('li');
+						listItem.className="mui-table-view-cell";
+						html='<h5 style="float: left;width:50%">'+item.name+'</h5>\
+							<h5 style="float: left;width:34%">'+item.zzc+'次</h5>\
+					 		<h5 style="float: left;width:34%">'+item.sell+'次</h5>\
+					 		<h5 style="float: right;">'+percent+'%</h5>';
+					 	listItem.innerHTML=html;
+					 	saleList.appendChild(listItem);
+					}else{
+						mui.toast(data.msg);
+					}
+					
+				});
+				
+				//自定义事件
+				window.addEventListener('queryanaNum',function(e){
+					//获取传递数据
+					begindate = e.detail.begindate;
+					enddate = e.detail.enddate;
+					//隐藏已有的图表
+					document.getElementById("barChart").style.display='none';
+					//删除统计表数据
+					saleList.innerHTML='<li class="mui-table-view-cell">\
+										<h4 class="appName">终端销售占比统计表</h4>\
+										<h5 class="status"></h5>\
+										</li>';
+					//显示查询的范围
+					document.getElementById("range").innerText=begindate+'~'+enddate;
+					//查询后台，获取数据
+					ajax_get_report_sale({
+						begindate:begindate||'',
+						enddate:enddate||''
+					},function(data){
+						if(data.code=='000000'){
+							document.querySelector('.status').innerText="总次数:  "+data.amount;
+							var num1 = []; 
+							mui.each(JSON.parse(data.resultList),function(index,item){
+								//饼图
+								num1.push(item);
+								//列表
+								var percent = Math.round(item.value / data.amount * 10000) / 100.00;
+								var html ='';
+								var listItem = document.createElement('li');
+								listItem.className="mui-table-view-cell";
+								html='<h5 style="float: left;width:50%">'+item.name+'</h5>\
+							 		<h5 style="float: left;width:34%">'+item.value+'次</h5>\
+							 		<h5 style="float: right;">'+percent+'%</h5>';
+							 	listItem.innerHTML=html;
+							 	saleList.appendChild(listItem);
+							});
+							chartOption.series[0].data =num1 ;
+							barChart.setOption(chartOption);
+							document.getElementById("barChart").style.display='block';
+						}else{
+							mui.toast(data.msg);
+						}
+					});
+				},false);
+				 
+			});
+			
+			/*document.getElementById("query").addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../anaylzeHtml/anaylze-percent-query.html',
+					id:'../anaylzeHtml/anaylze-percent-query.html',
+					styles:{
+						popGesture:'close'
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+				
+			},false);*/
+			
+			var chartOption1 =  {
+				calculable: false,
+				series: [{
+					name: '访问来源',
+					type: 'pie',
+					radius: '65%',
+					center: ['50%', '50%'],
+					data: []
+				}]
+			};
+			var byId = function(id) {
+				return document.getElementById(id);
+			};
+			var barChart1 = echarts.init(byId('barChart1'));
+			
+			var chartOption2 =  {
+				calculable: false,
+				series: [{
+					name: '访问来源',
+					type: 'pie',
+					radius: '65%',
+					center: ['50%', '50%'],
+					data: []
+				}]
+			};
+			var barChart2 = echarts.init(byId('barChart2'));
+			
+			var chartOption3 =  {
+				calculable: false,
+				series: [{
+					name: '访问来源',
+					type: 'pie',
+					radius: '65%',
+					center: ['50%', '50%'],
+					data: []
+				}]
+			};
+			var barChart3 = echarts.init(byId('barChart3'));
+		</script>
+	</body>
+</html>

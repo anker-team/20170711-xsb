@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    
+    <style type="text/css">
+    		.mui-table-view .mui-media-object {
+			line-height: 75px;
+			max-width: 75px;
+			height: 75px;
+		}
+		.itemName {
+			color: black;
+			font-size: 0.9em;
+		}
+		
+		.price {
+			margin-top: 10px;
+			font-size: 1em;
+		}
+		
+		.curprice {
+			color: #ef5028
+		}
+		.preprice {
+			color: black;
+			text-decoration:line-through
+		}
+		.mui-pull-left {
+    			color: gray;
+		}
+		h5 {
+			color: black
+		}
+		
+		.name {
+			float: left;
+		}
+		.number {
+			float: right;
+		}
+		
+		.address {
+			padding-top: 2px;
+			clear: both;
+		}
+		
+		.li_3{
+			padding: 5px 15px;
+		}
+		
+		.button {
+			float: right;
+		}
+		
+		.money{
+			float: left;
+		}
+		.status{
+			float: right;
+			color: red;
+			font-weight: 500;
+		}
+		
+		.appName{
+			float: left;
+			font-size: 16px;
+		}
+		
+		.list-padding{
+			margin-bottom: 15px;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">靓号筛选</h1>
+	</header>
+	<nav class="mui-bar mui-bar-tab">
+		<div class="mui-button-row" style="margin: 0 15px 15px 15px;">
+			<button id="queryBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">查询</button>
+		</div>
+	</nav>
+	<div class="mui-content">
+		<ul id="id-1" class="mui-table-view list-padding" style="display: none;">
+			<li class="mui-table-view-cell">
+				<h5 class="appName">号段</h5>
+			</li>
+			<li class="mui-table-view-cell mui-media" >
+				<div class="mui-slider-handle" id="no-1">
+					
+				</div>
+			</li>
+		</ul>
+		<ul id="id-2" class="mui-table-view list-padding" style="display: none;">
+			<li class="mui-table-view-cell">
+				<h5 class="appName">靓号类型</h5>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<div class="mui-slider-handle" id="no-2">
+					
+				</div>
+			</li>
+		</ul>
+		<!--<ul id="id-3" class="mui-table-view list-padding" style="display: none;">
+			<li class="mui-table-view-cell">
+				<h5 class="appName">尾数</h5>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<div class="mui-slider-handle" id="no-3">
+
+				</div>
+			</li>
+		</ul>-->
+		<ul id="id-4" class="mui-table-view list-padding" style="display: none;">
+			<li class="mui-table-view-cell">
+				<h5 class="appName">积分段</h5>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<div class="mui-input-row">
+					<input type="text" id="beginnum" class="mui-input-clear" placeholder="请输入起始积分" />
+				</div>
+				<div class="mui-input-row">
+					<input type="text" id="endnum" class="mui-input-clear" placeholder="请输入最大积分" />
+				</div>
+			</li>
+		</ul>
+		<ul id="id-5" class="mui-table-view list-padding" style="display: none;">
+			<li class="mui-table-view-cell">
+				<h5 class="appName">号码</h5>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<div class="mui-input-row">
+					<input type="text" id="mobileno" class="mui-input-clear" placeholder="请输入号码" />
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/arttmpl.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		var phoneQueryWebView;//当前页面
+		var selectno = [], //号段
+			cardtype =[], //靓号
+			tailnum, //尾数
+			beginnum, //最小积分
+			endnum, //最大积分
+			mobileno //号码
+		mui.plusReady(function(){
+			phoneQueryWebView = plus.webview.currentWebview();
+			//ajax获取数据
+			ajax_get_good_phonenum_query({},function(data){
+				if(data.selectnolist != ''){ //号段
+					var html = '';
+					mui.each(JSON.parse(data.selectnolist),function(index,item){
+						html+='<button data-id="'+item.value+'" style="margin-bottom:10px;" type="button" class="mui-btn mui-btn-outlined">'+item.enumitemname+'</button>&nbsp;'
+					});
+					document.getElementById("no-1").innerHTML=html;
+					document.getElementById("id-1").style.display = 'block';
+				}
+				if(data.cardtypelist != ''){ //靓号
+					var html = '';
+					mui.each(JSON.parse(data.cardtypelist),function(index,item){
+						html+='<button data-id="'+item.value+'" style="margin-bottom: 10px;" type="button" class="mui-btn mui-btn-outlined">'+item.enumitemname+'</button>&nbsp;'
+					});
+					document.getElementById("no-2").innerHTML=html;
+					document.getElementById("id-2").style.display = 'block';
+				}
+//				if(data.cardtypelist != ''){ //尾数
+//					var html = '';
+//					mui.each(JSON.parse(data.tailnumlist),function(index,item){
+//						html+='<button data-id="'+item.value+'" style="margin-bottom: 10px;" type="button" class="mui-btn mui-btn-outlined">'+item.enumitemname+'</button>&nbsp;'
+//					});
+//					document.getElementById("no-3").innerHTML=html;
+//					document.getElementById("id-3").style.display = 'block';
+//				}
+				
+				document.getElementById("id-4").style.display='block';
+				document.getElementById("id-5").style.display='block';
+			});
+			
+			//监听选定的号段
+			mui('#no-1').on('tap','button',function(){
+				var cname = this.className;
+				if(cname.indexOf('mui-btn-danger')>0){
+					this.className = 'mui-btn mui-btn-outlined';
+					for(var i=0;i<selectno.length;i++){
+						if(selectno[i] == this.getAttribute('data-id')){
+							selectno.splice(i,1);
+						}
+					}
+				}else{
+					this.className = 'mui-btn mui-btn-outlined mui-btn-danger';
+					selectno.push(this.getAttribute('data-id'));
+				}
+//				var pNode = this.parentNode;
+//				var x = pNode.child;
+//				for (var i = 0; i <pNode.children.length; i++) {
+//				    pNode.children[i].className = 'mui-btn mui-btn-outlined';
+//				}
+//				this.className = 'mui-btn mui-btn-outlined mui-btn-danger';
+//				selectno=this.getAttribute('data-id');s
+			});
+			
+			//监听选定的靓号
+			mui('#no-2').on('tap','button',function(){
+				var cname = this.className;
+				if(cname.indexOf('mui-btn-danger')>0){
+					this.className = 'mui-btn mui-btn-outlined';
+					for(var i=0;i<cardtype.length;i++){
+						if(cardtype[i] == this.getAttribute('data-id')){
+							cardtype.splice(i,1);
+						}
+					}
+				}else{
+					this.className = 'mui-btn mui-btn-outlined mui-btn-danger';
+					cardtype.push(this.getAttribute('data-id'));
+				}
+//				var pNode = this.parentNode;
+//				var x = pNode.child;
+//				for (var i = 0; i <pNode.children.length; i++) {
+//				    pNode.children[i].className = 'mui-btn mui-btn-outlined';
+//				}
+//				this.className = 'mui-btn mui-btn-outlined mui-btn-danger';
+//				cardtype=this.getAttribute('data-id');
+				 
+			});
+			
+//			//监听选定的尾数
+//			mui('#no-3').on('tap','button',function(){
+//				var cname = this.className;
+//				if(cname.indexOf('mui-btn-danger')>0){
+//					this.className = 'mui-btn mui-btn-outlined';
+//					for(var i=0;i<tailnum.length;i++){
+//						if(tailnum[i] == this.getAttribute('data-id')){
+//							tailnum.splice(i,1);
+//						}
+//					}
+//				}else{
+//					this.className = 'mui-btn mui-btn-outlined mui-btn-danger';
+//					tailnum.push(this.getAttribute('data-id'));
+//				}
+////				var pNode = this.parentNode;
+////				var x = pNode.child;
+////				for (var i = 0; i <pNode.children.length; i++) {
+////				    pNode.children[i].className = 'mui-btn mui-btn-outlined';
+////				}
+////				this.className = 'mui-btn mui-btn-outlined mui-btn-danger';
+////				tailnum=this.getAttribute('data-id');
+//				 
+//			});
+			//监听点击查询按钮
+			document.getElementById("queryBtn").addEventListener('tap',function(){
+				var beginnum =document.getElementById("beginnum").value;
+				var endnum = document.getElementById("endnum").value;
+				var mobileno = document.getElementById("mobileno").value;
+				var lastWebView = plus.webview.getWebviewById('../goodPhoneNum/goodPhoneNum-list.html');
+				selectno = selectno.length>0?selectno.join(','):'';
+				cardtype = cardtype.length>0?cardtype.join(','):'';
+				mui.fire(lastWebView,'queryGoodPhoneNum',{
+					selectno:selectno||[],
+					cardtype:cardtype||[],
+					//tailnum:tailnum||'',
+					beginnum:beginnum||'',
+					endnum:endnum||'',
+					mobileno:mobileno||''
+				});
+				phoneQueryWebView.close();
+			},false);
+		});
+	</script>
+</body>
+</html>

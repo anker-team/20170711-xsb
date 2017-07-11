@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>    
+    <style type="text/css">
+		.view-more-text{ 
+			position: absolute; 
+			font-size: 12px; 
+			color: #999;
+			right:10px;
+		}
+		.time{
+			color : red;
+		}
+    </style>
+</head>
+<body>
+	
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-left-nav-color"></a>
+		<h1 class="mui-title" style="color: white;">支付订单</h1>
+	</header>	
+	<div class="mui-content" style="display: none;">
+		<ul  class="mui-table-view mui-table-view-chevron" style="margin-top: 0;margin-bottom: 15px;">
+			<li class="mui-table-view-cell" style="padding-right: 10px;">
+				<p style="font-size: 12px;text-align: center;">支付截止时间：<span class="time"></span></p>
+			</li>
+		</ul>
+		<ul  class="mui-table-view mui-table-view-chevron" style="margin-top: 0;margin-bottom: 15px;">
+			<li class="mui-table-view-cell" >订单号：<span id="orderno"></span></li>
+			<li class="mui-table-view-cell">支付金额：<span id="pricebtn"></span></li>
+		</ul>
+		
+		<div class="mui-button-row" style="margin: 10px 15px;">
+			<button id="loginBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">确认支付</button>
+		</div>
+		
+		
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+		var pricebtn;
+		var orderSubmitWebView;
+		var cartWebView;
+		var orderId = '';
+		var orderprice;
+		var orderNo;
+		mui.plusReady(function(){
+			pricebtn = document.getElementById('pricebtn');
+			orderSubmitWebView = plus.webview.currentWebview();
+			orderId = orderSubmitWebView.orderId||'';
+			orderprice = orderSubmitWebView.orderprice;
+			orderNo = orderSubmitWebView.orderNo;
+			console.log(orderId);
+//			if(!orderId){
+//				mui.toast('支付订单出错，请重试');
+//				orderSubmitWebView.close();
+//			}
+				
+			//获取服务器时间，支付限时40分钟
+			ajax_get_server_time({orderid:orderId},function(data){
+				document.querySelector('.mui-content').style.display='block';
+				document.querySelector('.time').innerText = data;
+			});
+			
+			
+			//判断返回到哪一个购物车页面
+			if(orderSubmitWebView.categoryID){
+				cartWebView = plus.webview.getWebviewById('../order/order-cart.html');
+			}else{
+				cartWebView = plus.webview.getWebviewById('baritemHtml/cart.html');
+			}
+			//获取支付价格
+			pricebtn.innerHTML=orderprice;
+			document.getElementById("orderno").innerHTML=orderSubmitWebView.orderNo;
+			plus.webview.getWebviewById('template-main.html').hide();
+			//点击确认支付，调取支付接口页面
+			loginBtn.addEventListener('tap',function(){
+				
+				mui.openWindow({
+					url:'../order/order-pay.html',
+					id:'../order/order-pay.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						orderId: orderId,
+						type : '1',
+						orderNo:orderNo,
+						orderprice:orderprice
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});			  
+			},false);
+	});
+	
+	//点击返回购物车
+	 mui.back=function(){
+            var btn =   ["取消","确定"];
+            mui.confirm("取消支付订单？","销售宝",btn,function(e){
+                if(e.index==1){
+                	orderSubmitWebView.close();
+                	mui.fire(cartWebView,'refreshCartWebView',false);
+                }
+            },'div');
+        };
+	</script>
+</body>
+</html>

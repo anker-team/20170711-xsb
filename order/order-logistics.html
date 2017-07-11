@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>    
+    <style type="text/css">
+    		.emptyAddress {
+    			text-align: center;
+    			margin-top: 50px;
+    			font-size: 0.9em;
+    		}
+    		
+    		h5 {
+    			color: black
+    		}
+    		
+    		.name {
+    			float: left;
+    		}
+    		.number {
+    			float: right;
+    		}
+    		
+    		.address {
+    			padding-top: 2px;
+    			clear: both;
+    		}
+    		
+    		.price{
+    			float: right;
+    		}
+    		
+    		.pricenum{
+    			color: red;
+    			font-size: 18px;
+    		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-left-nav-color"></a>
+		<h1 class="mui-title" style="color: white;">选择物流</h1>
+	</header>
+	<div class="mui-content">
+		<ul id="logisticsList" class="mui-table-view" style="display: none;">
+			
+		</ul>
+		<div id="nonePhone" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">物流商信息为空</span>
+			<br />
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="../js/ajax.js" ></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+		 
+		var orderlogisticsWebview; //当前webview
+		var orderMianWebview; //生成订单页面webview
+		var logwebview; //
+		mui.plusReady(function(){
+			logwebview = document.getElementById("logisticsList");
+			orderlogisticsWebview = plus.webview.currentWebview();
+			//获取后台物流数据
+			ajax_get_logis_detail({
+				phonenum : orderlogisticsWebview.phonenum,
+				begdistrictid : orderlogisticsWebview.begdistrictid,
+				adressid : orderlogisticsWebview.adressid
+			});
+			
+			//选择物流商，并传值到订单页面
+			mui('.mui-table-view').on('tap','li',function(){
+				//订单页面赋在temple-sub.html共用子页面中。
+				orderMianWebview = plus.webview.getWebviewById('template-sub.html');
+				var wucompanyid=this.getAttribute('data-wucompanyid'),
+					wlchargeid =this.getAttribute('data-wlchargeid'),
+					companyname = this.getAttribute('data-companyname'),
+					wlprice = this.children[1].children[0].innerText;
+				mui.fire(orderMianWebview,'getLogisticsInfo',{
+					wucompanyid: wucompanyid,//仓库ID
+					wlchargeid: wlchargeid,//物流过程表ID
+					companyname:companyname, //物流名称
+					wlprice : wlprice //物流费
+					
+				});
+				plus.webview.currentWebview().close(); //关闭当前页面，释放资源
+			});
+		});
+		
+		//获取通过ajax传递过来的物流信息
+			function logisticsListSuccess(data){
+				if(data.code =='000000'){
+					var html = '';
+					mui.each(JSON.parse(data.logisticsList),function(index,item){
+						html += '<li class="mui-table-view-cell" data-wlchargeid ="'+item.wlchargeid+'" data-wucompanyid = "'+item.wucompanyid+'" data-companyname="'+item.companyname+'">\
+						<h5 class="name">'+item.companyname+'</h5>\
+						<h5 class="price">物流费 : ￥<span class="pricenum">'+item.wlprice+'</span></h5>\
+						<p class="address mui-ellipsis-2">'+item.remarks+'</p></li>';
+						 
+					});
+					logwebview.style.display='block';
+					logwebview.innerHTML=html;
+				}else{
+					document.getElementById("nonePhone").style.display= 'block';
+				}
+			}
+		
+	</script>
+</body>
+</html>

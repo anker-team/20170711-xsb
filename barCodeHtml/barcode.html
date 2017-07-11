@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>销售宝</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/own.css" rel="stylesheet" />
+		<style type="text/css">
+			.change-inline{
+				display: :block;
+				background-size:cover;
+				height: 100%;
+				width:100%;
+			}
+			.mui-pull-left,.mui-bar .mui-pull-right{
+				color: gray;
+			}
+			.title{
+    		float: left;
+	    	}
+	    	
+	    	.value{
+	    		float: right;
+	    	}
+		</style>	
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="type1" class="mui-title">
+				<div class="search-box">
+					<input type="search" class="search-text mui-input-clear" id="keywordsText" placeholder="搜索串码..." autofocus="autofocus">
+					<i class="mui-icon mui-icon-search search-btn" id="searchKey"></i>
+				</div>
+			</h1>
+			<a id="type2" class="mui-pull-right mui-btn-link" onclick="clicked('barcode_scan.html',true,true);">扫码</a>
+		</header>
+		<div class="mui-content">
+		    <div class="mui-card">
+		        <ul class="mui-table-view">
+		            <li class="mui-table-view-divider" style="color: black;">串码</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">串码</h5>
+						<h5 id="imei" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">报备入库时间</h5>
+						<h5 id="credate" class="value"></h5>
+		            </li>
+		           	<li class="mui-table-view-divider" style="color: black;">商品信息</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">名称</h5>
+						<h5 id="pro_name" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">颜色</h5>
+						<h5 id="color_schema" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">建议价格</h5>
+						<h5 id="market_price" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-divider" style="color: black;">串码状态</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">串码状态</h5>
+						<h5 id="status0" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-divider" style="color: black;">直供串码信息</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">是否直供串码</h5>
+						<h5 id="isyigou" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">直供状态</h5>
+						<h5 id="tystatus" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">供货商名称</h5>
+						<h5 id="suppname" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">直供入库时间</h5>
+						<h5 id="indate" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">采购商名称</h5>
+						<h5 id="companyname" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">订单号</h5>
+						<h5 id="orderno" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">直供出库时间</h5>
+						<h5 id="outdate" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title" id="shopname"></h5>
+						<h5 id="buyername" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-divider" style="color: black;">自注册激活信息</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">是否自注册激活</h5>
+						<h5 id="iszzc" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">自注册时间</h5>
+						<h5 id="registerdate" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">自注册手机号</h5>
+						<h5 id="mdn" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">自注册城市区号</h5>
+						<h5 id="citycode" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-divider" id="sign" style="color: black;">签收信息</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">签收时间</h5>
+						<h5 id="sgindate" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">签收工号</h5>
+						<h5 id="sgincrmno" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">签收销售点编码</h5>
+						<h5 id="sginno" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">签收销售点名称</h5>
+						<h5 id="sginpsname" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-divider" id="yz" style="color: black;">预占信息</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">预占时间</h5>
+						<h5 id="modifydate" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">预占工号</h5>
+						<h5 id="crmno" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">预占销售点编码</h5>
+						<h5 id="mapcrmno" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">预占销售点名称</h5>
+						<h5 id="hxpsname" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-divider" id="hx" style="color: black;">核销信息</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">核销方式</h5>
+						<h5 id="id1" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">核销时间</h5>
+						<h5 id="id2" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">核销工号</h5>
+						<h5 id="id3" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">核销销售点编码</h5>
+						<h5 id="id4" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">核销销售点名称</h5>
+						<h5 id="id5" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">核销系统</h5>
+						<h5 id="id6" class="value"></h5>
+		            </li>
+		        </ul>
+		    </div>
+		</div>
+		<script src="../js/ajax.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script>
+			mui.init({
+			swipeBack:false
+		}); 
+		var barcodeWebView,
+			imei,
+			type,
+			keywordsText=document.getElementById('keywordsText');
+		mui.plusReady(function(){
+			barcodeWebView = plus.webview.currentWebview();
+			imei = barcodeWebView.imei||'';
+			type = barcodeWebView.type||'';
+			if(type == 1){
+				document.getElementById("type1").style.display ='none';
+				document.getElementById("type2").style.display ='none';
+			}
+			if(imei)
+				searchRun(imei);
+			
+			//监听点击查询按钮的事件
+			document.getElementById('searchKey').addEventListener('tap',function(){
+				keywords=keywordsText.value;
+				searchRun(keywords);
+			});
+			
+			//监听点击软键盘按键的事件
+			document.addEventListener("keyup",function(event){
+				if((event||window.event).keyCode==13){//'13'代表enter键
+					keywordsText.blur(); //移开焦点
+					keywords=keywordsText.value;						 
+					searchRun(keywords);
+				}
+			});
+		});
+		
+		//获取传递过来的条形码数据
+		function scaned( t, r, f ) {
+			document.getElementById("keywordsText").value=r;
+			searchRun(r);
+		}
+		
+		
+		function searchRun(keywords){
+			ajax_get_barcode_info({
+				imei:keywords,
+				appuserid:JSON.parse(localStorage.getItem('$users')).appuserid
+			},function(data){
+				if(data.code == '000000'){
+					var ss =parseInt(data.status);
+					document.getElementById("imei").innerText=data.imei||'';
+					document.getElementById("credate").innerText=data.credate||'';
+					document.getElementById("pro_name").innerText=data.pro_name||'';
+					document.getElementById("color_schema").innerText=data.color_schema||'';
+					document.getElementById("market_price").innerText=data.market_price||'';
+					document.getElementById("status0").innerText=data.status0||'';
+					if(data.isyigou == '1'){ //是直供串码
+						document.getElementById("isyigou").innerText='是';
+						document.getElementById("tystatus").innerText=data.tystatus||'';
+						document.getElementById("suppname").innerText=data.suppname||'';
+						document.getElementById("indate").innerText=data.indate||'';
+						document.getElementById("companyname").innerText=data.companyname||'';
+						document.getElementById("orderno").innerText=data.orderno||'';
+						document.getElementById("outdate").innerText=data.outdate||'';
+						if(data.shopname){
+							document.getElementById("shopname").innerText=data.shopname||'';
+							document.getElementById("buyername").innerText=data.buyername||'';	
+						}else{
+							document.getElementById("shopname").parentNode.style.display='none';
+						}
+									
+					}else{//不是直供串码，隐藏
+						document.getElementById("isyigou").innerText='否';
+						document.getElementById("tystatus").parentNode.style.display='none';
+						document.getElementById("suppname").parentNode.style.display='none';
+						document.getElementById("indate").parentNode.style.display='none';
+						document.getElementById("companyname").parentNode.style.display='none';
+						document.getElementById("orderno").parentNode.style.display='none';
+						document.getElementById("outdate").parentNode.style.display='none';
+						document.getElementById("shopname").parentNode.style.display='none';
+					}
+					if(data.iszzc == '1'){ //是自注册
+						var mdn = data.mdn||'';
+						if(mdn)
+							mdn = mdn.substr(0,3)+"****"+mdn.substr(7);
+						document.getElementById("iszzc").innerText='是';
+						document.getElementById("registerdate").innerText=data.registerdate||'';
+						document.getElementById("mdn").innerText=mdn||'';
+						document.getElementById("citycode").innerText=data.citycode||'';		
+					}else{//不是自注册，隐藏
+						document.getElementById("iszzc").innerText='否';
+						document.getElementById("registerdate").parentNode.style.display='none';
+						document.getElementById("mdn").parentNode.style.display='none';
+						document.getElementById("citycode").parentNode.style.display='none';
+					}
+					if(ss>59 ){//签收信息
+						document.getElementById("sgindate").innerText=data.sgindate||'';
+						document.getElementById("sgincrmno").innerText=data.sgincrmno||'';
+						document.getElementById("sginno").innerText=data.sginno||'';
+						document.getElementById("sginpsname").innerText=data.sginpsname||'';
+					}else{ //无签收信息
+						document.getElementById("sign").style.display='none';
+						document.getElementById("sgindate").parentNode.style.display='none';
+						document.getElementById("sgincrmno").parentNode.style.display='none';
+						document.getElementById("sginno").parentNode.style.display='none';
+						document.getElementById("sginpsname").parentNode.style.display='none';
+					}
+					if(ss>=90 && ss<93){ //预占
+						document.getElementById("modifydate").innerText=data.modifydate||'';
+						document.getElementById("crmno").innerText=data.crmno||'';
+						document.getElementById("mapcrmno").innerText=data.mapcrmno||'';
+						document.getElementById("hxpsname").innerText=data.hxpsname||'';
+					}else{ //无预占信息
+						document.getElementById("yz").style.display='none';
+						document.getElementById("modifydate").parentNode.style.display='none';
+						document.getElementById("crmno").parentNode.style.display='none';
+						document.getElementById("mapcrmno").parentNode.style.display='none';
+						document.getElementById("hxpsname").parentNode.style.display='none';
+					}
+					if(ss>93){ //核销信息
+						document.getElementById("id1").innerText=data.label||'';
+						document.getElementById("id2").innerText=data.modifydate||'';
+						document.getElementById("id3").innerText=data.crmno||'';
+						document.getElementById("id4").innerText=data.mapcrmno||'';
+						document.getElementById("id5").innerText=data.hxpsname||'';
+						document.getElementById("id6").innerText=data.hxorgname||'';
+					}else{ //无核销信息
+						document.getElementById("hx").style.display='none';
+						document.getElementById("id1").parentNode.style.display='none';
+						document.getElementById("id2").parentNode.style.display='none';
+						document.getElementById("id3").parentNode.style.display='none';
+						document.getElementById("id4").parentNode.style.display='none';
+						document.getElementById("id5").parentNode.style.display='none';
+						document.getElementById("id6").parentNode.style.display='none';
+					}
+				}else{//为空
+					mui.toast('未查询到相关数据');
+				}
+			});
+		}
+	</script>
+	</body>
+</html>

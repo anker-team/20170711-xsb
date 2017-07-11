@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    
+    <style type="text/css">
+    		.mui-table-view .mui-media-object {
+			line-height: 75px;
+			max-width: 75px;
+			height: 75px;
+		}
+		.itemName {
+			color: black;
+			font-size: 0.9em;
+		}
+		
+		.price {
+			margin-top: 10px;
+			font-size: 1em;
+		}
+		
+		.curprice {
+			color: #ef5028
+		}
+		.preprice {
+			color: black;
+			text-decoration:line-through
+		}
+		.mui-pull-left {
+    			color: gray;
+		}
+		h5 {
+			color: black
+		}
+		
+		.name {
+			float: left;
+		}
+		.number {
+			float: right;
+		}
+		
+		.address {
+			padding-top: 2px;
+			clear: both;
+		}
+		
+		.li_3{
+			padding: 5px 15px;
+		}
+		
+		.button {
+			float: right;
+		}
+		
+		.money{
+			float: left;
+		}
+		.status{
+			float: right;
+			font-weight: 500;
+		}
+		
+		.appName{
+			float: left;
+			font-size: 16px;
+		}
+		
+		.list-padding{
+			margin-bottom: 15px;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">串码</h1>
+	</header>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div id="noneInfo" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未有相关串码数据</span>
+			<br />
+			<!--<button type="button" class="mui-btn own-btn-green" style="margin-top: 10px; padding: 5px 20px;">请登录</button>-->
+		</div>
+		<div class="mui-scroll">
+			<!--<ul id="xingyuandanList" class="mui-table-view list-padding">
+				<li class="mui-table-view-cell">
+					<h5 class="appName">订单号</h5>
+					<h5 class="status"></h5>
+				</li>
+				<li class="mui-table-view-cell">
+					<h5 class="appName">支付时间</h5>
+					<h5 class="status"></h5>
+				</li>
+			</ul>-->
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/arttmpl.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false,
+			pullRefresh: {
+				container:'#pullrefresh',
+				down:{
+					contentdown:'下拉可刷新',
+					contentover:'释放立即刷新',
+					contentrefresh:'正在加载..',
+					callback:pulldownRefresh
+				},
+				up:{
+					contentrefresh:'正在加载..',
+					contentnomore:'已加载全部订单',
+					callback:pullupRefresh
+				}
+			}
+		});
+		
+		
+		var myOrderWebView;//当前页面
+		var myOrderList;//
+		var isloaded = false;//是否正在请求数据
+		var page = 1;//页码
+		var pagesize ; //总页数
+		var isnodate = false;
+		var orderid;
+		mui.plusReady(function(){
+			myOrderWebView = plus.webview.currentWebview();
+			myOrderList = document.querySelector('.mui-scroll');
+			orderid = myOrderWebView.orderid;
+			//ajax获取数据，回写订单列表数据
+			ajax_get_barcode_order_code_list({
+				page:page,
+				page_size:'10',
+				orderid:orderid
+			});
+			isloaded = true;
+			
+			//监听订单点击事件，打开订单详情页面
+			mui('.mui-scroll').on('tap','ul',function(){
+				var imei = this.getAttribute('data-id');
+				mui.openWindow({
+					url:'../barCodeHtml/barcode.html',
+					id:'../barCodeHtml/barcode.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						imei:imei,//订单ID
+						type:1
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				}); 
+			});
+		});
+	
+		//成功获取订单列表数据
+		function getOrderList(data){
+			//if (data.length == '000000') {
+				if(data.pagesize == 0){//列表为空时
+					document.getElementById("noneInfo").style.display ='block';
+				}else{
+					pagesize = data.pagesize;
+					mui.each(JSON.parse(data.orderList),function(index,item){
+						var html = '';
+						var listItem = document.createElement('ul');
+						listItem.className = 'mui-table-view list-padding';
+						listItem.setAttribute('data-id',item.imei);
+						html = '<li class="mui-table-view-cell"><h5 class="appName">串码</h5>\
+								<h5 class="status">'+item.imei+'</h5></li>\
+								<li class="mui-table-view-cell"><h5 class="appName">报备入库时间</h5>\
+								<h5 class="status">'+item.credate+'</h5></li>';
+								
+						listItem.innerHTML = html ;
+						myOrderList.appendChild(listItem);
+					});
+			//}
+					isloaded = false;
+				}
+				
+		}
+		
+		function pulldownRefresh() {
+			setTimeout(function(){
+				
+				 mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			},1000);
+		}
+		function pullupRefresh(){
+			var copythis = this;
+			//上拉翻页
+			if(pagesize>page*10){
+				page++;
+				ajax_get_barcode_order_code_list({
+					page:page,
+					page_size:'10',
+					orderid:orderid
+				});
+			}else{
+				isnodate = true;
+			}
+			setTimeout(function(){
+				copythis.endPullupToRefresh(isnodate);
+			});
+		}
+	</script>
+</body>
+</html>

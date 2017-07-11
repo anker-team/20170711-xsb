@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="css/iconfont.css"/>
+    
+    <style type="text/css">
+    		/*下面两项是重置muicss的输入框label和input之间的宽比率*/
+    		.mui-input-row label {
+    			width: 20%;
+    		}
+    		.mui-input-row label~input {
+    			width: 80%;
+    		}
+    		.mui-input-group .mui-input-row:after{
+    			height: 0;
+    		}
+    		.share-top{
+    			margin: 3px 3px 3px 3px;
+    			height: 21px;
+    		}
+    </style>
+</head>
+<body>
+	<div class="mui-content">
+		<div class="share-top">
+			<a href="shareBarCode.html"><span id="shareBarCode" style="font-size: 14px; color: gray;float: left;">分享APP</span></a>
+			<a href="help.html"><span style="font-size: 14px; color: gray;float: right;">使用帮助</span></a>
+		</div>
+		<div style="margin-top: 60px; text-align: center;">
+			<!--<span class="mui-icon mui-icon-person" style="font-size: 4em; border: 2px solid gray; border-radius: 50%; color: gray;"></span>-->
+			<img src="img/login.png" style="width: 50%;"/>
+		</div>
+		<div class="mui-card" style="margin-top: 60px;border: 0;box-shadow: none;">
+			<form class="mui-input-group" style="background-color:#efeff4;">
+				<div class="mui-input-row" style="height: 60px;">
+					<label><span class="mui-icon iconfont icon-zhanghao"></span></label>
+					<input style="border-bottom: 1px solid #ddd;height: 44px;" type="text" class="mui-input-clear" placeholder="请输入用户" />
+				</div>
+				<div class="mui-input-row" style="height: 60px;">
+					<label><span class="mui-icon iconfont icon-mimaxiugai"></span></label>
+					<input style="border-bottom: 1px solid #ddd;height: 44px;" type="password" class="mui-input-clear" placeholder="请输入密码" />
+				</div>
+			</form>
+		</div>
+		<div class="mui-button-row" style="margin: 10px 15px;">
+			<button id="loginBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">登录</button>
+		</div>
+		<div class="mui-button-row" style="padding-top: 0px;">
+			<button id="register" type="button" class="mui-btn mui-btn-link own-main-color own-font-size" style="padding-top: 0px; margin-right: 60px; ">快速注册</button>
+			<button id="repsd" type="button" class="mui-btn mui-btn-link own-font-size" style="padding-top: 0px; margin-left: 60px; color: #FF6A6A;">忘记密码</button>
+		</div>
+	</div>
+	
+	<script src="js/mui.min.js" charset="UTF-8"></script>
+	<script src="js/own.js" charset="UTF-8"></script>
+	<script src="js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+		
+		var account;
+		var psd;
+		var login;
+		var register;
+		var repsd;
+		var loginWebview;
+		var backbtn; //是否点击'退出按钮退出'
+		mui.plusReady(function(){
+			var settings = getSettings();
+			account = document.querySelector('input[type="text"]');
+			psd = document.querySelector('input[type="password"]');
+			login = document.getElementById('loginBtn');
+			register = document.getElementById('register');
+			repsd = document.getElementById('repsd');
+			loginWebview = plus.webview.currentWebview();
+			backbtn = loginWebview.backbtn;
+			if(backbtn == 'back'){
+				account.value='';
+				psd.value = '';
+			}
+			//检查 "登录状态/锁屏状态" 开始
+			if (settings.autoLogin && settings.gestures) {
+				mui.openWindow({
+					url: 'unlock.html',
+					id: 'unlock',
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+			}else{
+				document.querySelector('.mui-content').style.display = 'block';
+			}
+			
+			//检测本地的登录过的账号。
+			if (localStorage.getItem('account')) {
+				account.value = localStorage.getItem('$account');
+			}
+			
+			//预加载首页
+//			var mainPage = mui.preload({//预加载页面
+//				"id": 'index',
+//				"url": 'index.html'
+//			});					
+			var toMain = function() {
+//				mui.fire(mainPage, 'show', null); //mui.fire 触发目标窗口自定义事件
+				setTimeout(function() { //异步操作，保证最后执行function里面的内容
+					mui.openWindow({
+						url:'index.html',
+						id: 'index',
+						show: {
+							aniShow: 'pop-in' //页面显示动画,从右侧平移入栈动画效果
+						},
+						waiting: {
+							autoShow: false //自动显示等待框，默认为true
+						}
+					});
+				}, 0);
+			};			 
+			
+			//登陆的点击事件
+			login.addEventListener('tap',function(){
+				var toastMSG;
+				//账号密码检测不能为空
+				if (account.value.length <= 0) {
+					toastMSG = '请输入账号';
+					mui.toast(toastMSG);
+					return;
+				}
+				if (psd.value.length <= 0) {
+					toastMSG = '密码不能为空';
+					mui.toast(toastMSG);
+					return;
+				}
+				//登陆联网处理todo之后将页面close
+				var loginInfo = {
+						username: account.value,
+						password: psd.value
+					};			 
+				ajax_login(loginInfo,function(data) {
+					//将用户信息和account分开存放是有好处的
+					if ('000000' == data.code) {
+						var user = {
+							name : data.name,
+							phone: data.phone,
+							account:data.login_name,
+							password:data.password,
+							id:data.userid, //直供ID
+							usertype:data.user_type, //用户类型
+							appuserid:data.id, //appID
+							userphone : data.userphone,
+							buyerId:data.companyid, //采购商ID
+							dbs:data.dbs //是否地包商
+						}
+						//将两个数据存放起来，第一个是等出之后删除，第二个只要登录之后就会记录保存
+						localStorage.removeItem('$users');
+						localStorage.removeItem('$account');
+						localStorage.setItem('$users',JSON.stringify(user));
+						localStorage.setItem('$account',data.login_name);
+						toMain();
+					}else{
+						mui.toast('用户名或密码错误');
+						
+					}
+				});
+			},false);
+			
+			setTimeout(function() {
+				//关闭 splash
+				plus.navigator.closeSplashscreen();
+			}, 600);
+			
+			//注册按钮的点击事件
+			register.addEventListener('tap', function(event) {
+				mui.openWindow({
+					url: 'Mine/register-needtem.html',
+					id: 'reg',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					styles: {
+						popGesture: 'hide'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+			}, false);
+			
+			//分享APP、使用帮助点击事件
+			mui(".share-top").on('tap','a', function(event) {
+				var url = this.href;
+				var id = this.getAttribute("href");
+				mui.openWindow({
+					url: url,
+					id: id,
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					styles: {
+						
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+			});
+			
+			//忘记密码按钮的点击事件
+			repsd.addEventListener('tap', function(event) {
+				mui.openWindow({
+					url: 'Mine/remenberpsd.html',
+					id: 'remenberpsd',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					styles: {
+						popGesture: 'hide'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+			}, false);
+			
+			//监听点击软键盘按键的事件
+			document.addEventListener("keyup",function(event){
+				if((event||window.event).keyCode==13){//'13'代表enter键
+					var toastMSG;
+					//账号密码检测不能为空
+					if (account.value.length <= 0) {
+						toastMSG = '请输入账号';
+						mui.toast(toastMSG);
+						return;
+					}
+					if (psd.value.length <= 0) {
+						toastMSG = '密码不能为空';
+						mui.toast(toastMSG);
+						return;
+					}
+					//登陆联网处理todo之后将页面close
+					var loginInfo = {
+							username: account.value,
+							password: psd.value
+						};			 
+					ajax_login(loginInfo,function(data) {
+						//将用户信息和account分开存放是有好处的
+						if ('000000' == data.code) {
+							alert(JSON.stringify(data))
+							var user = {
+								name : data.name,
+								phone: data.phone,
+								account:data.login_name,
+								password:data.password,
+								id:data.userid, //直供ID
+								usertype:data.user_type, //用户类型
+								appuserid:data.id, //appID
+								userphone : data.userphone,
+								buyerId:data.companyid, //采购商ID
+								dbs:data.dbs //是否地包商
+							}
+							//将两个数据存放起来，第一个是等出之后删除，第二个只要登录之后就会记录保存
+							localStorage.removeItem('$users');
+							localStorage.removeItem('$account');
+							localStorage.setItem('$users',JSON.stringify(user));
+							localStorage.setItem('$account',data.login_name);
+							toMain();
+						}else{
+							mui.toast('用户名或密码错误');
+							
+						}
+					});
+				}
+			});
+		});
+		
+		//点击两次，退出应用
+		var backButtonPress = 0;
+		mui.back = function(event) {
+			backButtonPress++;
+			if (backButtonPress > 1) {
+				plus.runtime.quit();
+			} else {
+				plus.nativeUI.toast('再按一次退出应用');
+			}
+			setTimeout(function() {
+				backButtonPress = 0;
+			}, 1000);
+			return false;
+		};
+	</script>
+</body>
+</html>

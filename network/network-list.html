@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">		
+		/*.mui-content {
+			background-color: #fff;
+		}*/
+		.mui-pull-left, .mui-pull-right{
+    		color: gray;
+    	}
+    	.headImg {
+			padding: 8% 0px 13% 0px;
+			background-color:#ef5028 ;
+			color: white;
+		}
+		.touxiang {
+			text-align: left;
+			height: 60px;
+			margin-left: 10px;
+		}
+		.touxiang div {
+			/*font-size: 18px;
+			font-weight: bold;
+			color: #F7F7F8;
+			width: 100px;
+			height: 45px;*/
+			width: 5em;
+			height: 5em;
+			padding: 0px;
+			border-radius: 50%;
+			border: 2px solid white;
+			margin: 0px auto;
+			margin-bottom: 15px;
+			margin-left: 65%;
+			margin-top: -10px;
+			text-align: center;
+			vertical-align: middle;
+			line-height: 80px;
+			color: white;
+			
+		}	
+		.num {
+			text-align: left;
+			font-size: 50px;
+			margin-left: 10px;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">地包商</h1>
+	</header>
+	<div class="mui-content">
+		<div class="headImg">
+			<div class="touxiang">
+				<span>未领奖(元)</span>
+				<div id="pay"> 
+					<!--<a id="trueimg" href="../zghd/zghd-pay-list.html" style="color: white;font-weight: bold;">-->
+						<!--<img id="head-img" src="../img/timg.jpg" style="width: 100%; height: 100%; border-radius: 50%;" />-->
+						领&nbsp;奖
+					<!--</a>-->
+				</div>
+			</div>
+			<div class="num">
+				<span id="curamonut">0.00</span>
+			</div>
+		</div>
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell mui-collapse">
+				<a class="mui-navigate-right">异网客商总数</a>
+				<div class="mui-collapse-content">
+					<p>累计：<span id="text1">0</span><p>
+					<p>当月：<span id="text2">0</span></p>
+				</div>
+			</li>
+			<li class="mui-table-view-cell mui-collapse">
+				<a class="mui-navigate-right">终端销量</a>
+				<div class="mui-collapse-content">
+					<p>累计：<span id="text3">0</span><p>
+					<p>当月：<span id="text4">0</span></p>
+				</div>
+			</li>
+			<li class="mui-table-view-cell mui-collapse">
+				<a class="mui-navigate-right">终端激活量</a>
+				<div class="mui-collapse-content">
+					<p>累计：<span id="text5">0</span><p>
+					<p>当月：<span id="text6">0</span></p>
+				</div>
+			</li>
+			<li class="mui-table-view-cell mui-collapse">
+				<a class="mui-navigate-right">终端奖励</a>
+				<div class="mui-collapse-content">
+					<p>累计：<span id="text7">0</span><p>
+					<p>当月：<span id="text8">0</span></p>
+				</div>
+			</li>
+		</ul>
+		<ul class="mui-table-view" style="margin-top: 10px;" id="view">
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../network/info.html">
+					分享二维码
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../network/network-user-detail.html">
+					异网客商明细
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../network/network-money-user-detail.html">
+					奖励明细
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		var currentwebview; 
+		mui.plusReady(function(){
+			currentwebview = plus.webview.currentWebview();
+			user = JSON.parse(localStorage.getItem('$users'));
+			ajax_get_network_index(
+				{
+					appuserid:user.appuserid,
+					userid:user.id
+				},function(data){
+					document.getElementById("text1").innerText=data.personMap.amount;
+					document.getElementById("text2").innerText=data.personMap.curamount;
+					document.getElementById("curamonut").innerText=data.dddMap.total;
+					document.getElementById("text3").innerText=data.dMap.amount;
+					document.getElementById("text4").innerText=data.dMap.curamount;
+					document.getElementById("text5").innerText=data.ddMap.amount;
+					document.getElementById("text6").innerText=data.ddMap.curamount;
+					document.getElementById("text7").innerText=data.dddMap.amount;
+					document.getElementById("text8").innerText=data.dddMap.curamount;
+				});
+			
+			document.getElementById("pay").addEventListener("tap",function(){
+				mui.openWindow({
+					url:"../network/network-user-payment.html",
+					id:"../network/network-user-payment.html",
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			mui('.mui-table-view').on('tap','a',function(){
+				var url = this.href;				
+				var id = this.getAttribute('href');
+				 mui.openWindow({
+					url:url,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						 
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+				});
+			});
+	</script>
+</body>
+</html>

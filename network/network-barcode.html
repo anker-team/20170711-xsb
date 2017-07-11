@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>销售宝</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/own.css" rel="stylesheet" />
+		<style type="text/css">
+			.change-inline{
+				display: :block;
+				background-size:cover;
+				height: 100%;
+				width:100%;
+			}
+			.mui-pull-left,.mui-bar .mui-pull-right{
+				color: gray;
+			}
+			.title{
+    		float: left;
+	    	}
+	    	
+	    	.value{
+	    		float: right;
+	    	}
+		</style>	
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="type1" class="mui-title" style="color: white;">扫码奖励</h1>
+			<a id="type2" class="mui-pull-right mui-btn-link" onclick="clicked('../network/network-barcode-scan2.html',true,true);">扫码</a>
+		</header>
+		<div class="mui-content">
+		    <div class="mui-card">
+		        <ul class="mui-table-view">
+		            <li class="mui-table-view-divider" style="color: black;">串码</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">串码</h5>
+						<h5 id="imei" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">报备入库时间</h5>
+						<h5 id="credate" class="value"></h5>
+		            </li>
+		           	<li class="mui-table-view-divider" style="color: black;">商品信息</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">名称</h5>
+						<h5 id="pro_name" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">颜色</h5>
+						<h5 id="color_schema" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">建议价格</h5>
+						<h5 id="market_price" class="value"></h5>
+		            </li>
+		            <li class="mui-table-view-divider">用户信息</li>
+		            <form class="mui-input-group" style="margin-top: 10px;">
+						<!--<div class="mui-input-row ">
+							<input style="width: 70%;" type="text" id="jlname" class="mui-input-clear" placeholder="请输入姓名" />
+						</div>-->
+						<div class="mui-input-row" >
+							<input style="width: 70%;" type="text" id="jlphone" class="mui-input-clear" placeholder="请输入手机号" />
+						</div>
+					</form>
+		            <li class="mui-table-view-divider" style="color: black;">奖励介绍</li>
+		            <li class="mui-table-view-cell">
+		            	<h5 class="title">激活串码可获取15元奖励，具体请在我的奖励中查询。</h5>
+		            </li>
+		        </ul>
+		    </div>
+		    <div class="mui-button-row " style="margin: 10px 15px;">
+				<button id="submit" type="button" class="mui-btn mui-btn-block own-btn-green" style="padding: 5px 0px;">确认</button>
+			</div>
+		</div>
+		<script src="../js/ajax.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script>
+			mui.init({
+			swipeBack:false
+		}); 
+		var currentWebView,
+			imei,
+			user;
+		mui.plusReady(function(){
+			currentWebView = plus.webview.currentWebview();
+			user = JSON.parse(localStorage.getItem('$users'));
+			imei = currentWebView.imei||'';
+			if(imei)
+				searchRun(imei);			
+		});
+		
+		//获取传递过来的条形码数据
+		function scaned( t, r, f ) {
+			console.log(r);
+			imei = r;
+			searchRun(r);
+		}
+		
+		function searchRun(keywords){
+			ajax_get_network_barcode_info({
+				imei:keywords,
+				appuserid:user.appuserid
+			},function(data){
+				if(data.code == '000000'){
+					var ss =parseInt(data.status);
+					document.getElementById("imei").innerText=data.imei||'';
+					document.getElementById("credate").innerText=data.credate||'';
+					document.getElementById("pro_name").innerText=data.pro_name||'';
+					document.getElementById("color_schema").innerText=data.color_schema||'';
+					document.getElementById("market_price").innerText=data.market_price||'';
+				}else{//为空
+					mui.toast('未查询到相关数据');
+				}
+			});
+		}
+		
+		document.getElementById("submit").addEventListener('tap',function(){
+			if(imei ==''){
+					mui.toast('串码不能为空');
+					return;
+			}
+			if(document.getElementById("jlphone").value ==''){
+					mui.toast('请输入手机号');
+					return;
+			}
+			mui.confirm("确认申报该串码？","销售宝",["取消","确定"],function(e){
+	            if(e.index==1){
+	            	var options={
+						phone:document.getElementById("jlphone").value,
+						appuserid:user.appuserid,
+						imei:imei,
+						amount:'15'
+					}
+	            	ajax_network_save(options,function(data){
+	            			if('000000' == data.code){
+	            				plus.nativeUI.alert(data.msg);
+								setTimeout(function(){
+									currentWebView.reload();
+								},500);
+	            			}else{
+	            				plus.nativeUI.alert(data.msg);
+	            			}
+						}
+	            	);
+	            }
+	        },'div');
+		});
+	</script>
+	</body>
+</html>

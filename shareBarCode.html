@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>销售宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+    	<link rel="stylesheet" type="text/css" href="css/own.css"/>
+		<style>
+			p {
+				text-indent: 22px;
+				padding: 5px 8px;
+			}
+			
+			html,
+			body,
+			.mui-content {
+				background-color: #fff;
+			}
+			.mui-pull-left, .mui-pull-right{
+	    		color: gray;
+	    	}
+	    	
+			.qrcode {
+				/*position: absolute;*/
+				top: 50px;
+				/*left: 50%;*/
+				width: 100%;
+				/*-webkit-transform: translate(-50%, 0);
+				transform: translate(-50%, 0);*/
+				text-align: center;
+			}
+			
+			.qrcode img {
+				margin: 0 auto;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <!--<a id="share" class="mui-action-menu mui-icon mui-icon-bars mui-pull-right"></a>-->
+		    <h1 class="mui-title" style="color: white;">分享APP</h1>
+		</header>
+		<div class="mui-content">
+			<div style="text-align: center; margin-top: 25%;border-bottom:10px; font-weight: bold;">
+				<span style="color: gray; font-size: 0.9em;">扫描二维码分享</span>
+			</div>
+			<div class="mui-content-padded" id="code">
+				<div class="qrcode">
+					<img id="qrcode" src="img/app.png" width="50%" />
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.min.js" charset="UTF-8"></script>
+		<script src="js/ajax.js" charset="UTF-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init({
+				gestureConfig: {
+					longtap: true
+				},
+				swipeBack: true //启用右滑关闭功能
+			});
+			//分享操作
+			var shares = {},
+				barcodeimg,
+				qrcodeEl; 
+			mui.plusReady(function () {
+//				plus.share.getServices(function(s) {
+//					if (s && s.length > 0) {
+//						for (var i = 0; i < s.length; i++) {
+//							var t = s[i];
+//							shares[t.id] = t;
+//						}
+//					}
+//				}, function() {
+//					console.log("获取分享服务列表失败");
+//				});
+//			   
+//				//处理点击事件，需要打开原生浏览器
+//				mui('body').on('tap', 'a', function(e) {
+//					var href = this.getAttribute('href');
+//					if (href) {
+//						if (window.plus) {
+//							plus.runtime.openURL(href);
+//						} else {
+//							location.href = href;
+//						}
+//					}
+//				});
+//			});
+//			
+//			//分享链接点击事件
+//			document.getElementById("share").addEventListener('tap', function() {
+//				var ids = [{
+//						id: "weixin",
+//						ex: "WXSceneSession"
+//					}, {
+//						id: "weixin",
+//						ex: "WXSceneTimeline"
+//					}, {
+//						id: "sinaweibo"
+//					}, {
+//						id: "tencentweibo"
+//					}, {
+//						id: "qq"
+//					}],
+//					bts = [{
+//						title: "发送给微信好友"
+//					}, {
+//						title: "分享到微信朋友圈"
+//					}, {
+//						title: "分享到新浪微博"
+//					}, {
+//						title: "分享到腾讯微博"
+//					}, {
+//						title: "分享到QQ"
+//					}];
+//				plus.nativeUI.actionSheet({
+//					cancel: "取消",
+//					buttons: bts
+//				}, function(e) {
+//					var i = e.index;
+//					if (i > 0) {
+//						var s_id = ids[i - 1].id;
+//						var share = shares[s_id];
+//						if (share) {
+//							if (share.authenticated) {
+//								shareMessage(share, ids[i - 1].ex);
+//							} else {
+//								share.authorize(function() {
+//									shareMessage(share, ids[i - 1].ex);
+//								}, function(e) {
+//									console.log("认证授权失败：" + e.code + " - " + e.message);
+//								});
+//							}
+//						} else {
+//							mui.toast("无法获取分享服务，请检查manifest.json中分享插件参数配置，并重新打包")
+//						}
+//					}
+//				});
+//			});
+//			
+//			function shareMessage(share, ex) {
+//				var msg = {
+//					extra: {
+//						scene: ex
+//					}
+//				};
+//				msg.href = barcodeimg;
+//				msg.title = "电信异网客商联手互赢";
+//				msg.content = "我正在分享电信异网资源，快加入我们吧，共享优惠";
+//				if (~share.id.indexOf('weibo')) {
+//					msg.content += "；体验地址："+barcodeimg;
+//				}
+//				msg.thumbs = ["_www/images/logo.png"];
+//				share.send(msg, function() {
+//					console.log("分享到\"" + share.description + "\"成功！ ");
+//				}, function(e) {
+//					console.log("分享到\"" + share.description + "\"失败: " + e.code + " - " + e.message);
+//				});
+//			}
+//			
+//			qrcodeEl= document.getElementById("qrcode");
+//			qrcodeEl.addEventListener('longtap', function() {
+//				plus.nativeUI.actionSheet({
+//					cancel: '取消',
+//					buttons: [{
+//						title: '保存到相册'
+//					}]
+//				}, function(e) {
+//					var index = e.index;
+//					if (e.index === 1) {
+//						plus.gallery.save(qrcodeEl.src, function() {
+//							mui.toast('保存成功');
+//						}, function() {
+//							mui.toast('保存失败，请重试！');
+//						});
+//					}
+//				});
+			});
+		</script>
+	</body>
+
+</html>

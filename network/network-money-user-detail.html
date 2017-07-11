@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+		
+		/*.mui-content {
+			background-color: #fff;
+		}*/
+		.mui-pull-left, .mui-pull-right{
+    		color: gray;
+    	}
+    	.update {
+			font-style: normal;
+			color: #999999;
+			font-size: 16px;
+			margin-right: -25px;
+		}
+		.list-padding{
+			margin-bottom: 15px;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">奖励明细</h1>
+	</header>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div id="nonePhone" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未有奖励信息</span>
+		</div>
+		<div class="mui-scroll">
+			<!--<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a >
+						<i class="mui-media-object mui-pull-right update">2017-02</i>
+						<div class="mui-media-body" style="">哈斯克斯卡
+							<p class='mui-ellipsis' style="color: black;font-size: 16px;padding-top: 5px;">金额：12(元)</p>
+						</div>
+					</a>
+				</li>
+			</ul>-->
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false,
+			pullRefresh: {
+				container:'#pullrefresh',
+//				down:{
+//					contentdown:'下拉可刷新',
+//					contentover:'释放立即刷新',
+//					contentrefresh:'正在加载..',
+//					callback:pulldownRefresh
+//				},
+				up:{
+					contentrefresh:'正在加载..',
+					contentnomore:'已加载全部信息',
+					callback:pullupRefresh
+				}
+			}
+		});
+		var currentwebview,
+		    page = 1,//页码
+			pagesize, //总页数
+			user,
+			month,
+			userList;
+		mui.plusReady(function(){
+			currentwebview = plus.webview.currentWebview();
+			month = currentwebview.month||'';
+			user= JSON.parse(localStorage.getItem('$users'));
+			userList = document.querySelector('.mui-scroll');
+			//获取客商信息
+			ajax_get_network_money_user_detail({
+				appuserid:user.appuserid||'',
+				userid:user.id||'',
+				month:month
+			});
+			mui('.mui-scroll').on('tap','.list-padding',function(){
+				var url = this.href;				
+				var id = this.getAttribute('href');
+				var rid = this.id;
+				 mui.openWindow({
+					url:'../network/network-bill.html',
+					id:'../network/network-bill.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						 month:month,
+						 rid:rid
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+				});
+			});
+			
+			//成功获取订单列表数据
+			function getNetworkUserList(data){
+			 	var flag = true;
+				pagesize = data.pagesize;
+				mui.each(data.userList,function(index,item){
+					var html = '';
+					var userphone = item.userphone||'';
+					var listItem = document.createElement('ul');
+					listItem.className = 'mui-table-view mui-table-view-chevron list-padding';
+					listItem.id = item.id;
+					html = '<li class="mui-table-view-cell mui-media"><a >\
+							<i class="mui-media-object mui-pull-right update">'+month+'</i>\
+							<div class="mui-media-body" style="">用户：'+item.name+'\
+							<p class="mui-ellipsis" style="color: black;font-size: 16px;padding-top: 5px;">金额：'+item.amount+'(元)</p>\
+						</div></a></li>';
+					listItem.innerHTML = html ;
+					userList.appendChild(listItem);
+					flag = false;
+				});
+				if(flag){
+					document.getElementById("nonePhone").style.display = 'block';
+				}
+			}
+			
+			function pullupRefresh(){
+				var copythis = this;
+				//上拉翻页
+				if(pagesize>page*10){
+					page++;
+					ajax_get_network_user_detail({
+						appuserid:user.appuserid
+					});
+				}else{
+					isnodata =true;
+				}
+				setTimeout(function(){
+					copythis.endPullupToRefresh(isnodata);
+				});
+			}
+	</script>
+</body>
+</html>

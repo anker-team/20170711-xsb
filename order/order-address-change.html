@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css"/>
+    
+    <style type="text/css">
+    		.mui-input-row label {
+    			width: 100%;
+    		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-left-nav-color"></a>
+		<h1 class="mui-title own-left-nav-color" style="color: white;">地址</h1>
+		<a class="mui-icon iconfont icon-iconfont53 mui-pull-right own-left-nav-color"></a>
+	</header>
+	
+	<div class="mui-content" >
+		<form class="mui-input-group">
+			<div class="mui-input-row">
+				<input id="name" type="text" class="mui-input-clear" placeholder="收货人姓名" />
+			</div>
+			<div class="mui-input-row">
+				<input id="phone" type="text" class="mui-input-clear" placeholder="手机号码" />
+			</div>
+			<div class="mui-input-row" id="addressPicker">
+				<label id="district">省、市、区</label>
+			</div>
+			<div class="mui-input-row" style="height: 4em; padding-top: 2px;">
+				<textarea id="detailInfo" placeholder="详细地址"></textarea>
+			</div>
+		</form>
+	</div>
+
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<!--<script src="../js/city.data-3.js" charset="UTF-8"></script>-->
+	<script src="../js/mui.picker.min.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+		
+		var addressPicker;
+		var pickerlabel;
+		var addressWebView; //当前webview
+		var cityData3 = [];
+		var userid; //用户ID
+		mui.plusReady(function(){
+			addressPicker = document.getElementById('addressPicker');
+			pickerlabel = addressPicker.children[0];
+			addressWebView = plus.webview.currentWebview();
+			userid = JSON.parse(localStorage.getItem('$users')).id;
+			
+			//ajax获取地址详细信息
+			ajax_get_address_detail({
+				id:addressWebView.addressid,
+				type:addressWebView.type
+			});
+			
+			//监听确认保存事件
+			document.querySelector(".icon-iconfont53").addEventListener('tap',function(){
+				if(document.getElementById("name").value == ''){
+					mui.toast('收货人姓名不能为空');
+					return;
+				}
+				if(document.getElementById("phone").value == ''){
+					mui.toast('手机号码不能为空');
+					return;
+				}
+				if(!pickerlabel.getAttribute("data-id")){
+					mui.toast('行政区划不能为空');
+					return;
+				}
+				if(document.getElementById("detailInfo").value == ''){
+					mui.toast('详细地址不能为空');
+					return;
+				}
+				var info ={
+					id : addressWebView.addressid,
+					linkperson : document.getElementById("name").value,
+					phone : document.getElementById("phone").value,
+					address : document.getElementById("detailInfo").value,
+					userid : userid,
+					proviceid : pickerlabel.getAttribute("data-id"),
+					provicecode : pickerlabel.getAttribute("data-pid")
+				};
+				
+				ajax_post_detail_address_info(info,function(data){
+					if(data.code='000000'){
+						mui.toast('保存地址成功');
+						var goalwebview =plus.webview.getWebviewById('../order/order-address-list.html');
+						mui.fire(goalwebview,"refresh",{});
+					 	addressWebView.close();
+					}
+				});
+			},false);
+//			var cityPicker3 = new $.PopPicker({
+//						layer: 3
+//					});
+//					cityPicker3.setData(cityData3);
+//					var showCityPickerButton = doc.getElementById('showCityPicker3');
+//					var cityResult3 = doc.getElementById('cityResult3');
+//					showCityPickerButton.addEventListener('tap', function(event) {
+//						cityPicker3.show(function(items) {
+//							cityResult3.innerText = "你选择的城市是:" + (items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+//							//返回 false 可以阻止选择框的关闭
+//							//return false;
+//						});
+//					}, false);
+			
+			//监听呼出picker事件
+			addressPicker.addEventListener('tap',function(){
+				var cityPicker3 = new mui.PopPicker({
+					layer:3
+				});
+				cityPicker3.setData(cityData3);
+				cityPicker3.show(function(items){
+				pickerlabel.innerText = (items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+				pickerlabel.setAttribute("data-id",(items[2] || {}).value);
+				pickerlabel.setAttribute("data-pid",(items[1] || {}).value);
+				
+				});
+			
+				
+			},false);
+		});
+		
+		//获取后台数据，回填。
+		function getDetailAdress(data){
+			if(data.code=='000000'){
+				document.getElementById("name").value=data.linkperson;
+				document.getElementById("phone").value = data.phone;
+				document.getElementById("detailInfo").value = data.address;
+				document.getElementById("district").innerText = data.districtname;
+				pickerlabel.setAttribute("data-id",data.proviceid);
+				pickerlabel.setAttribute("data-pid",data.provicecode);
+			}
+			cityData3 = JSON.parse(data.cityData3);
+		}
+	</script>
+	
+</body>
+</html>

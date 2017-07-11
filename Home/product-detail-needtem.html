@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+   	<title>销售宝</title>   	
+   	<link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>    		
+    <style type="text/css">    		
+    		.mui-table-view-cell:after {
+    			left: 0px;
+    		}
+    		 .mui-table-view .mui-table-view-cell {
+    			background-color: white;
+    		}
+    
+    		.mui-slider-indicator .mui-active.mui-indicator {
+    			/*background-color: #41CEA9;*/
+    		}
+    		#headul:after {
+    			height: 0px;
+    		}
+    		#headul .mui-table-view-cell {
+    			padding-bottom: 0px;
+    			padding-top: 0px;
+    			margin-top: 0px;
+    			background-color: white;
+    		}
+    		#headul {
+    			margin-top: 10px;
+    			margin-bottom: 8px;
+    		}
+    		
+    		#headul .mui-table-view-cell:after {
+    			height: 0px;
+    		}
+    		
+    		.mui-table-cell .borderleft {
+    			height: 40%;
+    			border-left: 1px solid gray; 
+    			margin-left: 5px;
+    		}
+    		
+    		.mui-icon.iconfont {
+    			font-size: 1em;
+    			color: #ef5028;
+    		}
+    		#headul .mui-table-view-cell.setbg {
+    			background-color: #f3fcfb;
+    		}
+    		#headul .mui-table-view-cell.setbg div {
+    			font-size: 0.7em;
+    			color: gray;
+    		}
+    		.mui-table-view-cell p.evaluateTitle {
+    			color:black;
+    			font-size: 1em;
+    		}
+    		
+    		.mui-table-view {
+    			margin-bottom: 10px;
+    		}
+    		
+    		span.evaluate {
+    			font-size: 0.68em;
+    			color: darkgray;
+    			border: 1px solid darkgray;
+    			word-break: nowrap;
+    			word-wrap: nowrap;
+    			border-radius: 2px;
+    			text-align: center;
+    		}
+    		.mui-table-view-cell .evaluaterHead img{
+    			background-color: darkgray;
+    			width: 2.5em; 
+    			max-width: 2.5em; 
+    			height: 2.5em;
+    			border:1px solid gray; 
+    			border-radius: 50%;
+    		}
+    		.mui-table-view-cell .evaluaterHead span {
+    			font-size: 0.9em;
+    			vertical-align: super;
+    		}
+    		
+    		.mui-table-view-cell .evaluteContent {
+    			font-size: 0.7em;
+    			line-height: 1.2em;
+    		}
+    		.mui-table-view-cell .evaluteMsg {
+    			font-size: 0.5em;
+    		}
+    		.mui-table-view-cell.moreEvaluate {
+    			text-align: center;
+    			padding-top: 8px;
+    			padding-bottom: 8px;
+    		}
+    		.mui-table-view-cell.moreEvaluate a {
+    			color: darkgray;
+    		}
+    		.mui-table .mui-col-xs-4 {
+    			font-size: 0.68em;
+    			color: darkgray;
+    		}
+    		.mui-table .mui-col-xs-6 {
+    			line-height: 1.1em;
+    			font-size: 0.8em;
+    		}
+    		.mui-table .mui-col-xs-6 .stroemsg {
+    			font-size: 0.5em;
+    			color: darkgray;
+    		}
+    		.mui-table .mui-col-xs-6  .lingBtn {
+    			font-size: 1em;
+    		}
+    		
+    		.mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-body {
+    			margin-top: 2px;
+    			margin-bottom: 5px;
+    			height: auto;
+    		}
+    		
+    		.mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-body p.mui-ellipsis-2 {
+    			font-size: 0.5em;
+    			line-height: 1.2em;
+    			white-space:pre;
+    			height: 2.3em;
+ 
+    		}
+    		.mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-body p.price {
+    			font-size: 0.8em;
+    			color: #ef5028;
+    		}
+    		
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-header-hidden">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left own-gray-color"></a>
+		<h1 class="mui-title">商品详情</h1>
+	</header>
+	<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item" href="../order/order-cart.html" id="cart">
+			<span class="mui-icon iconfont icon-cart" style="font-size: 24px;"><span class="mui-badge" id="num">0</span></span>
+			<span class="mui-tab-label">购物车</span>
+		</a>
+		<a class="mui-tab-item" id="addphone">
+			<span class="mui-icon iconfont icon-xinyuandan" style="font-size: 24px;"></span>
+			<span class="mui-tab-label">加入购物车</span>
+		</a>
+	</nav>
+	<div id="detailcontent" class="mui-content  own-content-padding">
+		
+	</div>
+	
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+	
+		mui.init({
+			swipeBack:true
+		});
+		var currentWebview;//当前子页面
+		var paredntWebview;//父页面
+		var product_id;
+		var detail = {};
+		var colorArray = [];
+		var detailcontent;
+		var addphone;//加入购物车
+		var phoneColor; //选定的机身颜色
+		var color;//颜色value值
+		mui.plusReady(function(){
+			currentWebview = plus.webview.currentWebview();
+			paredntWebview = currentWebview.parent();
+			detailcontent = document.getElementById('detailcontent');
+			addphone = document.getElementById("addphone");
+			//监听页面隐藏的时候清空数据信息
+			currentWebview.addEventListener('hide',function(){
+//				detailcontent.innerHTML = '';
+				detail = {};
+			},false);
+			
+			//监听机身颜色的button点击事件
+			addEventForPhoneColor();
+			
+			//监听点击购物车跳转到购物车界面
+			document.getElementById("cart").addEventListener('tap',function(){
+				var id=this.getAttribute('href');
+				var url = this.href;
+				mui.fire(paredntWebview,'showcart',{
+					id:id,
+					url:url
+				});
+			});
+			
+			//监听把相应商品加入购物车
+			addphone.addEventListener('tap',function(){
+				var user = JSON.parse(localStorage.getItem('$users'));
+				//若userid为空，则没有权限查看
+				if(!user.id && '4' != user.usertype){
+					plus.nativeUI.toast('该用户未开放购买权限');
+					return;
+				}
+				//校验是否选择机身颜色
+				if(!phoneColor){
+					plus.nativeUI.toast('未选择机身颜色');
+					return;
+				}
+				document.getElementById("num").innerHTML=parseInt(document.getElementById("num").innerHTML)+1;
+				//把相关商品通过ajax保存数据(采取什么方式：ajax/本地存储)
+				var phoneInfo = {
+						phoneColor: phoneColor,
+						color:color,
+						prdsellid: product_id,
+						pname: detail.manfactname,
+						photosrc:detail.photosrc,
+						price:detail.price,
+						num:'1',
+						type:'1' //购买类型。'1'-代表手机
+					};
+					ajax_save_cart(phoneInfo);
+			},false);
+		
+			//获取服务器信息
+			mui.fire(paredntWebview,'getproductid',{});
+			//监听返回getproductid事件
+			window.addEventListener('postproductid',function(e){
+				console.log('收到productid');
+				product_id = e.detail.product_id;
+				if(!product_id){
+					return;
+				}
+				//像服务器请求
+				ajax_get_product_detail({
+					product_id:product_id
+				});
+				
+			},false);
+		});
+		
+		function productDetailSuccess(data){
+			console.log(JSON.stringify(data));
+			if (data.code == '000000') {
+				//成功获取可以解析
+				detail.manfactname = data.manfactname;
+				detail.photosrc = data.photosrc;
+				detail.productname = data.productname;
+				detail.price=data.price;
+				detail.design=data.design;
+				detail.salepoint=data.salepoint;
+				detail.screenparam=data.screenparam;
+				detail.chip=data.chip;
+				detail.ap=data.ap;
+				detail.ram=data.ram;
+				detail.rom=data.rom;
+				detail.maincamera=data.maincamera;
+				detail.vicecamera=data.vicecamera;
+				detail.os=data.os;
+				detail.battery=data.battery;
+				detail.look=data.look;
+				detail.weight=data.weight;
+				detail.limitbuy = data.limitbuy;
+				detail.priceprotect = data.priceprotect;
+				detail.reward = data.reward;
+				detail.sealnum = data.sealnum;
+				colorArray =data.colorInfo;
+				setHtml();//传值显示页面
+			}else{
+				mui.toast('未找到该商品信息');
+				mui.back();
+			}
+		}
+		
+		function setHtml(){
+			
+			//第一步设置第一个图片滑动
+			setSldiderHtml();
+			//第二步设置商品名字价钱等
+			setproductMessage();
+			//设置颜色选择
+			setChooseColor();
+		}
+		
+		
+		//设置slider
+		function setSldiderHtml(){
+			var picSlider = document.createElement('div');
+			picSlider.className = 'mui-slider';
+			detailcontent.appendChild(picSlider);
+			
+			var picSliderGroup = document.createElement('div');
+			picSliderGroup.className = 'mui-slider-group';
+			
+			var picsliderindicator = document.createElement('div');
+			picsliderindicator.className = 'mui-slider-indicator';
+			for (var i = 1; i <3;) {
+				//var item = detail.detail_small_pictures[i];
+				//设置itemdetai
+				var div = document.createElement('div');
+				div.className = 'mui-slider-item';
+				var html = '<a href="#"><img src="'+detail.photosrc+'"/></a>';
+				div.innerHTML = html;
+				picSliderGroup.appendChild(div);
+				//设置itemindicator
+				var divindicator = document.createElement('div');
+				if (i == 1) {
+					divindicator.className = 'mui-indicator mui-active';
+				} else{
+					divindicator.className = 'mui-indicator';
+				}
+				picsliderindicator.appendChild(divindicator);
+			
+				i = i +2;
+			}
+			picSlider.appendChild(picSliderGroup);
+			picSlider.appendChild(picsliderindicator);
+			var gallery = mui('.mui-slider');
+			gallery.slider({
+			  interval:0//自动轮播周期，若为0则不自动播放，默认为0；
+			});
+		}
+		
+		//设置信息
+		function setproductMessage(){
+			var user = JSON.parse(localStorage.getItem('$users'));
+			var headul =  document.createElement('ul');
+			headul.id = 'headul';
+			headul.className = 'mui-table-view';
+			detailcontent.appendChild(headul);
+			if(('' != user.usertype && '4' != user.usertype) || user.id){
+				var html = '<li class="mui-table-view-cell">\
+					<div class="mui-table">\
+						<div class="mui-table-cell mui-col-xs-10">\
+							<h5 class="own-black-color mui-ellipsis-2">'+detail.manfactname+'</h5>\
+							<h5 class="own-main-color">¥'+detail.price+'</h5>\
+						</div>\
+						<div class="mui-table-cell mui-col-xs-2 mui-text-right" >\
+							<div class="borderleft">\
+								<h6>热销</h6>\
+							</div>\
+						</div>\
+					</div>\
+				</li>\
+				<li class="mui-table-view-cell setbg">\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>品牌：'+detail.manfactname+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>型号：'+detail.productname+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>外观设计:'+detail.design+'</span><br />\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>主屏参数：'+detail.screenparam+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>芯片平台：'+detail.chip+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>AP主频：'+detail.ap+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>RAM：'+detail.ram+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>ROM：'+detail.rom+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>主摄像头：'+detail.maincamera+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>副摄像头：'+detail.vicecamera+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>智能操作系统：'+detail.os+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>电池容量：'+detail.battery+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>外观类型：'+detail.look+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>产品重量：'+detail.weight+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>限购政策：'+detail.limitbuy+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>价保政策：'+detail.priceprotect+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>店员奖励：'+detail.reward+'</span>\
+					</div>\<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>已销售：'+detail.sealnum+'</span>\
+					</div>\
+					<div>\
+						<span class="mui-icon iconfont icon-queren" ></span>\
+						<span>产品销售卖点：'+detail.salepoint+'</span>\
+					</div>\
+				</li>';
+			}else{
+				var html = '<li class="mui-table-view-cell">\
+					<div class="mui-table">\
+						<div class="mui-table-cell mui-col-xs-10">\
+							<h5 class="own-black-color mui-ellipsis-2">'+detail.manfactname+'</h5>\
+							<h5 class="own-main-color">&nbsp;</h5>\
+						</div>\
+						<div class="mui-table-cell mui-col-xs-2 mui-text-right" >\
+							<div class="borderleft">\
+								<h6>热销</h6>\
+							</div>\
+						</div>\
+					</div>\
+					</li>\
+					<li class="mui-table-view-cell setbg">\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>品牌：'+detail.manfactname+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>型号：'+detail.productname+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>外观设计:'+detail.design+'</span><br />\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>主屏参数：'+detail.screenparam+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>芯片平台：'+detail.chip+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>AP主频：'+detail.ap+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>RAM：'+detail.ram+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>ROM：'+detail.rom+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>主摄像头：'+detail.maincamera+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>副摄像头：'+detail.vicecamera+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>智能操作系统：'+detail.os+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>电池容量：'+detail.battery+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>外观类型：'+detail.look+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>产品重量：'+detail.weight+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>限购政策：'+detail.limitbuy+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>价保政策：'+detail.priceprotect+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>店员奖励：'+detail.reward+'</span>\
+						</div>\<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>已销售：'+detail.sealnum+'</span>\
+						</div>\
+						<div>\
+							<span class="mui-icon iconfont icon-queren" ></span>\
+							<span>产品销售卖点：'+detail.salepoint+'</span>\
+						</div>\
+					</li>';
+			}
+			
+			headul.innerHTML = html;
+		}
+		
+		//设置选择颜色分类
+		function setChooseColor(){
+			var color = JSON.parse(colorArray || '[]');
+			var btnList ='';
+			if(color.length != 0){
+				for(var i in color){
+				btnList += '<button type="button" class="mui-btn" id="'+color[i].color+'" value="'+color[i].color+'">'+color[i].colorname+'</button>&nbsp;&nbsp;';
+				}
+			}else{
+				btnList += '<button type="button" >缺货</button>&nbsp;&nbsp;';
+			}
+			var chooseUl = document.createElement('ul');
+			chooseUl.className = 'mui-table-view chooseUl';
+			chooseUl.innerHTML = '<li class="mui-table-view-cell">选择机身颜色<p>'+btnList+'</p></li>';
+			detailcontent.appendChild(chooseUl);
+		}
+		
+		function addEventForPhoneColor(){
+			mui('.mui-content').on('tap', '.mui-btn', function() {				 
+				var x = document.getElementsByClassName(this.className);
+					var i;
+					for (i = 0; i < x.length; i++) {
+					    x[i].style.backgroundColor = "white";
+					    x[i].style.color = "black";
+					}
+				document.getElementById(this.id).style.backgroundColor="red";
+				document.getElementById(this.id).style.color="white";
+				phoneColor=this.innerHTML; //获取选择的机身颜色，传递到服务器
+				color = this.value;
+				console.log(color);
+			});
+		}
+	</script>
+	
+</body>
+</html>

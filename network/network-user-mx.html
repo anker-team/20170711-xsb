@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    
+    <style type="text/css">
+		.mui-table-view .mui-media-object {
+		line-height: 75px;
+		max-width: 75px;
+		height: 75px;
+		}
+		.itemName {
+			color: black;
+			font-size: 0.9em;
+		}
+		
+		.price {
+			margin-top: 10px;
+			font-size: 1em;
+		}
+		
+		.curprice {
+			color: #41CEA9;
+		}
+		.preprice {
+			color: black;
+			text-decoration:line-through
+		}
+		.mui-pull-left,.mui-pull-right {
+    			color: gray;
+		}
+		h5 {
+			color: black
+		}
+		
+		.name {
+			float: left;
+		}
+		.number {
+			float: right;
+		}
+		
+		.address {
+			padding-top: 2px;
+			clear: both;
+		}
+		
+		.li_3{
+			padding: 5px 15px;
+		}
+		
+		.button {
+			float: right;
+		}
+		
+		.money{
+			float: left;
+		}
+		.status{
+			float: right;
+			color: red;
+			font-weight: 500;
+		}
+		
+		.appName{
+			float: left;
+			font-size: 14px;
+		}
+		
+		.list-padding{
+			margin-bottom: 15px;
+		}
+		
+		tr{
+			color: #8f8f94;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;" id="title">明细</h1>
+	    <!--<a id="query" class="mui-icon mui-icon-search mui-pull-right" ></a>-->
+	</header>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div id="nonePhone" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未查询到数据</span>
+			<br />
+		</div>
+		<div class="mui-scroll">
+			
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/arttmpl.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false,
+			pullRefresh: {
+				container:'#pullrefresh',
+				up:{
+					contentrefresh:'正在加载..',
+					contentnomore:'已加载全部数据',
+					callback:pullupRefresh
+				}
+			}
+		});
+		var isnodata = false ;
+		var comOrderWebView;//当前页面
+		var comOrderList;//
+		var page = 1;//页码
+		var pagesize ; //总页数
+		var type,cushionId;
+		mui.plusReady(function(){
+			comOrderWebView = plus.webview.currentWebview();
+			type = comOrderWebView.type||'';
+			cushionId = comOrderWebView.cushionId||'';
+			comOrderList = document.querySelector('.mui-scroll');
+			var user = JSON.parse(localStorage.getItem('$users'));
+			//ajax获取数据，回写订单列表数据
+			ajax_get_network_user_bill({
+				appuserid:user.appuserid,
+				type:'2'
+			});
+		});	
+		
+		//成功获取订单列表数据
+		function getNetworkUserList(data){
+			 	var flag = true;
+				pagesize = data.pagesize;
+				mui.each(data.userList,function(index,item){
+					var html = '';
+					var typeName;
+					var iemiTag = '';
+					var listItem = document.createElement('ul');
+					listItem.className = 'mui-table-view list-padding';
+					listItem.id = item.id;
+					html = '<li class="mui-table-view-cell">\
+							<h5 class="appName">奖励金额</h5>\
+							<h5 class="status">'+item.amount+'</h5>\
+							</li>\
+							<li class="mui-table-view-cell" style="padding: 0 0 0 15px">\
+							<table style="width: 100%">\
+							<thead>\
+							<th width="20%"></th>\
+							<th width="80%"></th>\
+							</thead><tbody>\
+							<tr style="font-size: 14px">\
+							<td style="border-right:1px solid #EEEED1">串码</td>\
+							<td style="border-top:0">'+item.imei+'</td>\
+							</tr>\
+							<tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;">\
+							<td style="border-right:1px solid #EEEED1">申领时间</td>\
+							<td style="border-top:0">'+item.credate+'</td>\
+							</tr>\
+							<tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;">\
+							<td style="border-right:1px solid #EEEED1">联系方式</td>\
+							<td style="border-top:0">'+item.phone+'</td>\
+							</tr>\
+							</tbody></table></li>\
+							<li class="mui-table-view-cell"><h5 class="money">状态</span></h5>\
+							<h5 class="button">'+item.status+'</h5></li>';
+					listItem.innerHTML = html ;
+					comOrderList.appendChild(listItem);
+					flag = false;
+				});
+			if(flag){
+				document.getElementById("nonePhone").style.display = 'block';
+			}
+		}
+
+		function pullupRefresh(){
+			var copythis = this;
+			//上拉翻页
+			if(pagesize>page*10){
+				page++;
+				ajax_get_network_user_bill({
+					appuserid:user.appuserid,
+					type:'2'
+				});
+			}else{
+				isnodata =true;
+			}
+			setTimeout(function(){
+				copythis.endPullupToRefresh(isnodata);
+			});
+		}
+		
+	</script>
+</body>
+</html>

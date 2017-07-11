@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+    		.mui-table-view .mui-media-object {
+			line-height: 75px;
+			max-width: 75px;
+			height: 75px;
+		}
+		.itemName {
+			color: black;
+			font-size: 0.9em;
+		}
+		
+		.describe {
+			margin-top: 2px;
+			font-size: 12px;
+			line-height: 15px;
+		}
+		.time {
+			margin-top: 2px;
+			font-size: 12px;
+		}
+		.curprice {
+			color: #ef5028;
+		}
+		.preprice {
+			color: black;
+			text-decoration:line-through
+		}
+		.mui-pull-left {
+    			color: gray;
+		}
+		/**
+		 * 多行文字溢出[...]的实现(text-overflow: ellipsis)
+		 */
+		.twoLine {  
+		    overflow: hidden;  
+		    text-overflow: ellipsis;  
+		    display: -webkit-box;  
+		    -webkit-line-clamp: 2;  
+		    -webkit-box-orient: vertical;  
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">店奖活动</h1>
+	</header>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div id="noneInfo" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未查询到相关数据</span>
+			<br />
+		</div>
+		<div class="mui-scroll">
+			<ul id="zghdList" class="mui-table-view">
+				<!--<li class="mui-table-view-cell mui-media">
+					<div class="mui-slider-handle">
+						<a href="../zghd/zghd-detail.html">
+							<img src="../img/loginBanner.png" class="mui-media-object mui-pull-left"/>
+							<div class="mui-media-body">
+								<p class="itemName mui-ellipsis-2">2017年广信F3C高配激活奖励活动</p>
+								<p class="describe">全疆通过直供平台在4月1日至6月30日购买集采终端广信F3C高配版终端满足...</p>
+								<p class="time"><span class="mui-icon mui-icon-navigate" style="font-size: 16px;"></span>&nbsp;时间至2017-07-07</p>
+							</div>
+						</a>
+					</div>
+				</li>-->
+			</ul>
+		</div>
+	</div>
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/arttmpl.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false,
+			pullRefresh: {
+				container:'#pullrefresh',
+				up:{
+					contentrefresh:'正在加载..',
+					contentnomore:'已加载全部活动',
+					callback:pullupRefresh
+				}
+			}
+		});
+		var currentWebView;//当前页面
+		var isnodate = false;
+		var zghdList;
+		var page = 1;//页码
+		var pagesize=0 ; //总页数
+		var user;
+		mui.plusReady(function(){
+			user= JSON.parse(localStorage.getItem('$users'));
+			currentWebView = plus.webview.currentWebview();
+			zghdList = document.getElementById('zghdList');
+			ajax_get_zghd_list({
+					pageNo:page,
+					pageSize:'10',
+					userid:user.buyerId
+			});
+			//添加每个item点击的监听事件
+			mui('#zghdList').on('tap','a',function(){
+				var href = this.href;
+				var id = this.getAttribute('href');
+				var dataId = this.getAttribute('data-id');
+				mui.openWindow({
+					url:href,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						dataId:dataId
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+		});
+		
+		//成功获取心愿列表
+		function getActivityList(data){
+			if (data.success == 'true') {
+				pagesize = data.page.count;
+				if(pagesize>0){
+					mui.each(data.page.list,function(index,item){
+						var listItem = document.createElement('li');
+						listItem.className = 'mui-table-view-cell mui-media';
+						listItem.innerHTML ='<div class="mui-slider-handle">\
+												<a href="../zghd/zghd-detail.html" data-id="'+item.id+'">\
+													<img src="../img/loginBanner.png" class="mui-media-object mui-pull-left"/>\
+													<div class="mui-media-body">\
+														<p class="itemName mui-ellipsis-2">'+item.name+'</p>\
+														<p class="describe twoLine">'+item.actdesc+'</p>\
+														<p class="time"><span class="mui-icon mui-icon-navigate" style="font-size: 16px;"></span>&nbsp;时间至'+item.edate+'</p>\
+													</div></a></div>';
+						zghdList.appendChild(listItem);
+					});
+				}else{
+					document.getElementById("noneInfo").style.display ='block';
+					document.querySelector(".mui-scroll").style.display = 'none';
+				}
+			}
+		}
+		
+		function pullupRefresh(){
+			var copythis = this;
+			//上拉翻页
+			if(pagesize>page*10){
+				page++;
+				ajax_get_zghd_list({
+					pageNo:page,
+					pageSize:'10',
+					userid:user.buyerId
+				});
+			}else{
+				isnodate = true;
+			}
+			setTimeout(function(){
+				copythis.endPullupToRefresh(isnodate);
+			});
+		}
+	</script>
+</body>
+</html>

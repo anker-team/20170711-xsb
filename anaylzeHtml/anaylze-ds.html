@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>统计分析</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+	    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    	<link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+		<style>
+			.chart {
+				height: 200px;
+				margin: 0px;
+				padding: 0px;
+			}
+			h5 {
+				margin-top: 30px;
+				font-weight: bold;
+			}
+			h5:first-child {
+				margin-top: 15px;
+			}
+			.mui-pull-left,.mui-pull-right {
+    			color: gray;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+	    	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    	<h1 class="mui-title" style="color: white;">分析</h1>
+	    	<a id="query" class="mui-icon mui-icon-search mui-pull-right" ></a>
+		</header>
+		<div class="mui-content">
+			<div id="noneInfo" style="text-align: center; margin-top: 50px;display: none;">
+				<span style="color: gray; font-size: 0.9em;">未查询到相关数据</span>
+				<br />
+				<!--<button type="button" class="mui-btn own-btn-green" style="margin-top: 10px; padding: 5px 20px;">请登录</button>-->
+			</div>
+			<div class="mui-content-padded" id="s2">
+				<p style="text-align: center;font-size: 20px;"><span id="among"></span>地市直供采购量情况</p>
+				<p id="time-term" style="text-align: center;display: none;"><span id="start"></span>~<span id="end"></span></p>
+			</div>
+			<div class="mui-content-padded" id="s3">
+				<h5>直供销量</h5>
+				<div class="chart" id="barChart" style="height: 360px;"></div>
+				
+			</div>
+		</div>
+		<script src="../js/ajax.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/echarts-all.js"></script>
+		<script type="text/javascript" charset="UTF-8">
+			mui.init({
+				swipeBack:true
+			});
+			var anaylzeWebview,//当前webview
+				begindate,
+				enddate,
+				type,
+				typename;
+			mui.plusReady(function(){
+				anaylzeWebview = plus.webview.currentWebview();
+				begindate = anaylzeWebview.begindate;
+				enddate = anaylzeWebview.enddate;
+				type = anaylzeWebview.type;
+				typename = anaylzeWebview.typename;
+				if(type){
+					document.getElementById("among").innerText=typename;
+				}else if(begindate){
+					document.getElementById("start").innerText=begindate;
+					document.getElementById("end").innerText=enddate;
+					document.getElementById("time-term").style.display='block';
+				}
+				ajax_get_reportList({
+					type:type||'',
+					begindate:begindate||'',
+					enddate:enddate||''
+				},function(data){
+					var areas = [];
+					var num1 = [];
+					if(data.code == '000000'){ //为空
+						mui.each(JSON.parse(data.resultList),function(index,item){
+						  areas.push(item.areaname);
+						  num1.push(item.all1);
+						});
+						chartOption.yAxis[0].data = areas;
+						chartOption.series[0].data =num1 ;
+						barChart.setOption(chartOption);
+					}else{
+						document.getElementById("noneInfo").style.display='block';
+						document.getElementById("s2").style.display='none';
+						document.getElementById("s3").style.display='none';
+					}
+					
+				});
+				
+				//自定义事件
+				window.addEventListener('queryanaNum',function(e){
+					//获取传递数据
+					begindate = e.detail.begindate;
+					enddate = e.detail.enddate;
+					type = e.detail.type;
+					typename = e.detail.typename;
+					//隐藏已有的图表
+					document.getElementById("barChart").style.display='none';
+					//显示查询的范围
+					if(type){
+						document.getElementById("among").innerText=typename;
+					}else if(begindate){
+						document.getElementById("start").innerText=begindate;
+						document.getElementById("end").innerText=enddate;
+						document.getElementById("time-term").style.display='block';
+					}
+					//查询后台，获取数据
+					ajax_get_reportList({
+						type:type||'',
+						begindate:begindate||'',
+						enddate:enddate||''
+					},function(data){
+						var areas = [];
+						var num1 = [];
+						mui.each(data,function(index,item){
+						  areas.push(item.areaname);
+						  num1.push(item.all1);
+						});
+						chartOption.yAxis[0].data = areas;
+						chartOption.series[0].data =num1 ;
+						barChart.setOption(chartOption);
+						document.getElementById("barChart").style.display='block';
+					});
+				},false);
+				 
+			});
+			
+			document.getElementById("query").addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../anaylzeHtml/anaylze-ds-query.html',
+					id:'../anaylzeHtml/anaylze-ds-query.html',
+					styles:{
+						popGesture:'close'
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+				
+			},false);
+			
+			var chartOption =  {
+				tooltip : {
+			        trigger: 'axis',
+			        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+			            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+			        }
+			    },
+			    grid: {
+					x: 55,
+					x2: 2,
+					y: 0,
+					y2:1
+				},
+			    toolbox: {
+			        show : false,
+			        feature : {
+			            mark : {show: true},
+			            dataView : {show: true, readOnly: false},
+			            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+			            restore : {show: true},
+			            saveAsImage : {show: true}
+			        }
+			    },
+		    	calculable : true,
+			    xAxis : [
+			        {
+			            type : 'value'
+			        }
+			    ],
+			    yAxis : [
+			        {
+			            type : 'category',
+			            data: ['昌吉','克州','石河子',
+								'塔城','克拉玛依','哈密','和田','阿勒泰',
+								'巴州',	'博州',	'伊犁','奎屯','吐鲁番',
+								'乌鲁木齐',	'阿克苏','喀什']
+			        }
+			    ],
+			    series : [
+			        {
+			            name:'直供采购量',
+			            type:'bar',
+			            stack: '总量',
+			            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+			            data:[]
+			        }
+			    ]
+			};
+			
+			var byId = function(id) {
+				return document.getElementById(id);
+			};
+			var barChart = echarts.init(byId('barChart'));
+			
+			//重写返回事件
+			var old_back = mui.back;
+			mui.back=function(){
+				var qview =plus.webview.getWebviewById('../anaylzeHtml/anaylze-query.html');
+				qview.close();
+				old_back();
+			};
+		</script>
+	</body>
+</html>

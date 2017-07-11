@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+	</head>
+
+	<body>
+		<div style="text-align: center;margin-top: 50px;">支付成功，正在跳转....</div>
+	</body>
+	<script type="text/javascript">
+		if (navigator.userAgent.match(/Html5Plus/i)) {
+			var plusReady = function(callback) {
+				if (window.plus) {
+					setTimeout(function() {
+						callback();
+					}, 0);
+				} else {
+					document.addEventListener("plusready", function() {
+						callback();
+					}, false);
+				}
+			}
+			plusReady(function () {
+				var webview  = plus.webview.currentWebview();
+				if(webview.parent()){
+					webview = webview.parent();
+				}
+				webview.close();
+				
+			});
+		}
+	</script>
+</html>

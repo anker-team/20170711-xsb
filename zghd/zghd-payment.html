@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>销售宝</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/own.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-pull-left, .mui-pull-right{
+	    		color: gray;
+	    	}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title" style="color: white;">提现</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" style="margin-top: 20px;">
+				<div class="mui-input-row">
+					<input class="mui-input" style="width: 65%;" type="text" id="validateCode" placeholder="请输入短信验证码">
+					<button class="mui-btn mui-btn-primary own-btn-green " style="padding: 6px;float: none;width: 30%;vertical-align: middle;" onclick="settime(this)">获取验证码</button>
+				</div>
+				<div class="mui-input-row">
+					<input class="mui-input-clear mui-input" type="text" id="inproductno" placeholder="请输入翼支付账号">
+				</div>
+				<div class="mui-input-row">
+					<input class="mui-input-clear mui-input" type="text" id="txnamount" placeholder="请输入金额">
+				</div>
+				<div class="mui-input-row">
+					<h5 style="padding-left: 15px;padding-top: 5px;">可用余额：<span id="total">0</span></h5>
+				</div>
+			</form>
+			<div class="mui-button-row" style="margin: 10px 15px;">
+			<button id="loginBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">确认提现</button>
+		</div>
+		</div>
+	</body>
+	<!--MUI-->
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/ajax.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		mui.init({
+			swipeBack:true
+		});
+		var pWebview,
+			curwebview,
+			rewardId,
+			amount,
+			lastWebView;
+		mui.plusReady(function(){
+			curwebview = plus.webview.currentWebview();
+			lastWebView = plus.webview.getWebviewById('../zghd/zghd-pay-list.html');
+			rewardId = curwebview.rewardId;
+			amount = curwebview.amount;
+			document.getElementById("total").innerText=amount;
+			//监听
+			document.getElementById("loginBtn").addEventListener('tap',function(){
+				var a = parseFloat(amount);
+				//
+				var num = a - parseFloat(document.getElementById("txnamount").value);
+				if(a<=0){
+					mui.toast('可用额度不足');
+					return;
+				}
+				if(document.getElementById("txnamount").value==''){
+					mui.toast('请输入金额');
+					return;
+				}
+				if(num<0){
+					mui.toast('提现金额大于可用余额');
+					return;
+				}
+				if(document.getElementById("validateCode").value==''){
+					mui.toast('请输入短信验证码');
+					return;
+				}
+				if(document.getElementById("inproductno").value==''){
+					mui.toast('请输入翼支付账户');
+					return;
+				}
+				
+				
+				ajax_post_zghd_payment({
+					userid : JSON.parse(localStorage.getItem('$users')).buyerId,
+					rewardId : rewardId,
+					txnamount : document.getElementById("txnamount").value,
+					inproductno : document.getElementById("inproductno").value,
+					captcha : document.getElementById("validateCode").value
+				},function(data) {
+						//将用户信息和account分开存放是有好处的
+						if (data.success == "true") {
+							mui.toast(data.msg);
+							setTimeout(function(){
+					 			mui.fire(lastWebView,'closeOrder',{});
+								curwebview.close();
+							},1000);
+							
+						}else{
+							mui.toast(data.msg);
+						}
+					});
+			},false);
+		});
+		
+		var countdown=60;
+		var flag = true;
+		function settime(_this) {
+			if(flag){
+				ajax_get_zghd_vcode({
+					userid : JSON.parse(localStorage.getItem('$users')).buyerId,
+					 
+				},function(data){
+					
+				});
+			}
+			if (countdown == 0) {
+				_this.removeAttribute("disabled");
+				countdown = 60;
+				flag = true;
+				return;
+			} else {
+				_this.setAttribute("disabled", true); 
+				_this.innerText="重新发送(" + countdown + ")"; 
+				countdown--; 
+				if(countdown == 0)
+					_this.innerText = "获取";
+				flag = false;
+			}
+			
+			setTimeout(function() { 
+				settime(_this) 
+			},1000)
+		}
+		
+		
+	</script>
+</html>

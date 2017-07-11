@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/odometer-theme-car.css"/>
+    <style type="text/css">
+	    .mui-pull-left,.mui-pull-right {
+			color: gray;
+		}
+		
+		.headImg {
+			padding: 8% 0px 13% 0px;
+			background-position: center center; 
+			background-size: 100% auto;
+			background-color: #FF7011;
+			filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#f37422',endColorStr='#ef5028',gradientType='0');
+			background: -webkit-linear-gradient(#f37422, #ef5028);
+			background: -moz-linear-gradient(#f37422, #ef5028);
+			background: -o-linear-gradient(#f37422, #ef5028);
+			background: -webkit-gradient(linear, 0 0, 0 100%, from(#f37422), to(#ef5028));
+			background: linear-gradient(#f37422, #ef5028);
+		}
+		
+		.touxiang {
+			text-align: center;
+			height: 25%;
+			padding-top: 5%;
+		}
+		
+		.touxiang_center{
+			height: 50%;
+			padding-top: 20px;
+			text-align: center;
+		}
+		
+		.topTag{
+			text-align: center;
+			height: 25%;
+		}
+		
+		.mui-table-view-cell{
+			font-size: 40px ;
+			color: #FFFFF0;
+		}
+		
+		.mui-table-view-cell.mui-active {
+			background-color: transparent;
+		}
+		
+		span{
+			color: #FFFFF0
+		}
+		
+		.totalName{
+			color:#FFFFF0;
+			font-size: 16px;
+			border-bottom: 5px;
+		}
+		
+		.totalNum{
+			color:#FFFFF0;
+			font-size: 24px;
+		}
+		
+		h3{
+			color: #FF7011;
+		}
+		 
+    </style>
+</head>
+<body >
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">我的佣金</h1>
+	</header>
+	<div class="mui-content">
+		<div class="headImg">
+			<div class="topTag">
+				<span id="month">总佣金(元)</span>
+			</div>
+			<div class="touxiang_center" style="line-height: 70px;">
+				<a class="mui-table-view-cell odometer"></a>
+			</div>
+			<div class="touxiang">
+				<p class="totalName">本月佣金(元)</p>
+				<a id="hr" class="mui-table-view-cell"><span class="totalNum">0</span></a>
+			</div>
+		</div>
+		<ul class="mui-table-view mui-grid-view mui-grid-9">
+			<li class="mui-table-view-cell mui-media mui-col-xs-6">
+				<a href="../commission/com-order.html">
+					<h5>业务佣金(元)</h5>
+					<h3 id="yewu">0</h3>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-6">
+				<a href="../commission/com-order.html">
+					<h5>终端佣金(元)</h5>
+					<h3 id="zhongd">0</h3>
+				</a>
+			</li>
+		</ul>
+		<div class="mui-button-row" style="margin: 10px 15px;">
+			<button style="background-color: #2c8dff;border: 0;" id="query3MonthBtn" type="button" class="mui-btn mui-btn-green own-btn-green mui-btn-block " style="padding: 5px 0px;">查看最近三个月</button>
+		</div>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/jquery-1.7.2.min.js" charset="utf-8"></script>
+	<script src="../js/odometer.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		var aniShow;
+		var monthTag;
+		var cur;
+		var usertype;
+		mui.plusReady(function(){
+			aniShow = getaniShow();
+			monthTag = document.getElementById("month");
+			cur =document.querySelector('.touxiang_center').children[0];
+			//自适应屏幕高度
+			changeHight();
+			
+			//不同类型的用户点击查看不同类型数据
+			usertype= JSON.parse(localStorage.getItem('$users')).usertype;
+		    if('1' == usertype){ //分公司
+		    	document.getElementById('hr').href='../commission/com-fen-classification.html';
+		    }else  if('2' == usertype){  //代理商
+		    	document.getElementById('hr').href='../commission/com-dl-classification.html';
+		    }else{ //门店
+		    	document.getElementById('hr').href='../commission/com-classification.html';
+		    }
+		    
+			//ajax获取当前页面数据
+			ajax_get_current_commission_info({
+				appuserid:JSON.parse(localStorage.getItem('$users')).appuserid
+			},function(data){
+				if(data.code == '000000'){
+					document.querySelector('.totalNum').innerText = data.curamount;
+					document.getElementById('yewu').innerText = data.bussamount;
+					document.getElementById('zhongd').innerText = data.pdamount;
+					monthTag.id= data.month;
+				    $('.odometer').html(data.allamount);
+				}else{
+					mui.alert(data.msg);
+				}
+			});
+			
+			//监听点击本月佣金明细
+			mui('.mui-content').on('tap','.mui-table-view-cell',function(){
+				var href = this.href;
+				var id = this.getAttribute('href');
+				var month = monthTag.id;
+				mui.openWindow({
+					url:href,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						appuserid :JSON.parse(localStorage.getItem('$users')).appuserid,
+						serachtype:'0',  //按月查询
+						type:'Y'
+					},
+					show:{
+						aniShow:aniShow
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			//监听点击最近三个月查询按钮事件
+			document.getElementById("query3MonthBtn").addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../commission/com-index-detail.html',
+					id:'../commission/com-index-detail.html',
+					styles:{
+						popGesture:'close'
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					extras:{
+						appuserid:JSON.parse(localStorage.getItem('$users')).appuserid
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			},false);
+			
+		});
+		 
+		function changeHight(){
+			var height = (document.documentElement.clientHeight)*0.6;
+			document.querySelector('.headImg').style.height =height+'px'; //整体图片高度
+			
+		}
+	</script>
+</body>
+</html>

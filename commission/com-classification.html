@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>销售宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black"> 
+    	
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/own.css"/>
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			.mui-pull-top-tips .mui-pull-loading {
+				/*-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;*/
+				
+				margin: 0;
+			}
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img{
+				vertical-align: middle;
+				width: 24px;
+			}
+			h5 {
+			color: black
+		}
+		
+		.month{
+			float: right;
+			font-weight: 500;
+		}
+		
+		.appName{
+			float: left;
+			font-size: 17px;
+		}
+		
+		.areaName{
+			float: left;
+		}		
+		
+		.status{
+			float: right;
+			color: red;
+			font-weight: 500;
+		}
+		.li-padding{
+			padding: 0 0 0 15px;
+		}
+		.mui-control-content .mui-loading {
+			margin-top: 50px;
+		}
+		.mui-pull-left,.mui-pull-right {
+			color: gray;
+		}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav own-main-background-color">
+	    	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    	<h1 class="mui-title" style="color: white;"></h1>
+		</header>
+		<div class="mui-content">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div class="mui-scroll" style="width:100%" >
+						<a class="mui-control-item mui-active" href="#item1mobile" style="width:33%">
+							月
+						</a>
+						<a class="mui-control-item" href="#item2mobile" style="width:34%">
+							门店
+						</a>
+						<a class="mui-control-item" href="#item3mobile" style="width:33%">
+							套餐
+						</a>
+					</div>
+				</div>
+				<div class="mui-slider-progress-bar mui-col-xs-4" style="border-bottom: 0;"></div>
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll1" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+								<li class="mui-table-view-cell">
+									<h5 class="appName">佣金总额</h5>
+									<h5 class="status"></h5>
+								</li>
+								<li class="mui-table-view-cell" id="chart" style="min-height: 250px;padding: 0;">
+									
+								</li>
+								</ul>
+								<ul class="mui-table-view comlist" >
+								<li class="mui-table-view-cell">
+								<h5 class="appName">佣金分类明细</h5>
+								</li>
+								<li class="mui-table-view-cell">
+									<a class="mui-navigate-right" href="../commission/com-order.html">
+										<img  src="../img/yjicon_03.png"/>
+										发展佣金
+									</a>
+								</li>
+								<li class="mui-table-view-cell">
+									<a class="mui-navigate-right" href="../commission/com-order.html">
+										<img  src="../img/yjicon_06.png"/>
+										业务受理
+									</a>
+								</li>
+								<li class="mui-table-view-cell">
+									<a class="mui-navigate-right" href="../commission/com-order.html">
+										<img  src="../img/yjicon_08.png"/>
+										终端佣金
+									</a>
+								</li>
+								<li class="mui-table-view-cell">
+									<a class="mui-navigate-right" href="../commission/com-order.html">
+										<img  src="../img/yjicon_10.png"/>
+										话费分成
+									</a>
+								</li>
+								<li class="mui-table-view-cell">
+									<a class="mui-navigate-right" href="../commission/com-order.html">
+										<img  src="../img/yjicon_12.png"/>
+										充值缴费
+									</a>
+								</li>
+								<li class="mui-table-view-cell">
+									<a class="mui-navigate-right" href="../commission/com-order.html">
+										<img  src="../img/yjicon_14.png"/>
+										维系佣金
+									</a>
+								</li>
+								<li class="mui-table-view-cell">
+									<a class="mui-navigate-right" href="../commission/com-order.html">
+										<img  src="../img/yjicon_16.png"/>
+										增值发展
+									</a>
+								</li>
+								<li class="mui-table-view-cell">
+								<a class="mui-navigate-right" href="../commission/com-order.html">
+									<img  src="../img/yjicon_5.png"/>
+									终端激励
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right" href="../commission/com-order.html">
+									<img  src="../img/yjicon_7.png"/>
+									奖惩佣金
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right" href="../commission/com-order.html">
+									<img  src="../img/yjicon_9.png"/>
+									追溯佣金
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right" href="../commission/com-order.html">
+									<img  src="../img/yjicon_11.png"/>
+									调账佣金
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right" href="../commission/com-order.html">
+									<img  src="../img/yjicon_13.png"/>
+									渠道支撑费用
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right" href="../commission/com-order.html">
+									<img  src="../img/yjicon_15.png"/>
+									外包业务
+								</a>
+							</li>
+							</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item2mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll" >
+								<div class="mui-loading">
+									<div class="mui-spinner" >
+									</div>
+								</div>
+								<ul class="mui-table-view" style="display: none;">
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item3mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll" id="s3">
+								<div class="mui-loading">
+									<div class="mui-spinner" >
+									</div>
+								</div>
+								<ul class="mui-table-view" style="display: none;">
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js" charset="UTF-8"></script>
+		<script src="../js/own.js" charset="UTF-8"></script>
+		<script src="../js/ajax.js" charset="UTF-8"></script>
+		<script src="../js/mui.pullToRefresh.js"></script>
+		<script src="../js/mui.pullToRefresh.material.js"></script>
+		<script src="../js/echarts.common.min.js" charset="utf-8"></script>
+		<script>
+			mui.init();
+			//阻尼系数
+			var deceleration = mui.os.ios?0.003:0.0009;
+			mui('.mui-scroll-wrapper').scroll({
+				bounce: false,
+				indicators: true, //是否显示滚动条
+				deceleration:deceleration
+			});
+			mui.ready(function() {
+				//循环初始化所有下拉刷新，上拉加载。
+				mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+					if(this.parentNode.id=='scroll1') //按月页面不需要下拉
+						return;
+					mui(pullRefreshEl).pullToRefresh({
+//							down: {
+//								callback: function() {
+//									var self = this;
+//									setTimeout(function() {
+//										var ul = self.element.querySelector('.mui-table-view');
+//										ul.insertBefore(createFragment(ul, index, 10, true), ul.firstChild);
+//										self.endPullDownToRefresh(true);
+//									}, 1000);
+//								}
+//							},
+						up: {
+							callback: function() {
+								var isnodata = false ;
+								var self = this;
+								var level = '';
+								var page =0 ;
+								var pagesize = 0;
+								if(self.element.id == 's3'){ //套餐
+									level = 'item3mobile';
+									page = page2; 
+									pagesize = pagesize2;
+									setTimeout(function() {
+										if(pagesize>page*10){
+											page2++;
+											ajax_get_package_commission({
+												level:level,
+												page : page,
+												page_size:'10',
+												appuserid:JSON.parse(localStorage.getItem('$users')).appuserid,
+												month :month,
+												areacode:areacode,
+												busscode:busscode,
+												type : type
+											},function(data){ 
+												if(data.code=='000000'){
+													var ul = self.element.querySelector('.mui-table-view');
+													ul.appendChild(createFragmentpack(data.commList));
+												};
+											});	
+										}else{
+											isnodata = true;
+										}
+										self.endPullUpToRefresh(isnodata);
+									}, 500);
+								}else{
+									page = page1;
+									level = '';
+									pagesize = pagesize1;
+									setTimeout(function() {
+									if(pagesize>page*10){
+										page1++;
+										ajax_get_area_commission({
+											level:level,
+											page : page,
+											page_size:'10',
+											appuserid:JSON.parse(localStorage.getItem('$users')).appuserid,
+											month :month,
+											netcode: netcode,
+											acode: acode,
+											leveltype:'3' //门店
+										},function(data){ 
+											if(data.code=='000000'){
+												var ul = self.element.querySelector('.mui-table-view');
+												ul.appendChild(createFragment(data.commList));
+											};
+										});	
+									}else{
+										isnodata = true;
+									}
+									self.endPullUpToRefresh(isnodata);
+								}, 500);
+								}
+								
+							}
+						}
+					});
+				});
+				var createFragmentpack = function(commList) {
+					var fragment = document.createDocumentFragment();
+					var li;
+					mui.each(commList,function(index,item){
+						li = document.createElement('li');
+						li.className = 'mui-table-view-cell';
+						li.setAttribute('data-code',item.code);
+						li.innerHTML='<h5 class="areaName">当前名次：第'+pagenum+'名</h5><h5 class="status">￥'+parseFloat(item.amount).toLocaleString()+'</h5>';
+						fragment.appendChild(li);
+						li = document.createElement('li');
+						li.className = 'mui-table-view-cell li-padding';
+						li.setAttribute('data-code',item.code);
+						li.innerHTML='<table style="width: 100%"><thead><th width="30%"></th><th width="70%"></th></thead><tbody><tr style="font-size: 14px"><td style="border-right:1px solid #EEEED1">套餐编码</td><td style="border-top:0">'+item.code+'</td></tr><tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;"><td style="border-right:1px solid #EEEED1">套餐名称</td><td style="border-top:0">'+item.name+'</td></tr><tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;"><td style="border-right:1px solid #EEEED1">业务佣金(元)</td><td style="border-top:0">'+parseFloat(item.bussamount).toLocaleString()+'</td></tr><tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;"><td style="border-right:1px solid #EEEED1;">终端佣金(元)</td><td>'+parseFloat(item.pdamount).toLocaleString()+'</td></tr></tbody></table>';
+						fragment.appendChild(li);
+						//
+						pagenum++;
+					});
+					return fragment;
+				}
+				var createFragment = function(commList) {
+					var fragment = document.createDocumentFragment();
+					var li;
+					mui.each(commList,function(index,item){
+						li = document.createElement('li');
+						li.className = 'mui-table-view-cell';
+						li.setAttribute('data-code',item.code);
+						li.innerHTML='<h5 class="areaName">当前名次：第'+pagenum1+'名</h5><h5 class="status">￥'+parseFloat(item.amount).toLocaleString()+'</h5>';
+						fragment.appendChild(li);
+						li = document.createElement('li');
+						li.className = 'mui-table-view-cell li-padding';
+						li.setAttribute('data-code',item.code);
+						li.innerHTML='<table style="width: 100%"><thead><th width="30%"></th><th width="70%"></th></thead><tbody><tr style="font-size: 14px"><td style="border-right:1px solid #EEEED1">门店名称</td><td style="border-top:0">'+item.name+'</td></tr><tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;"><td style="border-right:1px solid #EEEED1">业务佣金(元)</td><td style="border-top:0">'+parseFloat(item.bussamount).toLocaleString()+'</td></tr><tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;"><td style="border-right:1px solid #EEEED1;">终端佣金(元)</td><td>'+parseFloat(item.pdamount).toLocaleString()+'</td></tr></tbody></table>';
+						fragment.appendChild(li);
+						//
+						pagenum1++;
+					});
+					return fragment;
+				}
+			});
+		var currentWebView;//当前页面	 
+		var serachtype;//查询类型
+		var	month; //查询月份
+		var item2; //门店
+		var item3; //套餐 
+		var isloaded = false;//是否正在请求数据
+		var page1 = 1;//门店页码
+		var page2 = 1;//餐套页码
+		var pagesize1 ; //门店总页数
+		var pagesize2 ; //套餐总页数
+		var pagenum = 1; //套餐排序
+		var pagenum1 = 1; //门店排序
+		var areacode="N";
+		var	busscode="N";
+		var	netcode="N";
+		var type;
+		mui.plusReady(function(){
+			currentWebView = plus.webview.currentWebview();
+			item2= document.getElementById('item2mobile');
+			item3= document.getElementById('item3mobile');
+			serachtype = currentWebView.serachtype;
+			month = currentWebView.month||'';
+			busscode = currentWebView.busscode||'';
+			areacode = currentWebView.areacode||'';
+			type = currentWebView.type||'';
+			//获取标题
+			document.querySelector('.mui-title').innerText = month.replace('-','年')+'月佣金总览';
+			//document.querySelector('.mui-control-content').style.minHeight = (plus.screen.resolutionHeight-82)+'px';
+			//获取图表数据
+			var info ={
+				appuserid:JSON.parse(localStorage.getItem('$users')).appuserid,
+				month :month,
+				areacode:areacode,
+				busscode:busscode,
+				netcode:netcode,
+				type : type
+			}
+			ajax_get_commission_classification(info,function(data){
+				var num1 = [];
+				var num2 = [];
+				var heiht = 32*parseInt(data.comList.length);
+				if(heiht>250){
+					document.getElementById("chart").style.height = heiht+'px';
+				}
+				var barChart = echarts.init(document.getElementById('chart'));
+				//回写佣金总额
+				document.querySelector('.status').innerText = '¥'+parseFloat(data.account).toLocaleString();
+				//回写佣金分类明细列表
+				mui.each(data.comList,function(index,item){
+				  	num1.push(item.name);
+				 	num2.push(item);
+				});
+				chartOption.legend.data = num1;
+				chartOption.series[0].data =num2 ;
+				barChart.setOption(chartOption);
+			});
+			
+			//'按月'监听点击事件，查看明细页面
+			mui('.comlist').on('tap','a',function(){	
+				var url = this.href;				
+				var id = this.getAttribute('href');
+				var busstype = this.innerText;				 
+				mui.openWindow({
+					url:url,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						busstype:busstype,
+						month:month,
+						serachtype:'0',  //按月查询
+						areacode:areacode,
+						busscode:busscode,
+						netcode:netcode,
+						type : type
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			document.getElementById('slider').addEventListener('slide', function(e) { //门店
+				if (e.detail.slideNumber === 1) {
+					if(page1 !='1')
+						return; 
+					if (item2.querySelector('.mui-loading')) {
+						ajax_get_area_commission({
+							page : '1',
+							page_size:'10',
+							appuserid:JSON.parse(localStorage.getItem('$users')).appuserid,
+							month :month,
+							areacode:areacode,
+							busscode:busscode,
+							netcode:netcode,
+							type : type
+						},function(data){
+							var html2 ='';
+							if(data.code=='000000'){
+								mui.each(data.commList,function(index,item){
+									html2 +='<li class="mui-table-view-cell" data-code="'+item.code+'">\
+											<h5 class="areaName">当前名次：第'+pagenum1+'名</h5>\
+											<h5 class="status">￥'+parseFloat(item.amount).toLocaleString()+'</h5>\
+											</li>\
+											<li class="mui-table-view-cell" data-code="'+item.code+'" style="padding: 0 0 0 15px">\
+											<table style="width: 100%">\
+											<thead>\
+											<th width="30%"></th>\
+											<th width="70%"></th>\
+											</thead><tbody>\
+											<tr style="font-size: 14px">\
+											<td style="border-right:1px solid #EEEED1">门店名称</td>\
+											<td style="border-top:0">'+item.name+'</td>\
+											</tr>\
+											<tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;">\
+											<td style="border-right:1px solid #EEEED1">业务佣金(元)</td>\
+											<td style="border-top:0">'+parseFloat(item.bussamount).toLocaleString()+'</td>\
+											</tr>\
+											<tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;">\
+											<td style="border-right:1px solid #EEEED1;">终端佣金(元)</td>\
+											<td>'+parseFloat(item.pdamount).toLocaleString()+'</td></tr></tbody></table></li>';
+											//
+											pagenum1++;
+								});
+								pagesize1 = data.pagesize;
+								page1++;
+							}else{
+								html2 ='<div style="text-align: center; margin-top: 50px;background-color:#efeff4;">\
+										<span style="color: gray; font-size: 0.9em;">未查询到相关数据</span></div>';
+							}
+							item2.querySelector('.mui-table-view').style.display='block';
+							item2.querySelector('.mui-loading').style.display='none';
+							item2.querySelector('.mui-table-view').innerHTML=html2 ;
+							
+						});
+					}
+				} else if (e.detail.slideNumber === 2) { //套餐
+					if(page2 !='1')
+						return; 
+					if (item3.querySelector('.mui-loading')) {
+						ajax_get_package_commission({
+							level: 'item3mobile',
+							page : '1',
+							page_size:'10',
+							appuserid:JSON.parse(localStorage.getItem('$users')).appuserid,
+							month :month,
+							areacode:areacode,
+							busscode:busscode,
+							type : type
+						},function(data){
+							var html3 ='';
+							if(data.code=='000000'){
+								mui.each(data.commList,function(index,item){
+//									html2 += '<li class="mui-table-view-cell">\
+//											<h5 class="areaName">'+item.netname+'</h5>\
+//											<h5 class="status">佣金额度(元)：'+item.curamount+'</h5>\
+//											</li>';
+									html3 +='<li class="mui-table-view-cell" data-code="'+item.code+'">\
+											<h5 class="areaName">当前名次：第'+pagenum+'名</h5>\
+											<h5 class="status">￥'+parseFloat(item.amount).toLocaleString()+'</h5>\
+											</li>\
+											<li class="mui-table-view-cell" data-code="'+item.code+'" style="padding: 0 0 0 15px">\
+											<table style="width: 100%">\
+											<thead>\
+											<th width="30%"></th>\
+											<th width="70%"></th>\
+											</thead><tbody>\
+											<tr style="font-size: 14px">\
+											<td style="border-right:1px solid #EEEED1">套餐编码</td>\
+											<td style="border-top:0">'+item.code+'</td>\
+											</tr>\
+											<tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;">\
+											<td style="border-right:1px solid #EEEED1">套餐名称</td>\
+											<td style="border-top:0">'+item.name+'</td>\
+											</tr>\
+											<tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;">\
+											<td style="border-right:1px solid #EEEED1">业务佣金(元)</td>\
+											<td style="border-top:0">'+parseFloat(item.bussamount).toLocaleString()+'</td>\
+											</tr>\
+											<tr style="font-size: 14px;border:1px solid #EEEED1;border-left: 0;">\
+											<td style="border-right:1px solid #EEEED1;">终端佣金(元)</td>\
+											<td>'+parseFloat(item.pdamount).toLocaleString()+'</td></tr></tbody></table></li>';
+											//
+											pagenum++;
+								});								
+								pagesize2 = data.pagesize;
+								page2++;
+							}else{
+								html3 ='<div style="text-align: center; margin-top: 50px;background-color:#efeff4;">\
+										<span style="color: gray; font-size: 0.9em;">未查询到相关数据</span></div>';
+							}
+							item3.querySelector('.mui-table-view').style.display='block';
+							item3.querySelector('.mui-loading').style.display='none';
+							item3.querySelector('.mui-table-view').innerHTML=html3 ;
+							
+						});
+					}
+				}
+			});
+			
+			//'套餐'监听点击事件，查看明细页面
+			mui('#item3mobile').on('tap','li',function(){
+				var combocode =this.getAttribute('data-code');
+				mui.openWindow({
+					url:'../commission/com-menu-order.html',
+					id:'../commission/com-menu-order.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						combocode : combocode,
+						month:month,
+						serachtype:'0', //按月查询
+						areacode:areacode,
+						busscode:busscode,
+						type:type
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			//'门店'监听点击事件，查看明细页面
+			mui('#item2mobile').on('tap','li',function(){
+				var md_netcode =this.getAttribute('data-code');
+				mui.openWindow({
+					url:'../commission/com-area-classification.html',
+					id:'../commission/com-area-classification.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						areacode:areacode,
+						busscode:busscode,
+						month:month,
+						netcode :md_netcode,
+						serachtype:'0'  //按月查询
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+		});
+		
+		//图表控件
+		var	chartOption = {
+		    legend: {
+		        orient: 'orient',
+		        x: 'right',
+		        top:'middle',
+		       // data:['发展佣金    335','业务受理    123,345','终端佣金    0','话费分成    0','充值缴费    0','维系佣金    0','增值发展    0']
+		    	data:[]
+		    },
+		    series: [
+		        {
+		            name:'佣金明细',
+		            type:'pie',
+		            radius: ['24%', '50%'],
+		            avoidLabelOverlap: false,
+		            label: {
+		                normal: {
+		                    show: false,
+		                    position: 'center'
+		                },
+		                emphasis: {
+		                    show: false,
+		                    textStyle: {
+		                        fontSize: '16',
+		                        fontWeight: 'bold'
+		                    }
+		                }
+		            },
+		            labelLine: {
+		                normal: {
+		                    show: false
+		                }
+		            },
+		            center: ['30%', '50%'],
+//		            data:[
+//		                {value:335, name:'发展佣金    335'},
+//		                {value:310, name:'业务受理    123,345'},
+//		                {value:11, name:'终端佣金    0'},
+//		                {value:22, name:'话费分成    0'},
+//		                {value:133, name:'充值缴费    0'},
+//		                {value:133, name:'维系佣金    0'},
+//		                {value:133, name:'增值发展    0'}
+//		            ]
+					data:[]
+		        }
+		    ]
+		};
+		
+	</script>
+	</body>
+</html>

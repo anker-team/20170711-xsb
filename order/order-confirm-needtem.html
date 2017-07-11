@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <title>销售宝</title>
+    <link href="../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+    	li{font-size: 16px;}
+    	.mui-pull-left,.mui-pull-right {
+			color: gray;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">提交订单</h1>
+	</header>
+	<nav class="mui-bar mui-bar-tab">
+		<span class="mui-tab-item mui-active" href="baritemHtml/home.html">
+			<span style="color: red;">总价：￥<span id="plusall">0</span></span>
+		</span>
+		<span id="orderSubmit" class="mui-tab-item" style="background-color: red;color: white;">
+			 立即下单
+		</span>
+	</nav>
+	<div class="mui-content">
+		<ul id="selectAddress" class="mui-table-view mui-table-view-chevron" style="margin-top: 0;margin-bottom: 15px;">
+			<li class="mui-table-view-cell" >
+				<a class="mui-navigate-right" href="../order/order-address-list.html">请选择收货地址</a>
+			</li>
+		</ul>
+		<ul class="mui-table-view mui-table-view-chevron" style="margin-bottom: 15px;">
+			<li class="mui-table-view-cell mui-collapse">
+				<a class="mui-navigate-right">商品清单<span class="mui-badge" id="allnum">0</span></a>
+				<ul class="mui-table-view mui-table-view-chevron" id ="phoneList">
+					
+				</ul>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../order/order-logistics.html">选择物流商<span class="mui-badge" style="background-color: white;" id="logisticsInfo"></span></a>
+			</li>
+			<li class="mui-table-view-cell">
+				是否开发票 
+					<div id="M_Toggle" class="mui-switch mui-active">
+	                    <div class="mui-switch-handle"></div>
+	                </div>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../order/order-payway.html">物流付费<span class="mui-badge" style="background-color: white;" id="wlPayWayInfo"></span></a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../order/order-repertory.html">发货仓库<span class="mui-badge" style="background-color: white;" id="repertoryInfo"></span></a>
+			</li>
+		</ul>
+		<ul class="mui-table-view mui-table-view-chevron">
+			<li class="mui-table-view-cell">
+				商品金额<span class="mui-badge" style="background-color: white;color: red;" >￥<span id="allprice">0</span></span>
+			</li>
+			<li class="mui-table-view-cell">
+				运费<span class="mui-badge" style="background-color: white;color: red;">￥<span id="yunfei" >0</span></span>
+			</li>
+		</ul>
+	</div>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init({
+			swipeBack: false //启动右滑关闭关闭功能
+			
+		});
+		var orderConfirmWebView; //当前webview
+		var logisticsInfo, //物流商
+			wlPayWayInfo, //物流付费
+			repertoryInfo, //发货仓库
+			addressInfo; //收货地址
+		var wucompanyid,//仓库ID
+			wlchargeid,//物流过程表ID
+			outperson,//自提-提货人姓名
+			outphone,//自提-提货人电话
+			outcardno,//自提-提货人身份证号
+			isinvoice='0',//是否开发票
+			ispay;//物流付费
+			
+		var phonenum =0; //商品总数目
+		var cartUrl; //购物车ID，购物车有2个页面
+      	mui.plusReady(function(){
+      		setHtml();
+      		//链接后台服务获取默认地址
+      		ajax_get_selected_adress({
+      			phonenum:phonenum,
+      			id:JSON.parse(localStorage.getItem('$users')).id
+      		});
+      		
+      		orderConfirmWebView = plus.webview.currentWebview();
+		 	logisticsInfo =document.getElementById("logisticsInfo");
+		 	wlPayWayInfo =document.getElementById("wlPayWayInfo");
+		 	repertoryInfo =document.getElementById("repertoryInfo");
+		 	//获取由哪一个购物车页面传递过来的页面ID
+			mui.fire(plus.webview.currentWebview().parent(),'getCategoryID',{});
+			window.addEventListener('postCategoryID',function(e){
+				cartUrl=e.detail.categoryID;
+			});
+			
+			//提交订单
+			document.getElementById("orderSubmit").addEventListener('tap',function(){
+				//校验选项不能为空
+				if(logisticsInfo.innerHTML==null||logisticsInfo.innerHTML==""){
+					plus.nativeUI.toast("物流商不能为空");
+					return;
+				}else if(wlPayWayInfo.innerHTML==null||wlPayWayInfo.innerHTML==""){
+					plus.nativeUI.toast("物流付费不能为空");
+					return;
+				}else if(repertoryInfo.innerHTML==null||repertoryInfo.innerHTML==""){
+					plus.nativeUI.toast("发货仓库不能为空");
+					return;
+				}
+				var user = JSON.parse(localStorage.getItem('$users'));
+				var goods = localStorage.getItem('$cart');
+				//订单信息推送到数据库保存
+				var orderInfo = {
+						userid:user.id,
+						wucompanyid:wucompanyid, 
+						wlchargeid:wlchargeid, 
+						addressid:addressInfo.getAttribute('data-id'),
+						outperson:'',
+						outphone:'',
+						outcardno:'',
+						wareid:repertoryInfo.getAttribute('data-id'),
+						isinvoice:isinvoice,
+						ispay:ispay,
+						amount:document.getElementById("allprice").innerHTML, //商品总价，不包含运费
+						wlprice:document.getElementById("yunfei").innerText, //物流费
+						goods:goods
+					};
+				//通过ajax与后台通信，生成订单
+				ajax_save_order(orderInfo,function(data){
+					if(data.state==400){//错误信息
+						plus.nativeUI.toast(data.errmsg);
+					}else{//获取订单ID，并跳转
+						mui.openWindow({
+							id:'order-submit.html',
+							url:'order-submit.html',
+							extras:{
+								orderprice:document.getElementById("plusall").innerHTML,//商品总价
+								orderId:data.orderid,//订单ID
+								orderNo:data.orderno, //订单号
+								categoryID:cartUrl 
+						    },
+							show: {
+								autoShow:true,
+								aniShow: 'pop-in'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+						//清空购物车信息
+						localStorage.removeItem('$cart');
+					}
+				});
+				
+			},false);
+			
+			//设置监听(选择订单参数)
+      		mui('.mui-table-view').on('tap','a',function(){
+      			//当选择物流商时，需要选择了发货仓库和收货地址才能选择
+      			if(repertoryInfo.innerHTML==""){
+      				plus.nativeUI.toast('未选择发货仓库');
+      				return;
+      			}
+      			
+      			var id = this.getAttribute('href');
+				var href = this.href;
+				var adressid ='' ;
+				if(addressInfo){
+      				adressid = addressInfo.getAttribute('data-id');
+      			}
+				console.log(id);
+				mui.openWindow({
+					url:href,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						phonenum:phonenum,
+						begdistrictid : repertoryInfo.getAttribute('data-id'), //发货地址ID
+						adressid : adressid
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});			
+      		});
+      		
+      		//监听自定义事件（选择收货地址）
+      		window.addEventListener('getAddressInfo',function(e){
+      			//重新选择收货地址后，需要清空物流商数据，运费数据
+      			wucompanyid = '';
+      			wlchargeid ='';
+      			logisticsInfo.innerHTML = '';      			
+      			//运费金额置换为'0'
+      			document.getElementById("yunfei").innerText ='0';
+      			//更新收货地址信息
+      			var html='';
+      			html='<li class="mui-table-view-cell">\
+					<a id="addressInfo" data-id="'+e.detail.id+'" class="mui-navigate-right" href="../order/order-address-list.html">\
+					<p><span style="font-weight: bold;color: #000000;">'+e.detail.linkperson+'</span>\
+					<span style="font-weight: bold;color: #000000;">'+e.detail.phone+'</span>\
+					<span style="background-color: red;color:#F0F0F0;font-size: 12px;">默认</span></p>\
+					<p><span style="font-size: 12px;">'+e.detail.address+'</span></p></a></li>';
+				document.getElementById("selectAddress").innerHTML=html;
+			},false);
+      		
+      		//监听自定义事件（选择物流商）
+      		window.addEventListener('getLogisticsInfo',function(e){
+      			wucompanyid = e.detail.wucompanyid;
+      			wlchargeid = e.detail.wlchargeid;
+				logisticsInfo.innerHTML=e.detail.companyname;
+				document.getElementById("yunfei").innerText =e.detail.wlprice;
+			},false);
+			
+			//监听自定义事件（选择物流付费方式）
+      		window.addEventListener('getwlPayWayInfo',function(e){
+      			ispay = e.detail.wayVal;
+				wlPayWayInfo.innerHTML=e.detail.wlPayName;				
+			},false);
+			
+			//监听自定义事件（选择发货仓库）
+      		window.addEventListener('getRepertoryInfo',function(e){
+				repertoryInfo.innerHTML=e.detail.repertoryName;
+				repertoryInfo.setAttribute("data-id",e.detail.wareid);				
+			},false);
+			
+			document.getElementById("M_Toggle").addEventListener('toggle', function(event) {
+				setTimeout(function() {
+					if(event.detail.isActive){
+						isinvoice = '0' //开发票
+					}else{
+						isinvoice = '1' //不开发票
+					}
+				}, 50);
+			}, false);
+			
+      	});
+      	
+      	//获取后台传递数据，显示默认的收货地址
+      	function getSeletedAdress(data){
+      		if(data.code=="000000"){
+      			var html='';
+      			html='<li class="mui-table-view-cell">\
+					<a id="addressInfo" data-id="'+data.addressid+'" class="mui-navigate-right" href="../order/order-address-list.html">\
+					<p><span style="font-weight: bold;color: #000000;">'+data.linkperson+'</span>\
+					<span style="font-weight: bold;color: #000000;">'+data.phone+'</span>\
+					<span style="background-color: red;color:#F0F0F0;font-size: 12px;">默认</span></p>\
+					<p><span style="font-size: 12px;">'+data.address+'</span></p></a></li>';
+				document.getElementById("selectAddress").innerHTML=html;
+				wucompanyid = data.wucompanyid;
+      			wlchargeid = data.wlchargeid;
+				logisticsInfo.innerHTML=data.companyname||'';
+				document.getElementById("yunfei").innerText= data.wlprice||'';
+				document.getElementById("plusall").innerHTML=parseFloat(document.getElementById("allprice").innerText)+parseFloat(data.wlprice);
+				//加载完收货地址的页面代码后，才能获取到相应标签
+				addressInfo = document.getElementById("addressInfo");
+			}
+      		repertoryInfo.innerHTML=data.repertoryName;
+			repertoryInfo.setAttribute("data-id",data.wareid);
+			ispay = data.wayVal;
+			wlPayWayInfo.innerHTML=data.wlPayName||'';
+      	}
+      	
+      	function setHtml() {
+      		//商品清单
+			var phoneList =  document.getElementById("phoneList");
+			var html ='';
+			var allprice = 0;
+			var cart =JSON.parse(localStorage.getItem('$cart') || '[]');
+			 for(var i in cart){
+			 	var listDiv = '';
+					listDiv = '<li class="mui-table-view-cell">\
+								<a class="mui-navigate-right"><img class="mui-media-object mui-pull-left" src="'+cart[i].photosrc+'" style="max-width: 63px;height: 63px;">\
+								<div class="mui-media-body" style="margin-right: 0;"><p>'+cart[i].pname+'</p><p><span>单价:￥:'+cart[i].price+'</span>&nbsp;<span>'+cart[i].phoneColor+'</span></p>\
+								<p><span>总价:￥:'+parseFloat(cart[i].price)*parseInt(cart[i].num)+'</span>&nbsp;<span>数量:'+cart[i].num+'</span></p></div></a></li>';	
+				html += listDiv;
+				allprice = parseFloat(allprice)+(parseFloat(cart[i].price)*parseInt(cart[i].num));
+			 	phonenum = parseInt(phonenum) + parseInt(cart[i].num);
+			 }
+			phoneList.innerHTML = html;
+			document.getElementById("allprice").innerHTML=allprice;
+			document.getElementById("allnum").innerHTML=cart.length;
+		}
+      	
+    </script>
+	</div>
+</body>
+</html>

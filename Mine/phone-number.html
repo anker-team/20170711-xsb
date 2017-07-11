@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <style type="text/css">
+    	.emptyAddress {
+    			text-align: center;
+    			margin-top: 50px;
+    			font-size: 0.9em;
+    		}
+    </style>
+</head>
+<body>
+	<div class="mui-content">
+		<div class="emptyAddress own-left-nav-color">
+			<span>正在跳转，请稍等</span>
+			
+		</div>
+	</div>
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});		 
+		var payWebView;		 
+		mui.plusReady(function(){		 
+			payWebView = plus.webview.currentWebview();			 	 
+			ajax_get_phone_number_interface({userid : JSON.parse(localStorage.getItem('$users')).id});
+		});
+	</script>
+</body>
+</html>

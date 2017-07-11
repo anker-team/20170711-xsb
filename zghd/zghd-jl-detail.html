@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    
+    <style type="text/css">
+    	.title{
+    		float: left;
+    	}
+    	
+    	.value{
+    		float: right;
+    	}
+    	
+    	.mui-pull-left{
+    		color: gray;
+    	} 
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">店员奖励详情</h1>
+	</header>
+	<div class="zx-family zx-add-family mui-content">
+		<ul class="mui-table-view"  style="margin-top: 0;">
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">金额</span>
+				<span id="amount"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">奖励时间</span>
+				<span id="credate"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">区域</span>
+				<span id="area"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">活动名称</span>
+				<span id="actname"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">活动编码</span>
+				<span id="actno"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">品牌</span>
+				<span id="manfactname"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">规则机型</span>
+				<span id="productname"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">注册号码</span>
+				<span id="mdn"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">注册时间</span>
+				<span id="registerdate"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">串码</span>
+				<span id="imei"></span>
+			</li><li class="mui-table-view-cell">
+				<span class="xw-border-right">采购商</span>
+				<span id="companyname"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">供货商</span>
+				<span id="suppname" style="width: 78%;">新疆维吾尔自治区通信产业服务有限公司营销服务分公司</span>
+			</li>
+			<li class="mui-table-view-cell">
+				<span class="xw-border-right">垫资商</span>
+				<span id="cushionname"></span>
+			</li>
+		</ul>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		}); 
+		var comOrderDetailWebView;
+		mui.plusReady(function(){
+			comOrderDetailWebView = plus.webview.currentWebview();
+			//ajax获取当前页面数据
+			ajax_get_zghd_jl_list_detail({
+				id:comOrderDetailWebView.detailid
+			},function(data){
+				if(data.success == 'true'){
+					document.getElementById("amount").innerText=data.tyResult.amount;
+					document.getElementById("credate").innerText=data.tyResult.createDate;
+					document.getElementById("actname").innerText=data.tyResult.actname;
+					document.getElementById("actno").innerText=data.tyResult.actno;
+					document.getElementById("mdn").innerText=data.tyResult.mdn;
+					document.getElementById("registerdate").innerText=data.tyResult.registerdate;
+					document.getElementById("imei").innerText=data.tyResult.imei;
+					document.getElementById("companyname").innerText=data.tyResult.companyname;
+					document.getElementById("suppname").innerText=data.tyResult.suppname;
+					document.getElementById("cushionname").innerText=data.tyResult.cushionname;
+					document.getElementById("manfactname").innerText=data.tyResult.manfactname||'';
+					document.getElementById("productname").innerText=data.tyResult.productname||'';
+					document.getElementById("area").innerText=data.tyResult.area.name;
+				}else{
+					mui.toast(data.msg);
+				}
+			});
+		});
+	</script>
+</body>
+</html>

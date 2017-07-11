@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <style type="text/css">
+		.mui-page .mui-table-view:first-child {
+			margin-top: 15px;
+		}
+		.mui-page .mui-table-view:last-child {
+			margin-bottom: 30px;
+		}
+		/*.mui-table-view {
+			margin-top: 10px;
+		}*/
+		.table-view-combine:after {
+			height: 0;
+		}
+		.mui-table-view span.mui-pull-right {
+			color: #999;
+		}
+		.mui-grid-view.mui-grid-9{ background-color: #fff; margin: 0;}
+		.mui-grid-view.mui-grid-9:after{ position: absolute; display: block;}
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell{padding: 0; border: 0;}
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell .mui-badge,.mui-table-view-chevron .mui-badge{ display: none;}
+		.mui-grid-view.mui-grid-9 .mui-media .mui-icon{font-size:24px; color: #666;-webkit-text-stroke-width: 0.3px;}
+		.mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-body{ font-size: 12px;}
+		.mui-table-view .iconfont{ font-size: 20px;-webkit-text-stroke-width: 0.3px;}
+		.table-view-iconlist .iconfont{margin-right: 5px;}
+		.view-more-text{ position: absolute; font-size: 12px; color: #999;right:30px;}
+		.headImg {
+			padding: 8% 0px 13% 0px;
+			/*background: url(../img/bg.jpeg);*/
+			background: url(../img/me_back.jpg);
+			background-position: center center; 
+			background-size: 100% auto;
+		}
+		
+		.touxiang {
+			text-align: center;
+		}
+		
+		.touxiang div {
+			width: 4em;
+			height: 4em;
+			padding: 0px;
+			border-radius: 50%;
+			border: 2px solid white;
+			color: gray;
+			margin: 0px auto;
+			margin-bottom: 5px;
+		}
+		
+    </style>
+</head>
+<body>
+	<div class="mui-content">
+		<div id="nonePhone" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未有查看权限</span>
+		</div>
+		<ul class="mui-table-view" style="margin-top: 10px;display: none;" id="view">
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../anaylzeHtml/anaylze-query.html">
+					地市直供采购量情况
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../anaylzeHtml/anaylze-sale-percent.html">
+					终端销售占比统计表
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" href="../anaylzeHtml/anaylze-register.html">
+					自注册平台数据统计表
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false
+		});
+		var currentwebview; 
+		mui.plusReady(function(){
+			currentwebview = plus.webview.currentWebview();
+			//查询用户相关信息
+			currentwebview.addEventListener('show',function(){
+				var user = JSON.parse(localStorage.getItem('$users'));
+				var type = user.usertype||'';
+				if(type){
+					if(type=='1' || type=='2'){
+						document.getElementById("view").style.display='block';
+					}else{
+						document.getElementById("nonePhone").style.display='block';
+					}
+				}else{
+					document.getElementById("nonePhone").style.display='block';
+				}
+			},false);
+			mui('.mui-table-view').on('tap','a',function(){
+				var url = this.href;				
+				var id = this.getAttribute('href');
+				 mui.openWindow({
+					url:url,
+					id:id,
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						 
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+				});
+			});
+	</script>
+</body>
+</html>

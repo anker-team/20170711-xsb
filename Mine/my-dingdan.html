@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    
+    <style type="text/css">
+    		.mui-table-view .mui-media-object {
+			line-height: 75px;
+			max-width: 75px;
+			height: 75px;
+		}
+		.itemName {
+			color: black;
+			font-size: 0.9em;
+		}
+		
+		.price {
+			margin-top: 10px;
+			font-size: 1em;
+		}
+		
+		.curprice {
+			color: #ef5028
+		}
+		.preprice {
+			color: black;
+			text-decoration:line-through
+		}
+		.mui-pull-left {
+    			color: gray;
+		}
+		h5 {
+			color: black
+		}
+		
+		.name {
+			float: left;
+		}
+		.number {
+			float: right;
+		}
+		
+		.address {
+			padding-top: 2px;
+			clear: both;
+		}
+		
+		.li_3{
+			padding: 5px 15px;
+		}
+		
+		.button {
+			float: right;
+		}
+		
+		.money{
+			float: left;
+		}
+		.status{
+			float: right;
+			color: red;
+			font-weight: 500;
+		}
+		
+		.appName{
+			float: left;
+			font-size: 16px;
+		}
+		
+		.list-padding{
+			margin-bottom: 15px;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;"></h1>
+	</header>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div id="noneInfo" style="text-align: center; margin-top: 50px;display: none;">
+			<span style="color: gray; font-size: 0.9em;">未有相关订单数据</span>
+			<br />
+			<!--<button type="button" class="mui-btn own-btn-green" style="margin-top: 10px; padding: 5px 20px;">请登录</button>-->
+		</div>
+		<div class="mui-scroll">
+			<!--<ul id="xingyuandanList" class="mui-table-view list-padding">
+				<li class="mui-table-view-cell">
+					<h5 class="appName">销售宝</h5>
+					<h5 class="status">等待付款</h5>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<div class="mui-slider-handle">
+						<a href="#">
+							<img class="mui-media-object mui-pull-left" src="http://file.huihoo.com/images/products/SP-10011/large.jpg?t=1438147731554" />
+							<img class="mui-media-object mui-pull-left" src="http://file.huihoo.com/images/products/SP-10011/large.jpg?t=1438147731554" />
+							 
+						</a>
+					</div>
+				</li>
+				<li class="mui-table-view-cell li_3">
+					<h5 class="money">付款：￥46.00</h5>
+					<h5 class="button">
+						<button type="button" class="mui-btn mui-btn-outlined mui-btn-danger">去支付</button>
+					</h5>
+				</li>
+			</ul>-->
+		</div>
+	</div>
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script src="../js/arttmpl.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:false,
+			pullRefresh: {
+				container:'#pullrefresh',
+				down:{
+					contentdown:'下拉可刷新',
+					contentover:'释放立即刷新',
+					contentrefresh:'正在加载..',
+					callback:pulldownRefresh
+				},
+				up:{
+					contentrefresh:'正在加载..',
+					contentnomore:'已加载全部订单',
+					callback:pullupRefresh
+				}
+			}
+		});
+		
+		var myOrderWebView;//当前页面
+		var myOrderList;//
+		var isloaded = false;//是否正在请求数据
+		var page = 1;//页码
+		var pagesize ; //总页数
+		var isnodate = false;
+		mui.plusReady(function(){
+			myOrderWebView = plus.webview.currentWebview();
+			myOrderList = document.querySelector('.mui-scroll');
+			document.querySelector('.mui-title').innerText=myOrderWebView.title;
+		 
+			//ajax获取数据，回写订单列表数据
+			ajax_get_myorder_list({
+				page:page,
+				page_size:'10',
+				type:myOrderWebView.type,
+				userid:JSON.parse(localStorage.getItem('$users')).id
+			});
+			isloaded = true;
+			
+			//监听点击'去支付'按钮等事件，跳转到相应页面
+			mui('.mui-scroll').on('tap','.button',function(){
+				var type = this.getAttribute('data-type');
+				var orderId = this.id;
+				console.log(orderId);
+				if(type =='1'){ //去支付，跳转到支付页面
+					var price = this.parentNode.children[0].children[1].innerText;
+					var orderNo = this.parentNode.parentNode.children[0].children[0].innerText;
+					mui.openWindow({
+						id:'order-submit.html',
+						url:'../order/order-submit.html',
+						extras:{
+							orderprice:price,//商品总价
+							orderId:orderId,//订单ID
+							orderNo:orderNo, //订单号
+							categoryID:'order' 
+					    },
+						show: {
+							autoShow:true,
+							aniShow: 'pop-in'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				}else if(type=='2'){//去确认签收，弹出确认框，并刷新当前页面 
+					mui.confirm('确认签收？', '销售宝', ['否', '是'], function(e) {
+						if(e.index == 1) {
+							ajax_post_sign_order({
+								id : orderId //订单ID
+							},function(e){
+								if(e.code=='000000'){
+									mui.toast('签收成功');
+									myOrderWebView.reload();
+								}
+							});
+						} 
+					},'div');
+				}else{//再次购买
+					var indexWebview = plus.webview.getWebviewById('index');
+					var anishow = getaniShow();
+					//弹入分类商品详情
+					mui.fire(indexWebview,'newWebView',{
+						id:'Home/product-detail-needtem.html',
+						href:'Home/product-detail-needtem.html',
+						aniShow:anishow,
+						title:'商品详情',
+						isBars:false,
+						barsIcon:'',
+						product_id:itemID
+					});
+				}
+			});			
+			
+			//监听订单点击事件，打开订单详情页面
+			mui('#myOrderList').on('tap','a',function(){
+				var item = this;
+				var itemID = this.getAttribute('href');
+				var indexWebview = plus.webview.getWebviewById('index');
+				var anishow = getaniShow();
+				//弹入分类商品列表
+				mui.fire(indexWebview,'newWebView',{
+					id:'Home/product-detail-needtem.html',
+					href:'Home/product-detail-needtem.html',
+					aniShow:anishow,
+					title:'商品详情',
+					isBars:false,
+					barsIcon:'',
+					product_id:itemID,
+				});
+			});
+		});
+	
+		//成功获取订单列表数据
+		function getOrderList(data){
+			//if (data.length == '000000') {
+				 
+				if(data.pagesize == 0){//列表为空时
+					document.getElementById("noneInfo").style.display ='block';
+				}else{
+					pagesize = data.pagesize;
+					mui.each(JSON.parse(data.orderList),function(index,item){
+						var html = '';
+						var imgTag = '';
+						mui.each(JSON.parse(item.phoneInfo),function(i,ite){
+							imgTag+='<img class="mui-media-object mui-pull-left" src="'+ite.photosrc+'" />';
+						})
+						var listItem = document.createElement('ul');
+						listItem.className = 'mui-table-view list-padding';
+						html = '<li class="mui-table-view-cell"><h5 class="appName">'+item.orderno+'</h5>\
+								<h5 class="status">'+item.enumitemname+'</h5></li>\
+								<li class="mui-table-view-cell mui-media">\
+								<div class="mui-slider-handle"><a href="#">';
+						html+=imgTag;
+						if(item.status =='0'){ //待支付，显示'去支付' 按钮
+							html +='</a></div></li><li class="mui-table-view-cell li_3"><h5 class="money"><span>付款：￥</span><span>'+item.amount+'</span></h5>\
+								<h5 class="button" id="'+item.id+'" data-type="1"><button type="button" class="mui-btn mui-btn-outlined mui-btn-danger">去支付</button></h5></li>';
+					
+						}else if(item.status =='4'){ //待收货，显示'确认签收' 按钮
+							html +='</a></div></li><li class="mui-table-view-cell li_3"><h5 class="money"><span>付款：￥</span><span>'+item.amount+'</span></h5>\
+								<h5 class="button" id="'+item.id+'" data-type="2"><button type="button" class="mui-btn mui-btn-outlined mui-btn-danger">确认签收</button></h5></li>';
+					
+						}
+//						else if(item.status =='5'||item.status =='-1'){ //已签收或已失效，显示'再次购买' 按钮
+//							html +='</a></div></li><li class="mui-table-view-cell li_3"><h5 class="money"><span>付款：￥</span><span>'+item.amount+'</span></h5>\
+//								<h5 class="button" id="'+item.id+'" data-type="3"><button type="button" class="mui-btn mui-btn-outlined mui-btn-danger">再次购买</button></h5></li>';
+//					
+//						}
+						else{ //其他情况，不显示按钮
+							html +='</a></div></li><li class="mui-table-view-cell li_3"><h5 class="money"><span>付款：￥</span><span>'+item.amount+'</span></h5></li>';
+					
+						}
+						listItem.innerHTML = html ;
+						myOrderList.appendChild(listItem);
+					});
+			//}
+					isloaded = false;
+				}
+				
+		}
+		
+		function pulldownRefresh() {
+			setTimeout(function(){
+				
+				 mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			},1000);
+		}
+		function pullupRefresh(){
+			var copythis = this;
+			//上拉翻页
+			if(pagesize>page*10){
+				page++;
+				ajax_get_myorder_list({
+					page:page,
+					page_size:'10',
+					type:myOrderWebView.type,
+					userid:JSON.parse(localStorage.getItem('$users')).id
+				});
+			}else{
+				isnodate = true;
+			}
+			setTimeout(function(){
+				copythis.endPullupToRefresh(isnodate);
+			});
+		}
+	</script>
+</body>
+</html>

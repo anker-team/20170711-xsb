@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>销售宝</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/own.css" rel="stylesheet" />
+		<style type="text/css">
+			.change-inline{
+				display: :block;
+				background-size:cover;
+				height: 100%;
+				width:100%;
+			}
+			.mui-pull-left,.mui-bar .mui-pull-right{
+				color: gray;
+			}
+		</style>	
+	</head>
+	<body style="background-color: white;">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">
+				<div class="search-box">
+					<input type="search" class="search-text mui-input-clear" id="keywordsText" placeholder="搜索全部商品..." autofocus="autofocus">
+					<i class="mui-icon mui-icon-search search-btn" id="searchKey"></i>
+				</div>
+			</h1>
+			<a id="screenResult" class="mui-pull-right mui-btn-link">筛选</a>
+		</header>
+		<div class="fixed-inner">
+            <a class="no_icon default rangBtn" orderkey="1">默认<i></i></a>
+            <a class="price rangBtn" orderkey="1">价格<i class="icon_sort"></i></a>
+            <a class="state_switch rangBtn" orderkey="2">销量<i class="icon_sort_single"></i></a>
+            <a class="state_switch rangBtn" orderkey="3">上架<i class="icon_sort_single"></i></a>
+            <a class="switch">&nbsp;<i class="icon_switch"></i></a>
+        </div>
+        <div id="screenBox" class="screen-box">
+        	<div class="screen-head border-bot">
+        		<a id="cancelScreen">取消</a>
+        		<h1>筛选</h1>
+        		<a class="mui-right" id="enterScreen">确定</a>
+        	</div>
+        	<ul class="mui-table-view mui-table-view-chevron" id="screenTerm">
+        		<li class="collapse-line border-bot"></li>
+				<li class="mui-table-view-cell mui-collapse border-bot">
+					<a class="mui-navigate-right">
+						价格区间(元)&nbsp;<span class="view-choose-text" id="pricetype">全部</span>
+					</a>
+					<ul class="mui-table-view mui-table-view-chevron">
+						<!--不换行，元素中的空白被视作文本，而文本被视作文本节点。-->
+						<li class="mui-table-view-cell mui-radio mui-right choosePrice" data-id="1">0-999<input name="Price" type="radio"></li>
+						<li class="mui-table-view-cell mui-radio mui-right choosePrice" data-id="2">100-1999<input name="Price" type="radio"></li>
+						<li class="mui-table-view-cell mui-radio mui-right choosePrice" data-id="3">2000-2999<input name="Price" type="radio"></li>
+						<li class="mui-table-view-cell mui-radio mui-right choosePrice" data-id="4">3000以上<input name="Price" type="radio"></li>
+					</ul>
+				</li>
+				<li class="collapse-line border-bot"></li>
+				<li class="collapse-line border-bot"></li>
+				<li class="mui-table-view-cell mui-collapse border-bot">
+					<a class="mui-navigate-right">
+						网络制式&nbsp;<span class="view-choose-text" id="wifitype">全部</span>
+					</a>
+					<ul class="mui-table-view mui-table-view-chevron">
+						<!--不换行，元素中的空白被视作文本，而文本被视作文本节点。-->
+						<li class="mui-table-view-cell mui-radio mui-right chooseWifi" data-id="1">4G网络<input name="Wifi" type="radio"></li>
+						<li class="mui-table-view-cell mui-radio mui-right chooseWifi" data-id="2">3G双网双待<input name="Wifi" type="radio"></li>
+						<li class="mui-table-view-cell mui-radio mui-right chooseWifi" data-id="3">3G单网单待<input name="Wifi" type="radio"></li>
+						<li class="mui-table-view-cell mui-radio mui-right chooseWifi" data-id="2">2G双网双待<input name="Wifi" type="radio"></li>
+						<li class="mui-table-view-cell mui-radio mui-right chooseWifi" data-id="3">2G单网单待<input name="Wifi" type="radio"></li>
+					</ul>
+				</li>
+				<li class="collapse-line border-bot"></li>
+				<!--<li class="collapse-line border-bot"></li>
+				<input type="text" class="mui-input-clear" placeholder="请输入品牌" />
+        		<li class="collapse-line border-bot"></li><li class="collapse-line border-bot"></li>
+				<input type="text" class="mui-input-clear" placeholder="请输入型号" />
+        		<li class="collapse-line border-bot"></li>-->
+        	</ul>
+        	<div class="screen-bot">
+        		<button class="custom-btn-default" id="clearChoose">清除选项</button>
+        	</div>
+        </div>
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul class="mui-table-view mui-grid-view mui-clearfix vshop-product" id="productsList" style="padding-top: 45px;padding-right: 0;"></ul>
+			</div>
+		</div>
+		<div class="empty-show" id="emptyShow" style="display: none;"><h4>没有搜索到相关商品</h4></div>
+		
+		<script src="js/ajax.js"></script>
+		<script src="js/mui.min.js"></script>		
+		<script src="js/delayimg.min.js"></script>
+		<script>
+			var page = 1,
+				pagesize, //后台查询的总数据量
+				isnodata = false,
+				imgWidth,
+				keywords, //查询栏关键字
+				a_id,
+				b_id,
+				orderKey,
+				orderType,
+				mask,
+				keywordsText=document.getElementById('keywordsText'),
+				productsList=document.getElementById('productsList'),
+				user = JSON.parse(localStorage.getItem('$users'));
+			mui.init({
+				pullRefresh : {
+				    container:'#pullrefresh',
+				    deceleration:0.0006,
+				    up : {
+					    contentrefresh : "正在加载...",
+					    contentnomore:'已加载全部商品',
+					    callback :function(){
+					      	var self=this;
+					      	if(productsList.innerHTML == ''||pagesize<=page*10){
+					      		isnodata = true;
+					      	}
+					      	if (!isnodata) {
+					      		page++;
+						        mui.ajax(httpUrl+'OpenApi_getCategoryList.action?page='+page+'&pageSize=10',{
+						        	data:{
+										keywords:keywords,
+										a_id:a_id,
+										b_id:b_id,
+										orderKey:orderKey,
+										orderType:orderType
+									},
+									dataType:'json',
+									type:'get',
+									timeout:10000,
+									success:function(data){
+										//if(data.Success=='true'){
+						                    var html = '';
+						                    var phoneList = JSON.parse(data.phoneList);
+									        if (phoneList.length > 0) {
+									        	for(var i=0;i<phoneList.length;i++){
+									        		if(('' != user.usertype && '4' != user.usertype) || user.id){
+									        			html+='<li class="mui-table-view-cell mui-media mui-col-xs-6">'+
+						                        			'<div class="vshop-product-box">'+
+																'<a data-id="'+phoneList[i].id+'">'+
+																	'<div class="p-img" style="height:160px;"><b id="test" class="change-inline" data-delay-background="'+phoneList[i].photosrc+'"></b></div>'+
+																	'<div class="mui-media-body">'+phoneList[i].productname+'</div>'+
+																	'<p class="vshop-product-price"><span>¥ '+phoneList[i].price+'</span></p>'+
+																'</a>'+
+															'</div>'+
+									            		'</li>';
+									        		}else{
+									        			html+='<li class="mui-table-view-cell mui-media mui-col-xs-6">'+
+						                        			'<div class="vshop-product-box">'+
+																'<a data-id="'+phoneList[i].id+'">'+
+																	'<div class="p-img" style="height:160px;"><b id="test" class="change-inline" data-delay-background="'+phoneList[i].photosrc+'"></b></div>'+
+																	'<div class="mui-media-body" style="margin-bottom:10px;">'+phoneList[i].productname+'</div>'+
+																'</a>'+
+															'</div>'+
+									            		'</li>';
+									        		}
+									           }
+							                    productsList.insertAdjacentHTML('beforeend',html); // 类似append()方法，继续添加html代码
+//							                    for(var i=(page-1)*10; i<data.phoneList.length+(page-1)*10; i++){
+//							                    	document.getElementsByClassName('p-img')[i].style.height= imgWidth+'px';
+//							                    }
+							                    delayimg.render();
+						                   	}else{
+												isnodata = true;
+											}
+											self.endPullupToRefresh(isnodata);
+					      					
+										//}
+									},
+									error:function(xhr,type,errorThrown){
+										plus.nativeUI.toast('请求失败，请检查网络')
+									}
+								});
+						    }else{
+						    	self.endPullupToRefresh(isnodata);
+						    }
+				    	}
+				    }
+				}
+			});
+			
+			mui.plusReady(function() {
+				var ws=plus.webview.currentWebview();
+				ws.setStyle({scrollIndicator:'none'}); //设置窗口是否显示滚动条
+				keywords=ws.keywords;
+				if(keywords!=undefined ){
+					searchRun(keywords,a_id,b_id,orderKey,orderType);
+				}else{
+					openSoftKeyboard(); //打开软键盘
+					keywordsText.focus(); //定焦
+				}
+				
+				//监听点击查询按钮的事件
+				document.getElementById('searchKey').addEventListener('tap',function(){
+					a_id=b_id=orderKey=orderType=undefined; //统一赋值
+					document.getElementById('pricetype').innerText='全部';
+					document.getElementById('wifitype').innerText='全部';
+					keywords=keywordsText.value;
+					searchRun(keywords,a_id,b_id,orderKey,orderType);
+				});
+				
+				//监听点击软键盘按键的事件
+				document.addEventListener("keyup",function(event){
+					if((event||window.event).keyCode==13){//'13'代表enter键
+						b_id=a_id=undefined;
+						document.getElementById('pricetype').innerText='全部';
+						document.getElementById('wifitype').innerText='全部';
+						keywordsText.blur(); //移开焦点
+						orderKey=orderType=undefined;
+						keywords=keywordsText.value;						 
+						searchRun(keywords,a_id,b_id,orderKey,orderType);
+					}
+				});
+				
+				
+				//监听点击'筛选'按钮的事件
+				document.getElementById('screenResult').addEventListener('tap',function(){
+					openScreen();
+				});
+				
+				//监听向右滑动事件
+				document.addEventListener("swiperight",function(){
+				     closeScreen();
+				});
+				
+//				//监听向左滑动事件
+//				document.addEventListener("swipeleft",function(){
+//				    openScreen();
+//				});
+				
+				//监听点击侧滑界面的'确认'事件
+				document.getElementById('enterScreen').addEventListener('tap',function(){
+					closeScreen();
+					searchRun(keywords,a_id,b_id,orderKey,orderType);
+				});
+				
+				//监听点击侧滑界面的'取消'事件
+				document.getElementById('cancelScreen').addEventListener('tap',function(){
+					b_id=a_id=undefined;
+					closeScreen();
+				});
+				
+				//监听点击排序按钮的事件,选中改变背景颜色
+				mui('.fixed-inner').on('tap','a.rangBtn',function(){
+					var selectA=document.getElementsByClassName('select');
+					if(selectA.length>0)
+						selectA[0].className=selectA[0].className.replace(/ select/g,'');
+					if(this.className.indexOf('select')<0)
+						this.className=this.className+' select';
+					if(this.className.indexOf('price')>=0){
+						if(this.className.indexOf('state_switch')>=0){
+							this.className=this.className.replace(' state_switch','')
+							orderType=1; //升序
+						}else{
+							this.className=this.className+' state_switch';
+							orderType=2; //降序
+						}
+					}else{
+						orderType=2;
+					}
+					orderKey=this.getAttribute('orderkey');
+					searchRun(keywords,a_id,b_id,orderKey,orderType);
+				});
+				
+				//监听点击改变商品显示风格的事件
+				mui('.fixed-inner').on('tap','a.switch',function(){
+					if(this.className.indexOf('state_switch')>=0)
+						this.className=this.className.replace(' state_switch','')
+					else
+						this.className=this.className+' state_switch';
+					
+					if(productsList.className.indexOf('crossrange')>=0)
+						productsList.className=productsList.className.replace(' crossrange','')
+					else
+						productsList.className=productsList.className+' crossrange';
+				
+				});
+			});
+			
+			function chooseChangeText(_this){
+				var parentN=_this.parentNode.parentNode;
+				parentN.className=parentN.className.replace(' mui-active','');
+				if(_this.lastChild.checked)
+					parentN.getElementsByTagName('span')[0].innerHTML='<em>'+_this.innerText+'</em>';
+				else
+					parentN.getElementsByTagName('span')[0].innerText='全部';
+			}
+			
+			//监听选择'价格区间'事件
+			mui('#screenTerm').on('tap','.choosePrice',function(){
+				var _this=this;
+				setTimeout(function(){
+					//lastChild 属性返回指定节点的最后一个子节点，以 Node 对象。注意：元素中的空白被视作文本，而文本被视作文本节点。在本例中不换行
+					if(_this.lastChild.checked){
+						a_id=_this.getAttribute('data-id');
+					}else
+						a_id=undefined;
+					chooseChangeText(_this);
+				},10)
+			});
+			
+			//监听选择 '网络制式'事件
+			mui('#screenTerm').on('tap','.chooseWifi',function(){
+				var _this=this;
+				setTimeout(function(){
+					if(_this.lastChild.checked){
+						b_id=_this.getAttribute('data-id');
+					}else
+						b_id=undefined;
+					
+					chooseChangeText(_this);
+				},10)
+			});
+			
+			//监控清空筛选条件
+			document.getElementById('clearChoose').addEventListener('tap',function(){
+				a_id=b_id=undefined;
+				document.getElementById('pricetype').innerText='全部';
+				document.getElementById('wifitype').innerText='全部';
+			});
+			
+			//打开侧滑页面
+			function openScreen(){
+				document.getElementById('screenBox').className='screen-box active';
+				if(!mask)
+					mask = mui.createMask(function(){document.getElementById('screenBox').className='screen-box'});
+				mask.show();
+			}
+			
+			//关闭侧滑页面
+			function closeScreen(){
+				mask.close();
+			    document.getElementById('screenBox').className='screen-box';
+			}
+			
+			//ajax请求和后台对接
+			function searchRun(keywords,a_id,b_id,orderKey,orderType){
+				page = 1;
+				isnodata = false;
+				mui('#pullrefresh').pullRefresh().refresh(true);
+				window.scrollTo(0,0);
+				var w=plus.nativeUI.showWaiting('',{padlock:true});
+				mui.ajax(httpUrl+'OpenApi_getCategoryList.action?page=1&pageSize=10',{
+					data:{
+						keywords:keywords,
+						orderKey:orderKey,
+						orderType:orderType,
+						b_id:b_id,
+						a_id:a_id
+					},
+					dataType:'json',
+					type:'get',
+					timeout:10000,
+					success:function(data){
+						//if(data.Success=='true'){
+							var html='';
+							var phoneList = JSON.parse(data.phoneList);
+					        if (phoneList.length > 0) {
+					        	for(var i=0;i<phoneList.length;i++){
+					        		if(('' != user.usertype && '4' != user.usertype) || user.id){
+					        			html+='<li class="mui-table-view-cell mui-media mui-col-xs-6">'+
+		                        			'<div class="vshop-product-box">'+
+												'<a data-id="'+phoneList[i].id+'">'+
+													'<div class="p-img" style="height:160px;"><b id="test" class="change-inline" data-delay-background="'+phoneList[i].photosrc+'"></b></div>'+
+													'<div class="mui-media-body">'+phoneList[i].productname+'</div>'+
+													'<p class="vshop-product-price"><span>¥ '+phoneList[i].price+'</span></p>'+
+												'</a>'+
+											'</div>'+
+					            		'</li>';
+					        		}else{
+					        			html+='<li class="mui-table-view-cell mui-media mui-col-xs-6">'+
+		                        			'<div class="vshop-product-box">'+
+												'<a data-id="'+phoneList[i].id+'">'+
+													'<div class="p-img" style="height:160px;"><b id="test" class="change-inline" data-delay-background="'+phoneList[i].photosrc+'"></b></div>'+
+													'<div class="mui-media-body" style="margin-bottom:10px;">'+phoneList[i].productname+'</div>'+
+												'</a>'+
+											'</div>'+
+					            		'</li>';
+					        		}
+					        		
+					           }
+					        	pagesize = data.pagesize; //获取到总数量
+					            document.getElementById('emptyShow').style.display='none';
+					            productsList.innerHTML=html;
+//					             if(imgWidth==null)
+//					            	imgWidth = document.getElementsByClassName('p-img')[0].offsetWidth;
+//			                    for(var i=0; i<phoneList.length; i++){
+//			                    	document.getElementsByClassName('p-img')[i].style.height= imgWidth+'px';
+//			                    }
+			                    delayimg.init({throttle: 300,offset:100});
+					            w.close();
+					            
+					       }else{
+					        	productsList.innerHTML='';
+					        	document.getElementById('emptyShow').style.display='block';
+					        	w.close();
+					        }
+						//}
+					},
+					error:function(xhr,type,errorThrown){
+						w.close();
+						document.getElementById('emptyShow').innerHTML='<h4>网络不给力，请检查网络！</h4>';
+					}
+				});
+			}
+			
+			//添加每个item点击的监听事件
+			mui('#productsList').on('tap', 'a', function() {
+				var item = this;
+				var itemID = this.getAttribute('data-id');
+				var indexWebview = plus.webview.getWebviewById('index');
+				//弹入分类商品列表
+				mui.fire(indexWebview,'newWebView',{
+					id:'Home/product-detail-needtem.html',
+					href:'Home/product-detail-needtem.html',
+					aniShow:'pop-in',
+					title:'商品详情',
+					isBars:false,
+					barsIcon:'',
+					product_id:itemID,
+				});
+			 
+			});
+		</script>
+	</body>
+
+</html>

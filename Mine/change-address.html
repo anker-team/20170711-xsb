@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>销售宝</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/own.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    
+<style type="text/css">
+    		.emptyAddress {
+    			text-align: center;
+    			margin-top: 50px;
+    			font-size: 0.9em;
+    		}
+    		
+    		.mui-pull-left, .mui-pull-right{
+    			color: gray;
+    		}
+    		
+    		h5 {
+    			color: black
+    		}
+    		
+    		.name {
+    			float: left;
+    		}
+    		.number {
+    			float: right;
+    		}
+    		
+    		.address {
+    			padding-top: 2px;
+    			clear: both;
+    		}
+    		
+    		h6 {
+    			font-size: 14px;	
+    		}    		
+    		
+    		.update {
+    			float: right;
+    			padding-right: 20px;
+    		}
+    		
+    		.delete{
+    			float: right;
+    		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav own-main-background-color">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" style="color: white;">收货地址管理</h1>
+	    <a class="mui-pull-right mui-icon iconfont icon-tianjia" ></a>
+	</header>
+	<div class="mui-content">
+		<div class="emptyAddress own-left-nav-color" style="display: none;">
+			<span>空空如也</span>
+			<br />
+			<span>先添加一个收货地址吧</span>
+			<br />
+			<button type="button" class="mui-btn">
+				<span class="mui-icon iconfont icon-tianjia" style="padding: 0px 5px; color: gray;"></span>
+			</button>
+		</div>
+		<!--<ul style="margin-bottom: 15px;" class="mui-table-view" style="display: block;">
+			<li class="mui-table-view-cell">
+				<h5 class="name">文学勇</h5>
+				<h5 class="number">15882017353</h5>
+				<p class="address ">中国四川省成都市</p>
+			</li>
+			<li class="mui-table-view-cell">
+				<h6 class="delete"><i class="mui-icon mui-icon-trash icon-right"></i>删除</h6>
+				<h6 class="update"><i class="mui-icon mui-icon-compose icon-right"></i>编辑</h6>
+			</li>
+		</ul>-->
+	</div>
+	
+	<script src="../js/mui.min.js" charset="UTF-8"></script>
+	<script src="../js/own.js" charset="UTF-8"></script>
+	<script src="../js/ajax.js" charset="UTF-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+			swipeBack:true
+		});
+		var addressWebview;
+		var emptyAddress;
+		var emptyAddressBtn;
+		
+		mui.plusReady(function(){
+			addressWebview = plus.webview.currentWebview();
+			emptyAddress = document.querySelector('.emptyAddress');
+			emptyAddressBtn = emptyAddress.querySelector('button');
+			
+			//对接后台获取所有地址信息
+			ajax_get_address({id :JSON.parse(localStorage.getItem('$users')).id});
+			
+			//监听新建地址事件
+			document.querySelector(".icon-tianjia").addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../Mine/address.html',
+					id:'../Mine/address.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						type:'add' //判断'新增'状态标识
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			},false);
+			
+			//监听修改地址事件
+			mui('.mui-content').on('tap','.update',function(){
+				var addressid = this.getAttribute('data-id');
+				mui.openWindow({
+					url:'../Mine/address.html',
+					id:'../Mine/address.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						addressid:addressid,
+						type:'update' //判断'修改'状态标识
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+			});
+			
+			//监听地址删除事件
+			mui('.mui-content').on('tap','.delete',function(){
+				var addressid = this.getAttribute('data-id');
+				mui.confirm('确认删除？', '销售宝', ['否', '是'], function(e) {
+					if(e.index == 1) {
+						ajax_delete_selected_address({id:addressid},function(data){
+							if(data.code='000000'){
+								addressWebview.reload();
+							}
+						});
+					}
+				});
+			});
+			
+			//接收更新当前页面事件
+			window.addEventListener('refresh',function(){
+				addressWebview.reload();
+			},false);
+		});
+		
+		//回调函数，回写地址信息
+		function getAdressList(data){
+			if(data.code=='000000'){
+				emptyAddress.style.display = 'none';
+				var html='';
+				mui.each(JSON.parse(data.list),function(index,item){
+					html+='<ul style="margin-bottom: 15px;" class="mui-table-view">\
+						<li class="mui-table-view-cell"><h5 class="name">'+item.linkperson+'</h5><h5 class="number">'+item.phone+'</h5>\
+						<p class="address ">'+item.address+'</p></li><li class="mui-table-view-cell">\
+						<h6 class="delete" data-id="'+item.id+'"><i class="mui-icon mui-icon-trash icon-right"></i>删除</h6>\
+						<h6 class="update" data-id="'+item.id+'"><i class="mui-icon mui-icon-compose icon-right"></i>编辑</h6></li></ul>';
+				});
+				document.querySelector(".mui-content").innerHTML=html;
+			}else{
+				emptyAddress.style.display = 'block';
+				emptyAddressBtn.addEventListener('tap',function(){
+					mui.openWindow({
+					url:'../Mine/address.html',
+					id:'../Mine/address.html',
+					styles:{
+						popGesture:'close'
+					},
+					extras:{
+						type:'add' //判断'新增'状态标识
+					},
+					show:{
+						aniShow:'pop-in'
+					},
+					waiting:{
+						autoShow:false
+					}
+				});
+				},false);
+			}
+		}
+	</script>
+	
+</body>
+</html>
